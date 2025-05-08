@@ -1,6 +1,6 @@
-import { AppRoute, AppRouter } from "@yuqijs/core";
+import type { AppRoute, AppRouter } from "@yuqijs/core";
 
-import { AppRouteImplementationOrOptions } from "../types";
+import type { AppRouteImplementationOrOptions } from "../types";
 
 export type PartialRouter<
   T extends AppRouter,

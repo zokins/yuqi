@@ -1,0 +1,34 @@
+{
+  "name": "@yuqijs/vitest-config",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./base": "./dist/configs/base.js",
+    "./ui": "./dist/configs/ui.js"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "build": "tsc",
+    "collect-json-reports": "node dist/scripts/collect-json-outputs.js",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "merge-json-reports": "nyc merge coverage/raw coverage/merged/merged-coverage.json",
+    "report": "nyc report -t coverage/merged --report-dir coverage/report --reporter=html --exclude-after-remap false",
+    "typecheck": "tsc --noEmit",
+    "view-report": "open coverage/report/index.html"
+  },
+  "devDependencies": {
+    "@vitest/coverage-istanbul": "^3.0.7",
+    "@vitest/ui": "3.0.7",
+    "@yuqijs/prettier-config": "workspace:*",
+    "@yuqijs/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "glob": "^11.0.1",
+    "jsdom": "^26.0.0",
+    "nyc": "^17.1.0",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "^3.1.3"
+  },
+  "prettier": "@yuqijs/prettier-config"
+}

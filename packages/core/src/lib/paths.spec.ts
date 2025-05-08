@@ -1,6 +1,7 @@
 import { expectType } from "tsd";
 
-import { insertParamsIntoPath, ParamsFromUrl } from "./paths";
+import type { ParamsFromUrl } from "./paths";
+import { insertParamsIntoPath } from "./paths";
 
 const type = <T>() => "" as unknown as T;
 

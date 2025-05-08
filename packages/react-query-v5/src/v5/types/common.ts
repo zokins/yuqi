@@ -1,6 +1,6 @@
-import { QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 
-import {
+import type {
   AppRoute,
   AppRouteDeleteNoBody,
   AppRouteMutation,
@@ -13,8 +13,8 @@ import {
   SuccessfulHttpStatusCode,
 } from "@yuqijs/core";
 
-import { MutationHooks, QueryHooks } from "./hooks";
-import { TsRestQueryClientFunctions } from "./query-client-functions";
+import type { MutationHooks, QueryHooks } from "./hooks";
+import type { TsRestQueryClientFunctions } from "./query-client-functions";
 
 export type DataResponse<TAppRoute extends AppRoute> = ClientInferResponses<
   TAppRoute,

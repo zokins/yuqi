@@ -1,12 +1,14 @@
-import {
-  Controller,
+import type {
   INestApplication,
   ModuleMetadata,
-  Type,
-} from "@nestjs/common";
+  Type} from "@nestjs/common";
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
+  Controller
+} from "@nestjs/common";
+import type {
+  NestFastifyApplication} from "@nestjs/platform-fastify";
+import {
+  FastifyAdapter
 } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
 import * as supertest from "supertest";
@@ -14,11 +16,12 @@ import { z } from "zod";
 
 import { initContract, TsRestResponseError } from "@yuqijs/core";
 
-import {
-  nestControllerContract,
+import type {
   NestControllerInterface,
   NestRequestShapes,
-  NestResponseShapes,
+  NestResponseShapes} from "./yuqijs-nest";
+import {
+  nestControllerContract
 } from "./yuqijs-nest";
 import { tsRestHandler, TsRestHandler } from "./yuqijs-nest-handler";
 import { TsRestRequest } from "./yuqijs-request.decorator";

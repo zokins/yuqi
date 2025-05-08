@@ -1,9 +1,10 @@
-import {
+import type {
   AppRoute,
   ClientInferResponses,
   ErrorHttpStatusCode,
+  InferResponseUndefinedStatusCodes} from "@yuqijs/core";
+import {
   exhaustiveGuard,
-  InferResponseUndefinedStatusCodes,
   isUnknownErrorResponse,
 } from "@yuqijs/core";
 

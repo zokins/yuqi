@@ -20,7 +20,9 @@
     "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
     "postinstall": "pnpm lint:ws",
-    "typecheck": "turbo run typecheck"
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "view-report": "turbo run view-report"
   },
   "devDependencies": {
     "@turbo/gen": "^2.5.1",

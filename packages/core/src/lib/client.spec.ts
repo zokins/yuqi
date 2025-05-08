@@ -1,14 +1,11 @@
 import * as fetchMock from "fetch-mock-jest";
 import { z, ZodError } from "zod";
 
-import {
-  FetchOptions,
-  HTTPStatusCode,
-  initContract,
-  OverrideableClientArgs,
-} from "..";
-import { ApiFetcherArgs, initClient } from "./client";
-import { Equal, Expect } from "./test-helpers";
+import type { FetchOptions, HTTPStatusCode, OverrideableClientArgs } from "..";
+import type { ApiFetcherArgs } from "./client";
+import type { Equal, Expect } from "./test-helpers";
+import { initContract } from "..";
+import { initClient } from "./client";
 
 const c = initContract();
 
@@ -22,11 +19,11 @@ const postSchema = z.object({
 });
 export type Post = z.infer<typeof postSchema>;
 
-export type User = {
+export interface User {
   id: string;
   email: string;
   name: string | null;
-};
+}
 
 const postsRouter = c.router({
   getPost: {
@@ -576,7 +573,7 @@ describe("client", () => {
         },
         (_, req) => ({
           body: {
-            contentType: (req.headers as any)["content-type"],
+            contentType: req.headers["content-type"],
             reqBody: JSON.parse(req.body as string),
           },
           status: 200,

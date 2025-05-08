@@ -1,11 +1,12 @@
-import { AppRouter } from "@yuqijs/core";
+import type { AppRouter } from "@yuqijs/core";
 
 import { TsRestRequest } from "../request";
 import { createServerlessRouter } from "../router";
-import {
-  createTsr,
+import type {
   RouterImplementationOrFluentRouter,
-  ServerlessHandlerOptions,
+  ServerlessHandlerOptions} from "../types";
+import {
+  createTsr
 } from "../types";
 
 export const tsr = {

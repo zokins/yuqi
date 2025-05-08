@@ -5,9 +5,10 @@ import { z } from "zod";
 import { initContract, TsRestResponseError } from "@yuqijs/core";
 
 import { RequestValidationErrorSchema } from "../types";
+import type {
+  FetchHandlerOptions} from "./yuqijs-fetch";
 import {
   createFetchHandler,
-  FetchHandlerOptions,
   fetchRequestHandler,
   tsr,
 } from "./yuqijs-fetch";
@@ -385,9 +386,9 @@ describe("fetchRequestHandler", () => {
   });
 
   it("should handle custom context", async () => {
-    type PlatformContext = {
+    interface PlatformContext {
       foo: string;
-    };
+    }
 
     const fetchRequestHandlerWithContext = (
       request: Request,

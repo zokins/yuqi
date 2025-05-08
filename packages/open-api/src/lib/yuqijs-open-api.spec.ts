@@ -1,5 +1,5 @@
 import { extendApi } from "@anatine/zod-openapi";
-import { SecurityRequirementObject } from "openapi3-ts";
+import type { SecurityRequirementObject } from "openapi3-ts";
 import { z } from "zod";
 
 import { initContract } from "@yuqijs/core";
@@ -8,10 +8,10 @@ import { generateOpenApi } from "./yuqijs-open-api";
 
 const c = initContract();
 
-type Post = {
+interface Post {
   title: string;
   published: boolean;
-};
+}
 
 const commentSchema = z.object({
   id: z.number(),

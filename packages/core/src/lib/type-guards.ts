@@ -1,9 +1,9 @@
-import { AppRoute } from "./dsl";
-import {
+import type { AppRoute } from "./dsl";
+import type {
   ClientInferResponses,
   InferResponseUndefinedStatusCodes,
 } from "./infer-types";
-import {
+import type {
   ErrorHttpStatusCode,
   HTTPStatusCode,
   SuccessfulHttpStatusCode,

@@ -1,11 +1,7 @@
 type ResolveOptionalPathParam<T extends string> =
   T extends `${infer PathParam}?`
-    ? {
-        [key in PathParam]?: string | undefined;
-      }
-    : {
-        [key in T]: string;
-      };
+    ? Partial<Record<PathParam, string | undefined>>
+    : Record<T, string>;
 
 /**
  * @params T - The URL e.g. /posts/:id

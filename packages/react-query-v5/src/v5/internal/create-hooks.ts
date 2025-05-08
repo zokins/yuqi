@@ -1,8 +1,9 @@
-import {
+import type {
   QueryClient,
   QueryFunctionContext,
   QueryKey,
-  QueryOptions,
+  QueryOptions} from "@tanstack/react-query";
+import {
   skipToken,
   useInfiniteQuery,
   useMutation,
@@ -15,10 +16,11 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
-import {
+import type {
   AppRoute,
   AppRouter,
-  ClientArgs,
+  ClientArgs} from "@yuqijs/core";
+import {
   evaluateFetchApiArgs,
   fetchApi,
   getRouteQuery,
@@ -27,7 +29,7 @@ import {
   isErrorResponse,
 } from "@yuqijs/core";
 
-import {
+import type {
   DataResponse,
   MutationHooks,
   QueryHooks,

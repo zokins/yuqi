@@ -4,7 +4,8 @@ import { waitFor } from "@testing-library/vue";
 import { createApp, unref } from "vue";
 import { z } from "zod";
 
-import { ApiFetcher, initContract } from "@yuqijs/core";
+import type { ApiFetcher} from "@yuqijs/core";
+import { initContract } from "@yuqijs/core";
 
 import { initQueryClient } from "./vue-query";
 
@@ -12,20 +13,20 @@ const act = (cb: () => {}) => cb();
 
 const c = initContract();
 
-export type Post = {
+export interface Post {
   id: string;
   title: string;
   description: string | null;
   content: string | null;
   published: boolean;
   authorId: string;
-};
+}
 
-export type User = {
+export interface User {
   id: string;
   email: string;
   name: string | null;
-};
+}
 
 const postsRouter = c.router(
   {

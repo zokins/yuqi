@@ -1,4 +1,4 @@
-import {
+import type {
   FetchInfiniteQueryOptions,
   FetchQueryOptions,
   InfiniteData,
@@ -6,10 +6,10 @@ import {
   QueryKey,
 } from "@tanstack/react-query";
 
-import { AppRoute, AppRouteFunction, ClientArgs } from "@yuqijs/core";
+import type { AppRoute, AppRouteFunction, ClientArgs } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse, RequestData } from "./common";
-import {
+import type { DataResponse, ErrorResponse, RequestData } from "./common";
+import type {
   TsRestQueryOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryOptionsWithInitialData,
@@ -23,7 +23,7 @@ import {
   UseSuspenseQueriesOptions,
   UseSuspenseQueryOptions,
 } from "./hooks-options";
-import {
+import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   UseInfiniteQueryResult,
@@ -64,7 +64,7 @@ export interface QueryHooks<
   ): UseSuspenseQueryResult<TAppRoute, TData, TError>;
 
   useQueries<
-    T extends Array<any>,
+    T extends any[],
     TCombinedResult = UseQueriesResult<TAppRoute, T>,
   >(
     options: UseQueriesOptions<TAppRoute, TClientArgs, T, TCombinedResult>,
@@ -72,7 +72,7 @@ export interface QueryHooks<
   ): TCombinedResult;
 
   useSuspenseQueries<
-    T extends Array<any>,
+    T extends any[],
     TCombinedResult = UseSuspenseQueriesResult<TAppRoute, T>,
   >(
     options: UseSuspenseQueriesOptions<

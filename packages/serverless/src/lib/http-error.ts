@@ -18,7 +18,7 @@ export class TsRestHttpError extends Error {
       "message" in body &&
       typeof body.message === "string"
     ) {
-      this.message = body["message"];
+      this.message = body.message;
     } else {
       this.message = "Error";
     }

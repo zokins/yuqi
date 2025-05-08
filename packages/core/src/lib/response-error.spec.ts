@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import type { Equal, Expect } from "./test-helpers";
 import { initContract } from "./dsl";
-import { TsRestResponseError } from "./response-error";
-import { HTTPStatusCode } from "./status-codes";
+import type { TsRestResponseError } from "./response-error";
+import type { HTTPStatusCode } from "./status-codes";
 
 const c = initContract();
 

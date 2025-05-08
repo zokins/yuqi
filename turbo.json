@@ -22,6 +22,13 @@
       "dependsOn": ["^topo", "^build"],
       "outputs": [".cache/.eslintcache"]
     },
+    "test": {
+      "dependsOn": ["transit", "@yuqijs/vitest-config#build"],
+      "outputs": ["coverage.json"]
+    },
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
     "typecheck": {
       "dependsOn": ["^topo", "^build"],
       "outputs": [".cache/tsbuildinfo.json"]
@@ -34,7 +41,5 @@
     }
   },
   "globalEnv": [],
-  "globalPassThroughEnv": [
-    "npm_lifecycle_event"
-  ]
+  "globalPassThroughEnv": ["npm_lifecycle_event"]
 }

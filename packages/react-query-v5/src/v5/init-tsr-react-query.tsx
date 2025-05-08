@@ -1,7 +1,7 @@
-import { QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import * as React from "react";
 
-import { AppRouter, ClientArgs } from "@yuqijs/core";
+import type { AppRouter, ClientArgs } from "@yuqijs/core";
 
 import { initHooksContainer, initQueryClient } from "./internal/create-hooks";
 import { TsRestInnerProvider } from "./internal/provider-inner";

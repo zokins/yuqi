@@ -1,9 +1,9 @@
-import { IncomingHttpHeaders } from "http";
+import type { IncomingHttpHeaders } from "http";
 import { z } from "zod";
 
 import { initContract } from "@yuqijs/core";
 
-import { AppRouteImplementation } from "./types";
+import type { AppRouteImplementation } from "./types";
 
 export type Equal<a, b> =
   (<T>() => T extends a ? 1 : 2) extends <T>() => T extends b ? 1 : 2

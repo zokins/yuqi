@@ -1,4 +1,4 @@
-import {
+import type {
   FetchQueryOptions,
   InfiniteData,
   QueryClient,
@@ -7,7 +7,7 @@ import {
   QueryKey,
 } from "@tanstack/react-query";
 
-import {
+import type {
   AppRoute,
   AppRouteFunction,
   AppRouteMutation,
@@ -16,7 +16,7 @@ import {
   PartialClientInferRequest,
 } from "@yuqijs/core";
 
-import {
+import type {
   DataResponse,
   ReactQueryClientArgs,
   UseInfiniteQueryOptions,
@@ -27,10 +27,10 @@ import {
   UseQueryResult,
 } from "./types";
 
-export type AppRouteFunctions<
+export interface AppRouteFunctions<
   TAppRoute extends AppRoute,
   TClientArgs extends ReactQueryClientArgs,
-> = {
+> {
   useQuery: TAppRoute extends AppRouteQuery
     ? DataReturnQuery<TAppRoute, TClientArgs>
     : never;
@@ -73,7 +73,7 @@ export type AppRouteFunctions<
   setQueryData: TAppRoute extends AppRouteQuery
     ? DataReturnSetQueryData<TAppRoute>
     : never;
-};
+}
 
 export type AppRouteFunctionsWithQueryClient<
   TAppRoute extends AppRoute,

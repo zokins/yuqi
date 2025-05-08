@@ -4,7 +4,7 @@ import type {
 } from "@tanstack/vue-query";
 import { useMutation } from "@tanstack/vue-query";
 
-import {
+import type {
   AppRoute,
   AppRouteMutation,
   ClientArgs,
@@ -13,7 +13,8 @@ import {
   ZodInferOrType,
 } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse, queryFn } from "./common";
+import type { DataResponse, ErrorResponse} from "./common";
+import { queryFn } from "./common";
 
 // Used pn X.useMutation
 export type DataReturnMutation<

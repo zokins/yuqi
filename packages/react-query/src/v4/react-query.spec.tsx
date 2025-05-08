@@ -8,26 +8,27 @@ import * as React from "react";
 import { act } from "react-dom/test-utils";
 import { z } from "zod";
 
-import { ApiFetcher, initContract } from "@yuqijs/core";
+import type { ApiFetcher} from "@yuqijs/core";
+import { initContract } from "@yuqijs/core";
 
 import { initQueryClient, useTsRestQueryClient } from "./react-query";
 
 const c = initContract();
 
-export type Post = {
+export interface Post {
   id: string;
   title: string;
   description: string | null;
   content: string | null;
   published: boolean;
   authorId: string;
-};
+}
 
-export type User = {
+export interface User {
   id: string;
   email: string;
   name: string | null;
-};
+}
 
 const postsRouter = c.router(
   {

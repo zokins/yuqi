@@ -2,12 +2,12 @@ import type {
   OmitKeyof,
   QueriesPlaceholderDataFunction,
 } from "@tanstack/query-core";
-import { DefinedUseQueryResult, UseQueryResult } from "@tanstack/react-query";
+import type { DefinedUseQueryResult, UseQueryResult } from "@tanstack/react-query";
 
-import { AppRoute, ClientArgs } from "@yuqijs/core";
+import type { AppRoute, ClientArgs } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse } from "../types/common";
-import { UseQueryOptions } from "../types/hooks-options";
+import type { DataResponse, ErrorResponse } from "../types/common";
+import type { UseQueryOptions } from "../types/hooks-options";
 
 type UseQueryOptionsForUseQueries<
   TAppRoute extends AppRoute,
@@ -47,11 +47,11 @@ type MAXIMUM_DEPTH = 20;
 export type QueriesOptions<
   TAppRoute extends AppRoute,
   TClientArgs extends ClientArgs,
-  T extends Array<any>,
-  TResults extends Array<any> = [],
-  TDepth extends ReadonlyArray<number> = [],
+  T extends any[],
+  TResults extends any[] = [],
+  TDepth extends readonly number[] = [],
 > = TDepth["length"] extends MAXIMUM_DEPTH
-  ? Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>>
+  ? UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>[]
   : T extends []
     ? []
     : T extends [infer Head]
@@ -70,25 +70,23 @@ export type QueriesOptions<
             ],
             [...TDepth, 1]
           >
-        : ReadonlyArray<unknown> extends T
+        : readonly unknown[] extends T
           ? T
-          : T extends Array<
-                UseQueryOptionsForUseQueries<
+          : T extends UseQueryOptionsForUseQueries<
                   TAppRoute,
                   TClientArgs,
                   infer TData
-                >
-              >
-            ? Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs, TData>>
-            : Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>>;
+                >[]
+            ? UseQueryOptionsForUseQueries<TAppRoute, TClientArgs, TData>[]
+            : UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>[];
 
 export type QueriesResults<
   TAppRoute extends AppRoute,
-  T extends Array<any>,
-  TResults extends Array<any> = [],
-  TDepth extends ReadonlyArray<number> = [],
+  T extends any[],
+  TResults extends any[] = [],
+  TDepth extends readonly number[] = [],
 > = TDepth["length"] extends MAXIMUM_DEPTH
-  ? Array<UseQueryResult>
+  ? UseQueryResult[]
   : T extends []
     ? []
     : T extends [infer Head]
@@ -100,16 +98,12 @@ export type QueriesResults<
             [...TResults, GetUseQueryResult<TAppRoute, Head>],
             [...TDepth, 1]
           >
-        : T extends Array<
-              UseQueryOptionsForUseQueries<TAppRoute, ClientArgs, infer TData>
-            >
-          ? Array<
-              UseQueryResult<
+        : T extends UseQueryOptionsForUseQueries<TAppRoute, ClientArgs, infer TData>[]
+          ? UseQueryResult<
                 unknown extends TData ? DataResponse<TAppRoute> : TData,
                 ErrorResponse<TAppRoute>
-              >
-            >
-          : Array<UseQueryResult>;
+              >[]
+          : UseQueryResult[];
 
 type GetDefinedOrUndefinedQueryResult<T, TData, TError> = T extends {
   initialData?: infer TInitialData;

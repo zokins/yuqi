@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { initContract, TsRestResponseError } from "@yuqijs/core";
 
-import { TsRestRequest } from "../request";
+import type { TsRestRequest } from "../request";
 import { createAzureFunctionHandler } from "./yuqijs-azure-function";
 
 const c = initContract();

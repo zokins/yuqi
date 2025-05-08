@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { z } from "zod";
 
-import type { Equal, Expect } from "./test-helpers";
-import {
+import type {
   ContractNoBodyType,
   ContractOtherResponse,
   ContractPlainType,
-  ContractPlainTypeRuntimeSymbol,
-  initContract,
 } from "./dsl";
-import { Prettify } from "./type-utils";
+import type { Equal, Expect } from "./test-helpers";
+import type { Prettify } from "./type-utils";
+import { ContractPlainTypeRuntimeSymbol, initContract } from "./dsl";
 
 const c = initContract();
 

@@ -1,4 +1,4 @@
-import {
+import type {
   UseInfiniteQueryOptions as TanStackUseInfiniteQueryOptions,
   UseInfiniteQueryResult as TanStackUseInfiniteQueryResult,
   UseMutationOptions as TanStackUseMutationOptions,
@@ -7,7 +7,7 @@ import {
   UseQueryResult as TanStackUseQueryResult,
 } from "@tanstack/react-query";
 
-import {
+import type {
   AppRoute,
   ClientArgs,
   ClientInferResponses,
@@ -16,7 +16,7 @@ import {
   SuccessfulHttpStatusCode,
 } from "@yuqijs/core";
 
-import { TsRestReactQueryClient } from "./react-query";
+import type { TsRestReactQueryClient } from "./react-query";
 
 export interface ReactQueryClientArgs extends ClientArgs {
   includeThrownErrorsInErrorType?: boolean;

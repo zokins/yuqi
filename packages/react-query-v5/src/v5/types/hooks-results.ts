@@ -1,4 +1,4 @@
-import {
+import type {
   InfiniteData,
   DefinedUseInfiniteQueryResult as TanstackDefinedUseInfiniteQueryResult,
   DefinedUseQueryResult as TanstackDefinedUseQueryResult,
@@ -9,15 +9,15 @@ import {
   UseSuspenseQueryResult as TanStackUseSuspenseQueryResult,
 } from "@tanstack/react-query";
 
-import { AppRoute, ClientArgs } from "@yuqijs/core";
+import type { AppRoute, ClientArgs } from "@yuqijs/core";
 
-import { QueriesResults } from "../internal/queries-options";
-import { SuspenseQueriesResults } from "../internal/suspense-queries-options";
-import { DataResponse, ErrorResponse, RequestData } from "./common";
+import type { QueriesResults } from "../internal/queries-options";
+import type { SuspenseQueriesResults } from "../internal/suspense-queries-options";
+import type { DataResponse, ErrorResponse, RequestData } from "./common";
 
-export type TsRestResult<TAppRoute extends AppRoute> = {
+export interface TsRestResult<TAppRoute extends AppRoute> {
   contractEndpoint: TAppRoute;
-};
+}
 
 export type UseQueryResult<
   TAppRoute extends AppRoute,
@@ -39,12 +39,12 @@ export type UseSuspenseQueryResult<
 
 export type UseQueriesResult<
   TAppRoute extends AppRoute,
-  TQueries extends Array<any>,
+  TQueries extends any[],
 > = QueriesResults<TAppRoute, TQueries>;
 
 export type UseSuspenseQueriesResult<
   TAppRoute extends AppRoute,
-  TQueries extends Array<any>,
+  TQueries extends any[],
 > = SuspenseQueriesResults<TAppRoute, TQueries>;
 
 export type UseInfiniteQueryResult<

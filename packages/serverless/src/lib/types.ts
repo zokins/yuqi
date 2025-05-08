@@ -1,18 +1,20 @@
-import { CorsOptions, RequestHandler } from "itty-router";
+import type { CorsOptions, RequestHandler } from "itty-router";
 import { z } from "zod";
 
-import {
+import type {
   AppRoute,
   AppRouter,
   ServerInferRequest,
-  ServerInferResponses,
+  ServerInferResponses} from "@yuqijs/core";
+import {
   ZodErrorSchema,
 } from "@yuqijs/core";
 
 import { TsRestHttpError } from "./http-error";
-import { TsRestRequest } from "./request";
-import { TsRestResponse } from "./response";
-import { CompleteRouter, RouterBuilder } from "./router-builder";
+import type { TsRestRequest } from "./request";
+import type { TsRestResponse } from "./response";
+import type { CompleteRouter} from "./router-builder";
+import { RouterBuilder } from "./router-builder";
 
 export class RequestValidationError extends TsRestHttpError {
   constructor(
@@ -135,10 +137,10 @@ export type RouterImplementationOrFluentRouter<
   | RouterImplementation<T, TPlatformArgs, TRequestExtension>
   | CompleteRouter<T, TPlatformArgs, TRequestExtension>;
 
-export type ServerlessHandlerOptions<
+export interface ServerlessHandlerOptions<
   TPlatformArgs = {},
   TRequestExtension = {},
-> = {
+> {
   jsonQuery?: boolean;
   responseValidation?: boolean;
   errorHandler?: (
@@ -151,14 +153,12 @@ export type ServerlessHandlerOptions<
     TsRestRequest & TRequestExtension,
     [TPlatformArgs]
   >[];
-  responseHandlers?: Array<
-    (
+  responseHandlers?: ((
       response: TsRestResponse,
       request: TsRestRequest & TRequestExtension,
       args: TPlatformArgs,
-    ) => TsRestResponse | Promise<TsRestResponse> | void | Promise<void>
-  >;
-};
+    ) => TsRestResponse | Promise<TsRestResponse> | void | Promise<void>)[];
+}
 
 export const createTsr = <TPlatformContext = {}>() => ({
   router: <

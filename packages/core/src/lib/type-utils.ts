@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { ContractNoBodyType, ContractNullType, ContractPlainType } from "./dsl";
+import type { ContractNoBodyType, ContractNullType, ContractPlainType } from "./dsl";
 
 type GetIndexedField<T, K> = K extends keyof T
   ? T[K]
@@ -140,9 +140,9 @@ export type DefinedOrEmpty<
 
 declare const tag: unique symbol;
 
-declare type Tagged<Token> = {
+declare interface Tagged<Token> {
   readonly [tag]: Token;
-};
+}
 
 export type Opaque<Type, Token = unknown> = Type & Tagged<Token>;
 

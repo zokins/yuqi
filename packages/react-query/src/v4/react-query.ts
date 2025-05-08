@@ -1,4 +1,4 @@
-import {
+import type {
   FetchQueryOptions,
   QueryClient,
   QueryFilters,
@@ -7,7 +7,8 @@ import {
   QueryKey,
   UseInfiniteQueryOptions as TanStackUseInfiniteQueryOptions,
   UseMutationOptions as TanStackUseMutationOptions,
-  UseQueryOptions as TanStackUseQueryOptions,
+  UseQueryOptions as TanStackUseQueryOptions} from "@tanstack/react-query";
+import {
   useInfiniteQuery,
   useMutation,
   useQueries,
@@ -16,26 +17,27 @@ import {
 } from "@tanstack/react-query";
 import { useMemo } from "react";
 
-import {
+import type {
   AppRoute,
   AppRouteMutation,
   AppRouter,
   ClientInferRequest,
+  Without,
+  ZodInferOrType} from "@yuqijs/core";
+import {
   evaluateFetchApiArgs,
   fetchApi,
   getRouteQuery,
   isAppRoute,
-  isErrorResponse,
-  Without,
-  ZodInferOrType,
+  isErrorResponse
 } from "@yuqijs/core";
 
-import {
+import type {
   AppRouteFunctions,
   AppRouteFunctionsWithQueryClient,
   DataReturnQueries,
 } from "./inner-types";
-import { ReactQueryClientArgs } from "./types";
+import type { ReactQueryClientArgs } from "./types";
 
 const queryFn = <
   TAppRoute extends AppRoute,

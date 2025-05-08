@@ -1,20 +1,21 @@
-import {
+import type {
   QueryFunction,
   QueryFunctionContext,
   QueryKey,
 } from "@tanstack/vue-query";
 
-import {
+import type {
   AppRoute,
   AppRouteMutation,
   ClientArgs,
   ClientInferRequest,
   ClientInferResponses,
   ErrorHttpStatusCode,
+  SuccessfulHttpStatusCode} from "@yuqijs/core";
+import {
   evaluateFetchApiArgs,
   fetchApi,
-  isErrorResponse,
-  SuccessfulHttpStatusCode,
+  isErrorResponse
 } from "@yuqijs/core";
 
 // Data response if it's a 2XX

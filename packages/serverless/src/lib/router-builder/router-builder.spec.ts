@@ -4,7 +4,7 @@ import { z } from "zod";
 import { initContract } from "@yuqijs/core";
 
 import { tsr } from "../handlers/yuqijs-fetch";
-import { CompleteRouter, RouterBuilder } from "./index";
+import type { CompleteRouter, RouterBuilder } from "./index";
 import { ContractSubContractPaths } from "./types";
 
 const c = initContract();
@@ -62,10 +62,10 @@ const contract = c.router({
   },
 });
 
-type GlobalExtension = {
+interface GlobalExtension {
   globalContext: { health: "ok" };
   user: { id: string };
-};
+}
 
 const routerBuilderBase = tsr
   .routerBuilder(contract)

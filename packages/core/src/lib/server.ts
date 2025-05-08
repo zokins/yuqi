@@ -1,12 +1,13 @@
-import {
+import type {
   AppRoute,
   ContractAnyType,
-  ContractNoBody,
   ContractNoBodyType,
-  ContractOtherResponse,
+  ContractOtherResponse} from "./dsl";
+import {
+  ContractNoBody
 } from "./dsl";
 import { ResponseValidationError } from "./response-validation-error";
-import { HTTPStatusCode } from "./status-codes";
+import type { HTTPStatusCode } from "./status-codes";
 import { checkZodSchema } from "./zod-utils";
 
 export const isAppRouteResponse = (

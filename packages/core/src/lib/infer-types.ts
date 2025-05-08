@@ -1,10 +1,10 @@
-import {
+import type {
   ApiFetcher,
   ClientArgs,
   FetchOptions,
   OverrideableClientArgs,
 } from "./client";
-import {
+import type {
   AppRoute,
   AppRouteMutation,
   AppRouter,
@@ -13,9 +13,9 @@ import {
   ContractNoBodyType,
   ContractOtherResponse,
 } from "./dsl";
-import { ParamsFromUrl } from "./paths";
-import { HTTPStatusCode } from "./status-codes";
-import {
+import type { ParamsFromUrl } from "./paths";
+import type { HTTPStatusCode } from "./status-codes";
+import type {
   And,
   Extends,
   LowercaseKeys,
@@ -230,9 +230,7 @@ type ClientInferRequestBase<
       headers: THeaders;
       extraHeaders?: [THeaders] extends [never]
         ? Record<string, string | undefined>
-        : {
-            [K in NonNullable<keyof THeaders>]?: never;
-          } & Record<string, string | undefined>;
+        : Partial<Record<NonNullable<keyof THeaders>, never>> & Record<string, string | undefined>;
       fetchOptions?: FetchOptions;
       overrideClientOptions?: Partial<OverrideableClientArgs>;
 

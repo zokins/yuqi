@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { z } from "zod";
 
-import { Equal, Expect } from "./test-helpers";
-import {
+import type { Equal, Expect } from "./test-helpers";
+import type {
   AreAllPropertiesOptional,
   Without,
   ZodInferOrType,

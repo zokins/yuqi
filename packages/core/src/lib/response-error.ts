@@ -1,7 +1,7 @@
-import { AppRoute, AppRouter, AppRouteResponse } from "./dsl";
-import { ResolveResponseType, ServerInferResponses } from "./infer-types";
-import { HTTPStatusCode } from "./status-codes";
-import { CommonAndEqual, ZodInputOrType } from "./type-utils";
+import type { AppRoute, AppRouter, AppRouteResponse } from "./dsl";
+import type { ResolveResponseType, ServerInferResponses } from "./infer-types";
+import type { HTTPStatusCode } from "./status-codes";
+import type { CommonAndEqual, ZodInputOrType } from "./type-utils";
 
 export class TsRestResponseError<T extends AppRoute | AppRouter> extends Error {
   public statusCode: HTTPStatusCode;
@@ -27,7 +27,7 @@ export class TsRestResponseError<T extends AppRoute | AppRouter> extends Error {
       "message" in response.body &&
       typeof response.body.message === "string"
     ) {
-      this.message = response.body["message"];
+      this.message = response.body.message;
     } else {
       this.message = "Error";
     }

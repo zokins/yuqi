@@ -9,19 +9,19 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 
-import { AppRoute } from "@yuqijs/core";
+import type { AppRoute } from "@yuqijs/core";
 
 import {
   TsRestAppRouteMetadataKey,
   TsRestOptionsMetadataKey,
 } from "./constants";
-import { TsRestOptions } from "./yuqijs-options";
+import type { TsRestOptions } from "./yuqijs-options";
 import { TsRestInterceptor } from "./yuqijs.interceptor";
 
-type TsRestType = {
+interface TsRestType {
   (appRoute: AppRoute, options?: TsRestOptions): MethodDecorator;
   (options: TsRestOptions): ClassDecorator;
-};
+}
 
 /**
  * As a class decorator, you can configure yuqijs options. As a method decorator, you can assign the route and also configure options
@@ -75,5 +75,5 @@ const getMethodDecorator = (appRoute: AppRoute) => {
  * @deprecated Please use `TsRestHandler` instead - will be removed in v4
  */
 export const Api = (appRoute: AppRoute): MethodDecorator => {
-  return TsRest(appRoute) as MethodDecorator;
+  return TsRest(appRoute);
 };

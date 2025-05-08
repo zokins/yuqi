@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-import {
+import type {
   FetchOptions,
-  initContract,
-  OverrideableClientArgs,
+  OverrideableClientArgs} from "@yuqijs/core";
+import {
+  initContract
 } from "@yuqijs/core";
 
 import type { Equal, Expect } from "./test-helpers";
@@ -34,7 +35,7 @@ describe("next-client", () => {
     });
     type UserClient = typeof usersClient;
     type Test = Parameters<UserClient["getUser"]>[0];
-    type ExpectedClientArgs = {
+    interface ExpectedClientArgs {
       params: {
         id: string;
       };
@@ -43,7 +44,7 @@ describe("next-client", () => {
       overrideClientOptions?: Partial<OverrideableClientArgs>;
       cache?: FetchOptions["cache"];
       next?: FetchOptions["next"];
-    };
+    }
     type NextClientTypeTest = Expect<Equal<Test, ExpectedClientArgs>>;
   });
 

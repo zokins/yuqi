@@ -9,13 +9,13 @@ import type {
 } from "aws-lambda";
 import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
 import merge from "ts-deepmerge";
-import { PartialDeep } from "type-fest";
+import type { PartialDeep } from "type-fest";
 import { z } from "zod";
 
 import { initContract } from "@yuqijs/core";
 
 import { TsRestResponseError } from "../http-error";
-import { ApiGatewayEvent } from "../mappers/aws/api-gateway";
+import type { ApiGatewayEvent } from "../mappers/aws/api-gateway";
 import * as apiGatewayEventV1 from "../mappers/aws/test-data/api-gateway-event-v1.json";
 import * as apiGatewayEventV2 from "../mappers/aws/test-data/api-gateway-event-v2.json";
 import { TsRestResponse } from "../response";
@@ -123,12 +123,12 @@ const createV2LambdaRequest = (
 };
 
 describe("tsRestLambda", () => {
-  type GlobalRequestExtension = {
+  interface GlobalRequestExtension {
     context: {
       rawEvent: ApiGatewayEvent;
       lambdaContext: Context;
     };
-  };
+  }
 
   const lambdaHandler = createLambdaHandler(
     contract,
@@ -219,7 +219,7 @@ describe("tsRestLambda", () => {
         ],
         handler: async (_, { request, responseHeaders }) => {
           const boundary = getBoundary(
-            request.headers.get("content-type") as string,
+            request.headers.get("content-type")!,
           );
 
           const bodyBuffer = await request.arrayBuffer();

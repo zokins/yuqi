@@ -1,12 +1,13 @@
-import {
+import type {
   QueryFunctionContext,
   QueryKey,
-  useQuery,
   UseQueryOptions,
-  UseQueryReturnType,
+  UseQueryReturnType} from "@tanstack/vue-query";
+import {
+  useQuery
 } from "@tanstack/vue-query";
 
-import {
+import type {
   AppRoute,
   AppRouteMutation,
   AreAllPropertiesOptional,
@@ -15,7 +16,8 @@ import {
   PartialClientInferRequest,
 } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse, queryFn } from "./common";
+import type { DataResponse, ErrorResponse} from "./common";
+import { queryFn } from "./common";
 
 // Used on X.useQuery
 export type DataReturnQuery<

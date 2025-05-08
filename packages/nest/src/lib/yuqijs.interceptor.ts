@@ -1,18 +1,21 @@
 import type { Response } from "express-serve-static-core";
-import {
+import type {
   CallHandler,
   ExecutionContext,
+  NestInterceptor} from "@nestjs/common";
+import {
   Inject,
   Injectable,
-  NestInterceptor,
   Optional,
 } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { FastifyReply } from "fastify";
-import { catchError, map, Observable, of, throwError } from "rxjs";
+import type { Reflector } from "@nestjs/core";
+import type { FastifyReply } from "fastify";
+import type { Observable} from "rxjs";
+import { catchError, map, of, throwError } from "rxjs";
 
+import type {
+  AppRoute} from "@yuqijs/core";
 import {
-  AppRoute,
   isAppRouteOtherResponse,
   isAppRouteResponse,
   TsRestResponseError,
@@ -20,7 +23,8 @@ import {
 } from "@yuqijs/core";
 
 import { TsRestAppRouteMetadataKey } from "./constants";
-import { evaluateTsRestOptions, MaybeTsRestOptions } from "./yuqijs-options";
+import type { MaybeTsRestOptions } from "./yuqijs-options";
+import { evaluateTsRestOptions } from "./yuqijs-options";
 import { TS_REST_MODULE_OPTIONS_TOKEN } from "./yuqijs.module";
 
 @Injectable()

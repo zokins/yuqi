@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { FetchOptions, OverrideableClientArgs } from "./client";
+import type { FetchOptions, OverrideableClientArgs } from "./client";
 import { initContract } from "./dsl";
-import {
+import type {
   ClientInferRequest,
   ClientInferResponseBody,
   ClientInferResponses,
@@ -12,12 +12,12 @@ import {
   ServerInferResponseBody,
   ServerInferResponses,
 } from "./infer-types";
-import {
+import type {
   ErrorHttpStatusCode,
   HTTPStatusCode,
   SuccessfulHttpStatusCode,
 } from "./status-codes";
-import { Equal, Expect } from "./test-helpers";
+import type { Equal, Expect } from "./test-helpers";
 
 const c = initContract();
 

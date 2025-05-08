@@ -1,14 +1,14 @@
-import { ExecutionContext } from "@nestjs/common";
+import type { ExecutionContext } from "@nestjs/common";
 
 import { TsRestOptionsMetadataKey } from "./constants";
 
-export type TsRestOptions = {
+export interface TsRestOptions {
   jsonQuery?: boolean;
   validateResponses?: boolean;
   validateRequestHeaders?: boolean;
   validateRequestQuery?: boolean;
   validateRequestBody?: boolean;
-};
+}
 
 export type EvaluatedTsRestOptions = Required<TsRestOptions>;
 export type MaybeTsRestOptions = TsRestOptions | undefined | null;

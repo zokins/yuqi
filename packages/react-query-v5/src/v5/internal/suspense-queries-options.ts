@@ -1,9 +1,9 @@
-import { UseSuspenseQueryResult } from "@tanstack/react-query";
+import type { UseSuspenseQueryResult } from "@tanstack/react-query";
 
-import { AppRoute, ClientArgs } from "@yuqijs/core";
+import type { AppRoute, ClientArgs } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse } from "../types/common";
-import { UseSuspenseQueryOptions } from "../types/hooks-options";
+import type { DataResponse, ErrorResponse } from "../types/common";
+import type { UseSuspenseQueryOptions } from "../types/hooks-options";
 
 type GetUseSuspenseQueryOptions<
   TAppRoute extends AppRoute,
@@ -29,11 +29,11 @@ type MAXIMUM_DEPTH = 20;
 export type SuspenseQueriesOptions<
   TAppRoute extends AppRoute,
   TClientArgs extends ClientArgs,
-  T extends Array<any>,
-  TResults extends Array<any> = [],
-  TDepth extends ReadonlyArray<number> = [],
+  T extends any[],
+  TResults extends any[] = [],
+  TDepth extends readonly number[] = [],
 > = TDepth["length"] extends MAXIMUM_DEPTH
-  ? Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs>>
+  ? UseSuspenseQueryOptions<TAppRoute, TClientArgs>[]
   : T extends []
     ? []
     : T extends [infer Head]
@@ -49,21 +49,19 @@ export type SuspenseQueriesOptions<
             ],
             [...TDepth, 1]
           >
-        : Array<unknown> extends T
+        : unknown[] extends T
           ? T
-          : T extends Array<
-                UseSuspenseQueryOptions<TAppRoute, TClientArgs, infer TData>
-              >
-            ? Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs, TData>>
-            : Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs>>;
+          : T extends UseSuspenseQueryOptions<TAppRoute, TClientArgs, infer TData>[]
+            ? UseSuspenseQueryOptions<TAppRoute, TClientArgs, TData>[]
+            : UseSuspenseQueryOptions<TAppRoute, TClientArgs>[];
 
 export type SuspenseQueriesResults<
   TAppRoute extends AppRoute,
-  T extends Array<any>,
-  TResults extends Array<any> = [],
-  TDepth extends ReadonlyArray<number> = [],
+  T extends any[],
+  TResults extends any[] = [],
+  TDepth extends readonly number[] = [],
 > = TDepth["length"] extends MAXIMUM_DEPTH
-  ? Array<UseSuspenseQueryResult>
+  ? UseSuspenseQueryResult[]
   : T extends []
     ? []
     : T extends [infer Head]
@@ -75,13 +73,9 @@ export type SuspenseQueriesResults<
             [...TResults, GetUseSuspenseQueryResult<TAppRoute, Head>],
             [...TDepth, 1]
           >
-        : T extends Array<
-              UseSuspenseQueryOptions<TAppRoute, ClientArgs, infer TData>
-            >
-          ? Array<
-              UseSuspenseQueryResult<
+        : T extends UseSuspenseQueryOptions<TAppRoute, ClientArgs, infer TData>[]
+          ? UseSuspenseQueryResult<
                 unknown extends TData ? DataResponse<TAppRoute> : TData,
                 ErrorResponse<TAppRoute>
-              >
-            >
-          : Array<UseSuspenseQueryResult>;
+              >[]
+          : UseSuspenseQueryResult[];

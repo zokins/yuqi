@@ -1,13 +1,9 @@
-import { IRequest } from "itty-router";
+import type { IRequest } from "itty-router";
 
 export class TsRestRequest extends Request implements IRequest {
   public route: string;
-  public params: {
-    [key: string]: string;
-  };
-  public query: {
-    [key: string]: string | string[] | undefined;
-  };
+  public params: Record<string, string>;
+  public query: Record<string, string | string[] | undefined>;
   public content?: any;
 
   constructor(urlOrRequest: string | Request, init?: RequestInit) {

@@ -1,13 +1,14 @@
-import { AppRoute, AppRouteMutation, AppRouter, isAppRoute } from "./dsl";
-import {
+import type { AppRoute, AppRouteMutation, AppRouter } from "./dsl";
+import type {
   ClientInferRequest,
   ClientInferResponses,
   PartialClientInferRequest,
 } from "./infer-types";
+import type { Equal, Expect } from "./test-helpers";
+import type { AreAllPropertiesOptional, Prettify } from "./type-utils";
+import { isAppRoute } from "./dsl";
 import { insertParamsIntoPath } from "./paths";
 import { convertQueryParamsToUrlString } from "./query";
-import { Equal, Expect } from "./test-helpers";
-import { AreAllPropertiesOptional, Prettify } from "./type-utils";
 import { UnknownStatusError } from "./unknown-status-error";
 import { isZodType } from "./zod-utils";
 
@@ -68,38 +69,37 @@ export interface ClientArgs extends OverrideableClientArgs {
   api?: ApiFetcher;
 }
 
-export type ApiFetcherArgs<TFetchOptions extends FetchOptions = FetchOptions> =
-  {
-    route: AppRoute;
-    path: string;
-    method: string;
-    headers: Record<string, string>;
-    body: FormData | URLSearchParams | string | null | undefined;
-    rawBody: unknown;
-    rawQuery: unknown;
-    contentType: AppRouteMutation["contentType"];
-    fetchOptions?: FetchOptions;
-    validateResponse?: boolean;
+export interface ApiFetcherArgs<
+  TFetchOptions extends FetchOptions = FetchOptions,
+> {
+  route: AppRoute;
+  path: string;
+  method: string;
+  headers: Record<string, string>;
+  body: FormData | URLSearchParams | string | null | undefined;
+  rawBody: unknown;
+  rawQuery: unknown;
+  contentType: AppRouteMutation["contentType"];
+  fetchOptions?: FetchOptions;
+  validateResponse?: boolean;
 
-    /**
-     * @deprecated Use `fetchOptions.credentials` instead
-     */
-    credentials?: TFetchOptions["credentials"];
-    /**
-     * @deprecated Use `fetchOptions.signal` instead
-     */
-    signal?: TFetchOptions["signal"];
-    /**
-     * @deprecated Use `fetchOptions.cache` instead
-     */
-    cache?: "cache" extends keyof TFetchOptions
-      ? TFetchOptions["cache"]
-      : never;
-    /**
-     * @deprecated Use `fetchOptions.next` instead
-     */
-    next?: "next" extends keyof TFetchOptions ? TFetchOptions["next"] : never;
-  };
+  /**
+   * @deprecated Use `fetchOptions.credentials` instead
+   */
+  credentials?: TFetchOptions["credentials"];
+  /**
+   * @deprecated Use `fetchOptions.signal` instead
+   */
+  signal?: TFetchOptions["signal"];
+  /**
+   * @deprecated Use `fetchOptions.cache` instead
+   */
+  cache?: "cache" extends keyof TFetchOptions ? TFetchOptions["cache"] : never;
+  /**
+   * @deprecated Use `fetchOptions.next` instead
+   */
+  next?: "next" extends keyof TFetchOptions ? TFetchOptions["next"] : never;
+}
 
 export type ApiFetcher = (args: ApiFetcherArgs) => Promise<{
   status: number;
@@ -198,7 +198,7 @@ const normalizeHeaders = (headers: Record<string, string | undefined>) => {
   );
 };
 
-export type FetchApiOptions = {
+export interface FetchApiOptions {
   path: string;
   clientArgs: ClientArgs;
   route: AppRoute;
@@ -207,7 +207,7 @@ export type FetchApiOptions = {
   extraInputArgs: Record<string, unknown>;
   headers: Record<string, string | undefined>;
   fetchOptions?: FetchOptions;
-};
+}
 
 export const fetchApi = (options: FetchApiOptions) => {
   const {

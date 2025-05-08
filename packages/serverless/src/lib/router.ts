@@ -1,10 +1,11 @@
 import { cors, Router, withParams } from "itty-router";
 
-import {
+import type {
   AppRoute,
   AppRouter,
+  HTTPStatusCode} from "@yuqijs/core";
+import {
   checkZodSchema,
-  HTTPStatusCode,
   isAppRoute,
   isAppRouteNoBody,
   isAppRouteOtherResponse,
@@ -15,18 +16,19 @@ import {
 } from "@yuqijs/core";
 
 import { TsRestHttpError } from "./http-error";
-import { TsRestRequest } from "./request";
+import type { TsRestRequest } from "./request";
 import { TsRestResponse } from "./response";
 import { RouterBuilder } from "./router-builder";
-import {
+import type {
   AppRouteImplementationOrOptions,
+  RouterImplementation,
+  RouterImplementationOrFluentRouter,
+  ServerlessHandlerOptions} from "./types";
+import {
   isAppRouteImplementation,
   isRouterImplementation,
   RequestValidationError,
-  ResponseValidationError,
-  RouterImplementation,
-  RouterImplementationOrFluentRouter,
-  ServerlessHandlerOptions,
+  ResponseValidationError
 } from "./types";
 import { blobToArrayBuffer } from "./utils";
 
@@ -185,9 +187,9 @@ const tsRestMiddleware = <TPlatformArgs, TRequestExtension>(
   const evaluateContent = async (request: TsRestRequest) => {
     if (request.method !== "GET" && request.method !== "HEAD") {
       if (request.headers.get("content-type")?.includes("json")) {
-        request["content"] = await request.json();
+        request.content = await request.json();
       } else if (request.headers.get("content-type")?.startsWith("text/")) {
-        request["content"] = await request.text();
+        request.content = await request.text();
       }
     }
   };

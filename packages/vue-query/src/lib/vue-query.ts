@@ -1,26 +1,30 @@
-import {
+import type {
   AppRoute,
   AppRouteFunction,
   AppRouteMutation,
   AppRouteQuery,
   AppRouter,
   ClientArgs,
+  Without} from "@yuqijs/core";
+import {
   getRouteQuery,
-  isAppRoute,
-  Without,
+  isAppRoute
 } from "@yuqijs/core";
 
+import type {
+  DataReturnInfiniteQuery} from "./use-infinite-query";
 import {
-  DataReturnInfiniteQuery,
   getRouteUseInfiniteQuery,
 } from "./use-infinite-query";
-import { DataReturnMutation, getRouteUseMutation } from "./use-mutation";
-import { DataReturnQuery, getRouteUseQuery } from "./use-query";
+import type { DataReturnMutation} from "./use-mutation";
+import { getRouteUseMutation } from "./use-mutation";
+import type { DataReturnQuery} from "./use-query";
+import { getRouteUseQuery } from "./use-query";
 
-type UseQueryArgs<
+interface UseQueryArgs<
   TAppRoute extends AppRoute,
   TClientArgs extends ClientArgs,
-> = {
+> {
   useQuery: TAppRoute extends AppRouteQuery
     ? DataReturnQuery<TAppRoute, TClientArgs>
     : never;
@@ -36,7 +40,7 @@ type UseQueryArgs<
   mutation: TAppRoute extends AppRouteMutation
     ? AppRouteFunction<TAppRoute, TClientArgs>
     : never;
-};
+}
 
 type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute

@@ -1,11 +1,11 @@
-import {
+import type {
   AppRoute,
   AppRouter,
   ServerInferResponses,
   Without,
 } from "@yuqijs/core";
 
-import { TsRestRequestShape } from "./yuqijs-request.decorator";
+import type { TsRestRequestShape } from "./yuqijs-request.decorator";
 
 type AppRouterMethodShape<T extends AppRoute> = (
   ...args: any[]

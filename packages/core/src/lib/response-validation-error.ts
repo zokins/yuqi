@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { AppRoute } from "./dsl";
+import type { AppRoute } from "./dsl";
 
 export class ResponseValidationError extends Error {
   constructor(

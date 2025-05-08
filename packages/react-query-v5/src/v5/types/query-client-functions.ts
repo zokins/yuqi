@@ -1,4 +1,4 @@
-import {
+import type {
   EnsureQueryDataOptions,
   FetchInfiniteQueryOptions,
   FetchQueryOptions,
@@ -9,10 +9,10 @@ import {
   SetDataOptions,
 } from "@tanstack/react-query";
 
-import { AppRoute, ClientArgs } from "@yuqijs/core";
+import type { AppRoute, ClientArgs } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse } from "./common";
-import { TsRestQueryOptions } from "./hooks-options";
+import type { DataResponse, ErrorResponse } from "./common";
+import type { TsRestQueryOptions } from "./hooks-options";
 
 type Updater<TInput, TOutput> = TOutput | ((input: TInput) => TOutput);
 
@@ -31,7 +31,7 @@ export interface TsRestQueryClientFunctions<
 
   getQueriesData(
     filters: QueryFilters,
-  ): Array<[QueryKey, TQueryFnData | undefined]>;
+  ): [QueryKey, TQueryFnData | undefined][];
 
   setQueryData(
     queryKey: QueryKey,
@@ -43,7 +43,7 @@ export interface TsRestQueryClientFunctions<
     filters: QueryFilters,
     updater: Updater<TQueryFnData | undefined, TQueryFnData | undefined>,
     options?: SetDataOptions,
-  ): Array<[QueryKey, TQueryFnData | undefined]>;
+  ): [QueryKey, TQueryFnData | undefined][];
 
   getQueryState(
     queryKey: QueryKey,

@@ -1,7 +1,8 @@
-import { HttpRequest, HttpResponse } from "@azure/functions";
+import type { HttpRequest} from "@azure/functions";
+import { HttpResponse } from "@azure/functions";
 
 import { TsRestRequest } from "../../request";
-import { TsRestResponse } from "../../response";
+import type { TsRestResponse } from "../../response";
 import { arrayBufferToBase64, arrayBufferToString } from "../../utils";
 
 export async function requestFromHttpRequest(httpRequest: HttpRequest) {

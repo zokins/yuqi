@@ -1,18 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
+import type { z } from "zod";
 
-import {
+import type {
   AppRoute,
   AppRouteQuery,
   AppRouter,
-  checkZodSchema,
   HTTPStatusCode,
+  ServerInferRequest,
+  ServerInferResponses} from "@yuqijs/core";
+import {
+  checkZodSchema,
   isAppRoute,
   isAppRouteNoBody,
   isAppRouteOtherResponse,
   parseJsonQueryObject,
-  ServerInferRequest,
-  ServerInferResponses,
   TsRestResponseError,
   validateResponse,
   ZodErrorSchema,
@@ -51,12 +52,12 @@ export type RouterImplementation<T extends AppRouter> = {
 type AppRouteWithImplementation<T extends AppRouteQuery> = T &
   AppRouteImplementation<T>;
 
-type AppRouterWithImplementation = {
+interface AppRouterWithImplementation {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: AppRouterWithImplementation | AppRouteWithImplementation<any>;
-};
+}
 
-type CreateNextRouterOptions = {
+interface CreateNextRouterOptions {
   jsonQuery?: boolean;
   responseValidation?: boolean;
   throwRequestValidation?: boolean;
@@ -65,7 +66,7 @@ type CreateNextRouterOptions = {
     req: NextApiRequest,
     res: NextApiResponse,
   ) => void;
-};
+}
 
 /**
  * Combine all AppRoutes with their implementations into a single object
@@ -95,7 +96,7 @@ const mergeRouterAndImplementation = <T extends AppRouter>(
   }, {} as AppRouterWithImplementation);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export const isAppRouteWithImplementation = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: any,
@@ -215,7 +216,7 @@ export const createNextRouter = <T extends AppRouter>(
     const route = getRouteImplementation(
       combinedRouter,
       params,
-      req.method as string,
+      req.method!,
     );
     let pathParams;
     if (route) {
@@ -257,7 +258,7 @@ export function createSingleRouteHandler<T extends AppRoute>(
     const isValidRoute = isRouteCorrect(
       appRoute,
       urlChunks,
-      req.method as string,
+      req.method!,
     );
 
     return { pathParams, query, route: isValidRoute ? route : null };

@@ -7,7 +7,7 @@ import type {
 } from "@tanstack/vue-query";
 import { useInfiniteQuery } from "@tanstack/vue-query";
 
-import {
+import type {
   AppRoute,
   AppRouteMutation,
   ClientArgs,
@@ -15,7 +15,8 @@ import {
   PartialClientInferRequest,
 } from "@yuqijs/core";
 
-import { DataResponse, ErrorResponse, queryFn } from "./common";
+import type { DataResponse, ErrorResponse} from "./common";
+import { queryFn } from "./common";
 
 // Used on X.useInfiniteQuery
 export type DataReturnInfiniteQuery<

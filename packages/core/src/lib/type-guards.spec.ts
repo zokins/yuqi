@@ -1,10 +1,10 @@
 import { initContract } from "./dsl";
-import {
+import type {
   ErrorHttpStatusCode,
   HTTPStatusCode,
   SuccessfulHttpStatusCode,
 } from "./status-codes";
-import { Equal, Expect } from "./test-helpers";
+import type { Equal, Expect } from "./test-helpers";
 import {
   isErrorResponse,
   isResponse,
@@ -37,11 +37,11 @@ describe("Type Guards", () => {
     },
   });
 
-  type ResponseType = {
+  interface ResponseType {
     status: number;
     body: unknown;
     headers: Headers;
-  };
+  }
 
   const errorObject = new Error("Error");
 

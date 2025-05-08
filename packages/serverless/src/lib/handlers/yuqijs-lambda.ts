@@ -1,24 +1,26 @@
 import type { Context } from "aws-lambda";
 
-import { AppRouter } from "@yuqijs/core";
+import type { AppRouter } from "@yuqijs/core";
 
-import {
+import type {
   ApiGatewayEvent,
-  ApiGatewayResponse,
+  ApiGatewayResponse} from "../mappers/aws/api-gateway";
+import {
   requestFromEvent,
   responseToResult,
 } from "../mappers/aws/api-gateway";
 import { createServerlessRouter } from "../router";
-import {
-  createTsr,
+import type {
   RouterImplementationOrFluentRouter,
-  ServerlessHandlerOptions,
+  ServerlessHandlerOptions} from "../types";
+import {
+  createTsr
 } from "../types";
 
-type LambdaPlatformArgs = {
+interface LambdaPlatformArgs {
   rawEvent: ApiGatewayEvent;
   lambdaContext: Context;
-};
+}
 
 export const tsr = createTsr<LambdaPlatformArgs>();
 

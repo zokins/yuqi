@@ -1,19 +1,20 @@
-import {
-  createInfiniteQuery,
+import type {
   CreateInfiniteQueryOptions,
   CreateInfiniteQueryResult,
-  createMutation,
   CreateMutationOptions,
   CreateMutationResult,
-  createQuery,
   CreateQueryOptions,
   CreateQueryResult,
   QueryFunction,
   QueryFunctionContext,
-  QueryKey,
+  QueryKey} from "@tanstack/solid-query";
+import {
+  createInfiniteQuery,
+  createMutation,
+  createQuery
 } from "@tanstack/solid-query";
 
-import {
+import type {
   AppRoute,
   AppRouteFunction,
   AppRouteMutation,
@@ -23,15 +24,16 @@ import {
   ClientInferRequest,
   ClientInferResponses,
   ErrorHttpStatusCode,
+  PartialClientInferRequest,
+  SuccessfulHttpStatusCode,
+  Without,
+  ZodInferOrType} from "@yuqijs/core";
+import {
   evaluateFetchApiArgs,
   fetchApi,
   getRouteQuery,
   isAppRoute,
-  isErrorResponse,
-  PartialClientInferRequest,
-  SuccessfulHttpStatusCode,
-  Without,
-  ZodInferOrType,
+  isErrorResponse
 } from "@yuqijs/core";
 
 type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
@@ -42,10 +44,10 @@ type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
       : never;
 };
 
-type UseQueryArgs<
+interface UseQueryArgs<
   TAppRoute extends AppRoute,
   TClientArgs extends ClientArgs,
-> = {
+> {
   createQuery: TAppRoute extends AppRouteQuery
     ? DataReturnQuery<TAppRoute, TClientArgs>
     : never;
@@ -61,7 +63,7 @@ type UseQueryArgs<
   mutation: TAppRoute extends AppRouteMutation
     ? AppRouteFunction<TAppRoute, TClientArgs>
     : never;
-};
+}
 
 // Data response if it's a 2XX
 type DataResponse<TAppRoute extends AppRoute> = ClientInferResponses<

@@ -1,15 +1,15 @@
-import { RequestHandler } from "itty-router";
+import type { RequestHandler } from "itty-router";
 
-import { AppRoute, AppRouter } from "@yuqijs/core";
+import type { AppRoute, AppRouter } from "@yuqijs/core";
 
-import { TsRestRequest } from "../request";
-import { TsRestResponse } from "../response";
-import {
+import type { TsRestRequest } from "../request";
+import type { TsRestResponse } from "../response";
+import type {
   AppRouteImplementation,
   AppRouteImplementationOrOptions,
   RouterImplementation,
 } from "../types";
-import {
+import type {
   ChooseContractRoute,
   ChooseContractSubContract,
   ContractEndpointPaths,
@@ -25,20 +25,16 @@ export class RouterBuilder<
   TRemainingRoutes extends
     ContractEndpointPaths<TContract> = ContractEndpointPaths<TContract>,
 > {
-  protected _requestMiddleware: Array<
-    RequestHandler<
+  protected _requestMiddleware: RequestHandler<
       TsRestRequest & TRequestExtensionCumulative,
       [TPlatformContext]
-    >
-  >;
+    >[];
 
-  protected _responseHandlers: Array<
-    (
+  protected _responseHandlers: ((
       response: TsRestResponse,
       request: TsRestRequest & TRequestExtensionCumulative,
       args: TPlatformContext,
-    ) => TsRestResponse | Promise<TsRestResponse> | void | Promise<void>
-  >;
+    ) => TsRestResponse | Promise<TsRestResponse> | void | Promise<void>)[];
 
   protected _router: PartialRouter<
     TContract,
@@ -214,7 +210,7 @@ export class RouterBuilder<
       if (!routeParent[path]) {
         routeParent[path] = {};
       }
-      routeParent = routeParent[path] as any;
+      routeParent = routeParent[path];
     }
 
     routeParent[paths.shift()!] = route;
@@ -445,12 +441,10 @@ class RouteBuilder<
   TRequestExtensionCumulative,
   TEndpoint extends AppRoute,
 > {
-  private _middleware: Array<
-    RequestHandler<
+  private _middleware: RequestHandler<
       TsRestRequest & TRequestExtensionCumulative,
       [TPlatformContext]
-    >
-  > = [];
+    >[] = [];
 
   constructor() {}
 

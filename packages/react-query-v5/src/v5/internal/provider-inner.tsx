@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { useMemo } from "react";
 
-import { AppRouter, ClientArgs } from "@yuqijs/core";
+import type { AppRouter, ClientArgs } from "@yuqijs/core";
 
 import { initQueryClient } from "./create-hooks";
 import { TsrQueryClientContext } from "./use-tsr-query-client";

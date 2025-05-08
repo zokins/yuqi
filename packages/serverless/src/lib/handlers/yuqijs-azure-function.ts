@@ -4,23 +4,24 @@ import type {
   InvocationContext,
 } from "@azure/functions";
 
-import { AppRouter } from "@yuqijs/core";
+import type { AppRouter } from "@yuqijs/core";
 
 import {
   requestFromHttpRequest,
   responseToHttpResponse,
 } from "../mappers/azure/azure-function";
 import { createServerlessRouter } from "../router";
-import {
-  createTsr,
+import type {
   RouterImplementationOrFluentRouter,
-  ServerlessHandlerOptions,
+  ServerlessHandlerOptions} from "../types";
+import {
+  createTsr
 } from "../types";
 
-type AzureFunctionPlatformArgs = {
+interface AzureFunctionPlatformArgs {
   rawHttpRequest: HttpRequest;
   azureContext: InvocationContext;
-};
+}
 
 export const tsr = createTsr<AzureFunctionPlatformArgs>();
 

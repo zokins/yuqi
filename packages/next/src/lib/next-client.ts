@@ -1,13 +1,14 @@
-import {
+import type {
   AppRoute,
   AppRouter,
   AreAllPropertiesOptional,
   ClientArgs,
   ClientInferResponses,
-  getRouteQuery,
-  isAppRoute,
   PartialClientInferRequest,
-  Prettify,
+  Prettify} from "@yuqijs/core";
+import {
+  getRouteQuery,
+  isAppRoute
 } from "@yuqijs/core";
 
 /**

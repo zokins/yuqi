@@ -1,17 +1,18 @@
 import type { Request, Response } from "express-serve-static-core";
 import type { FastifyReply, FastifyRequest } from "fastify";
+import type {
+  CallHandler,
+  ExecutionContext,
+  HttpExceptionOptions,
+  NestInterceptor} from "@nestjs/common";
 import {
   BadRequestException,
-  CallHandler,
   Delete,
-  ExecutionContext,
   Get,
   HttpException,
-  HttpExceptionOptions,
   Inject,
   Injectable,
   InternalServerErrorException,
-  NestInterceptor,
   Optional,
   Patch,
   Post,
@@ -21,17 +22,19 @@ import {
 } from "@nestjs/common";
 import { PATH_METADATA } from "@nestjs/common/constants";
 import { Reflector } from "@nestjs/core";
-import { mergeMap, Observable } from "rxjs";
+import type { Observable } from "rxjs";
+import { mergeMap } from "rxjs";
 import { z } from "zod";
 
-import {
+import type {
   AppRoute,
   AppRouter,
+  ServerInferResponses} from "@yuqijs/core";
+import {
   checkZodSchema,
   isAppRoute,
   isAppRouteOtherResponse,
   parseJsonQueryObject,
-  ServerInferResponses,
   TsRestResponseError,
   ZodErrorSchema,
 } from "@yuqijs/core";
@@ -40,15 +43,16 @@ import {
   TsRestAppRouteMetadataKey,
   TsRestOptionsMetadataKey,
 } from "./constants";
-import {
-  evaluateTsRestOptions,
+import type {
   MaybeTsRestOptions,
-  TsRestOptions,
+  TsRestOptions} from "./yuqijs-options";
+import {
+  evaluateTsRestOptions
 } from "./yuqijs-options";
-import { TsRestRequestShape } from "./yuqijs-request.decorator";
+import type { TsRestRequestShape } from "./yuqijs-request.decorator";
 import { TS_REST_MODULE_OPTIONS_TOKEN } from "./yuqijs.module";
 
-type TsRestAppRouteMetadata = {
+interface TsRestAppRouteMetadata {
   appRoute: AppRoute;
   /**
    * if we're in a multi handler, this is the key of the route e.g. `getHello`
@@ -57,7 +61,7 @@ type TsRestAppRouteMetadata = {
    * Otherwise, it's null, i.e. single handler
    */
   routeKey: string | null;
-};
+}
 
 export class RequestValidationError extends BadRequestException {
   constructor(
