@@ -7,7 +7,18 @@
     "directory": "packages/express"
   },
   "license": "MIT",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
+    "build": "tsup",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -23,15 +34,19 @@
       "optional": true
     }
   },
+  "dependencies": {
+    "@yuqijs/core": "workspace:*"
+  },
   "devDependencies": {
-    "@types/express-serve-static-core": "^5.0.6",
-    "@yuqijs/core": "workspace:*",
+    "@types/express": "4.17.14",
+    "@types/express-serve-static-core": "^4.17.33",
     "@yuqijs/eslint-config": "workspace:*",
     "@yuqijs/prettier-config": "workspace:*",
     "@yuqijs/tsconfig": "workspace:*",
     "@yuqijs/vitest-config": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
+    "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

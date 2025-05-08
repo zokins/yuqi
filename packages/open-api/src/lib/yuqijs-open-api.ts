@@ -1,5 +1,5 @@
 import { generateSchema } from "@anatine/zod-openapi";
-import type {
+import {
   ExamplesObject,
   InfoObject,
   MediaTypeObject,
@@ -9,24 +9,23 @@ import type {
   ReferenceObject,
   SchemaObject,
 } from "openapi3-ts";
-import type { z } from "zod";
+import { z } from "zod";
 
-import type {
-  AppRoute,
-  AppRouter} from "@yuqijs/core";
 import {
+  AppRoute,
+  AppRouter,
   extractZodObjectShape,
   isAppRoute,
   isZodObject,
   isZodType,
 } from "@yuqijs/core";
 
-interface RouterPath {
+type RouterPath = {
   id: string;
   path: string;
   route: AppRoute;
   paths: string[];
-}
+};
 
 const getPathsFromRouter = (
   router: AppRouter,
@@ -192,7 +191,7 @@ const convertSchemaObjectToMediaTypeObject = (
 
 const extractReferenceSchemas = (
   schema: SchemaObject,
-  referenceSchemas: Record<string, SchemaObject>,
+  referenceSchemas: { [id: string]: SchemaObject },
 ): SchemaObject => {
   if (schema.allOf) {
     schema.allOf = schema.allOf?.map((subSchema) =>
@@ -221,7 +220,9 @@ const extractReferenceSchemas = (
   }
 
   if (schema.properties) {
-    schema.properties = Object.entries(schema.properties).reduce<Record<string, SchemaObject | ReferenceObject>>((prev, [propertyName, schema]) => {
+    schema.properties = Object.entries(schema.properties).reduce<{
+      [p: string]: SchemaObject | ReferenceObject;
+    }>((prev, [propertyName, schema]) => {
       prev[propertyName] = extractReferenceSchemas(schema, referenceSchemas);
       return prev;
     }, {});
@@ -296,7 +297,7 @@ export const generateOpenApi = (
 
   const operationIds = new Map<string, string[]>();
 
-  const referenceSchemas: Record<string, SchemaObject> = {};
+  const referenceSchemas: { [id: string]: SchemaObject } = {};
 
   const pathObject = paths.reduce((acc, path) => {
     if (options.setOperationId === true) {
@@ -405,11 +406,11 @@ export const generateOpenApi = (
   }, {} as PathsObject);
 
   if (Object.keys(referenceSchemas).length) {
-    apiDoc.components = {
+    apiDoc["components"] = {
       schemas: {
         ...referenceSchemas,
       },
-      ...apiDoc.components,
+      ...apiDoc["components"],
     };
   }
 

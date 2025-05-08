@@ -1,19 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { z } from "zod";
+import { z } from "zod";
 
-import type {
+import {
   AppRoute,
   AppRouteQuery,
   AppRouter,
-  HTTPStatusCode,
-  ServerInferRequest,
-  ServerInferResponses} from "@yuqijs/core";
-import {
   checkZodSchema,
+  HTTPStatusCode,
   isAppRoute,
   isAppRouteNoBody,
   isAppRouteOtherResponse,
   parseJsonQueryObject,
+  ServerInferRequest,
+  ServerInferResponses,
   TsRestResponseError,
   validateResponse,
   ZodErrorSchema,
@@ -52,12 +51,12 @@ export type RouterImplementation<T extends AppRouter> = {
 type AppRouteWithImplementation<T extends AppRouteQuery> = T &
   AppRouteImplementation<T>;
 
-interface AppRouterWithImplementation {
+type AppRouterWithImplementation = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: AppRouterWithImplementation | AppRouteWithImplementation<any>;
-}
+};
 
-interface CreateNextRouterOptions {
+type CreateNextRouterOptions = {
   jsonQuery?: boolean;
   responseValidation?: boolean;
   throwRequestValidation?: boolean;
@@ -66,7 +65,7 @@ interface CreateNextRouterOptions {
     req: NextApiRequest,
     res: NextApiResponse,
   ) => void;
-}
+};
 
 /**
  * Combine all AppRoutes with their implementations into a single object
@@ -96,7 +95,7 @@ const mergeRouterAndImplementation = <T extends AppRouter>(
   }, {} as AppRouterWithImplementation);
 };
 
- 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isAppRouteWithImplementation = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: any,
@@ -188,7 +187,7 @@ export const createNextRoute = <T extends AppRouter | AppRoute>(
 /**
  * Turn a completed set of Next routes into a Next.js compatible route.
  *
- * Should be exported from your [...yuqijs].tsx file.
+ * Should be exported from your [...ts-rest].tsx file.
  *
  * e.g.
  *
@@ -210,13 +209,13 @@ export const createNextRouter = <T extends AppRouter>(
     const combinedRouter = mergeRouterAndImplementation(routes, obj);
 
     // eslint-disable-next-line prefer-const
-    let { yuqijs: params, ...query } = req.query;
+    let { "ts-rest": params, ...query } = req.query;
 
     params = (params as string[]) || [];
     const route = getRouteImplementation(
       combinedRouter,
       params,
-      req.method!,
+      req.method as string,
     );
     let pathParams;
     if (route) {
@@ -258,7 +257,7 @@ export function createSingleRouteHandler<T extends AppRoute>(
     const isValidRoute = isRouteCorrect(
       appRoute,
       urlChunks,
-      req.method!,
+      req.method as string,
     );
 
     return { pathParams, query, route: isValidRoute ? route : null };

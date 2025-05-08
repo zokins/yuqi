@@ -1,11 +1,11 @@
-import type {
+import {
   Express,
   NextFunction,
   Request,
   Response,
 } from "express-serve-static-core";
 
-import type {
+import {
   AppRoute,
   AppRouteDeleteNoBody,
   AppRouteMutation,
@@ -17,7 +17,7 @@ import type {
   ServerInferResponses,
 } from "@yuqijs/core";
 
-import type { RequestValidationError } from "./request-validation-error";
+import { RequestValidationError } from "./request-validation-error";
 
 export type AppRouteQueryImplementation<
   T extends AppRouteQuery | AppRouteDeleteNoBody,
@@ -93,7 +93,7 @@ export type RouterImplementation<T extends AppRouter> = {
       : never;
 };
 
-export interface TsRestExpressOptions<T extends AppRouter> {
+export type TsRestExpressOptions<T extends AppRouter> = {
   logInitialization?: boolean;
   jsonQuery?: boolean;
   responseValidation?: boolean;
@@ -107,4 +107,4 @@ export interface TsRestExpressOptions<T extends AppRouter> {
         res: Response,
         next: NextFunction,
       ) => void);
-}
+};

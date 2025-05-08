@@ -7,9 +7,11 @@ import type {
   Response,
 } from "express-serve-static-core";
 
-import type { AppRoute, AppRouter, HTTPStatusCode } from "@yuqijs/core";
 import {
+  AppRoute,
+  AppRouter,
   checkZodSchema,
+  HTTPStatusCode,
   isAppRoute,
   isAppRouteNoBody,
   isAppRouteOtherResponse,
@@ -18,14 +20,14 @@ import {
   validateResponse,
 } from "@yuqijs/core";
 
-import type {
+import { RequestValidationError } from "./request-validation-error";
+import {
   AppRouteImplementationOrOptions,
+  isAppRouteImplementation,
   RouterImplementation,
   TsRestExpressOptions,
   TsRestRequestHandler,
 } from "./types";
-import { RequestValidationError } from "./request-validation-error";
-import { isAppRouteImplementation } from "./types";
 
 export const initServer = () => {
   return {
@@ -166,7 +168,7 @@ const initializeExpressRoute = ({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           file: req.file,
-          req: req,
+          req: req as any,
           res: res,
         });
       } catch (e) {
@@ -307,7 +309,8 @@ export const createExpressEndpoints = <TRouter extends AppRouter>(
     router,
     processRoute: (implementation, innerSchema) => {
       initializeExpressRoute({
-        implementationOrOptions: implementation,
+        implementationOrOptions:
+          implementation as AppRouteImplementationOrOptions<AppRoute>,
         schema: innerSchema,
         app,
         options,

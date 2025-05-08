@@ -18,8 +18,18 @@
     "directory": "packages/core"
   },
   "license": "MIT",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -44,11 +54,12 @@
     "@yuqijs/tsconfig": "workspace:*",
     "@yuqijs/vitest-config": "workspace:*",
     "eslint": "catalog:",
-    "fetch-mock-jest": "^1.5.1",
     "prettier": "catalog:",
     "tsd": "^0.32.0",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "vitest-fetch-mock": "^0.4.5"
   },
   "prettier": "@yuqijs/prettier-config"
 }

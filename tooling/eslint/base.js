@@ -42,8 +42,8 @@ export default tseslint.config(
   includeIgnoreFile(path.join(import.meta.dirname, "../../.gitignore")),
   { ignores: ["**/*.config.*"] },
   {
-    files: ["**/*.js", "**/*.ts", "**/*.tsx"],
-    plugins: {
+    // files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+    /*  plugins: {
       import: importPlugin,
       turbo: turboPlugin,
     },
@@ -75,7 +75,50 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
-    },
+    }, */
+    root: true,
+    ignorePatterns: ["**/*"],
+    plugins: ["@nx", "prettier"],
+    overrides: [
+      {
+        files: ["*.ts", "*.tsx", "*.js", "*.jsx"],
+        rules: {
+          "@nx/enforce-module-boundaries": [
+            "error",
+            {
+              enforceBuildableLibDependency: true,
+              allow: [],
+              depConstraints: [
+                {
+                  sourceTag: "*",
+                  onlyDependOnLibsWithTags: ["*"],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        files: ["*.ts", "*.tsx"],
+        extends: ["plugin:@nx/typescript", "plugin:prettier/recommended"],
+        rules: {
+          "@typescript-eslint/ban-types": [
+            "error",
+            {
+              extendDefaults: true,
+              types: {
+                "{}": false,
+              },
+            },
+          ],
+        },
+      },
+      {
+        files: ["*.js", "*.jsx"],
+        extends: ["plugin:@nx/javascript", "plugin:prettier/recommended"],
+        rules: {},
+      },
+    ],
   },
   {
     linterOptions: { reportUnusedDisableDirectives: true },
