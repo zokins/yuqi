@@ -5,7 +5,8 @@ import {
   QueryClient,
   QueryKey,
 } from "@tanstack/react-query";
-import { AppRoute, AppRouteFunction, ClientArgs } from "@ts-rest/core";
+
+import { AppRoute, AppRouteFunction, ClientArgs } from "@yuqijs/core";
 
 import { DataResponse, ErrorResponse, RequestData } from "./common";
 import {

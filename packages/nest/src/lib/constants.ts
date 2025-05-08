@@ -1,2 +1,2 @@
-export const TsRestAppRouteMetadataKey = Symbol("ts-rest-app-route");
-export const TsRestOptionsMetadataKey = Symbol("ts-rest-options");
+export const TsRestAppRouteMetadataKey = Symbol("yuqijs-app-route");
+export const TsRestOptionsMetadataKey = Symbol("yuqijs-options");

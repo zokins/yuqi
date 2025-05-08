@@ -1,8 +1,8 @@
 export * from "./lib/constants";
-export * from "./lib/ts-rest-nest";
-export * from "./lib/ts-rest.decorator";
-export * from "./lib/ts-rest.interceptor";
-export * from "./lib/ts-rest-request.decorator";
-export * from "./lib/ts-rest-nest-handler";
-export { TsRestModule } from "./lib/ts-rest.module";
-export { TsRestOptions } from "./lib/ts-rest-options";
+export * from "./lib/yuqijs-nest";
+export * from "./lib/yuqijs.decorator";
+export * from "./lib/yuqijs.interceptor";
+export * from "./lib/yuqijs-request.decorator";
+export * from "./lib/yuqijs-nest-handler";
+export { TsRestModule } from "./lib/yuqijs.module";
+export { TsRestOptions } from "./lib/yuqijs-options";

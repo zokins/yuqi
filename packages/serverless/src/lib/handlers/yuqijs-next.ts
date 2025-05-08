@@ -1,5 +1,6 @@
 import type { NextRequest, NextResponse } from "next/server";
-import { AppRouter } from "@ts-rest/core";
+
+import { AppRouter } from "@yuqijs/core";
 
 import { TsRestRequest } from "../request";
 import { createServerlessRouter } from "../router";
@@ -39,13 +40,13 @@ export const createNextHandler = <T extends AppRouter, TRequestExtension>(
 
   return async (nextRequest: NextRequest): Promise<NextResponse> => {
     if (options.handlerType === "pages-router-edge") {
-      if (!nextRequest.nextUrl.searchParams.has("ts-rest")) {
+      if (!nextRequest.nextUrl.searchParams.has("yuqijs")) {
         throw new Error(
-          "Please make sure your catch-all route file is named [...ts-rest]",
+          "Please make sure your catch-all route file is named [...yuqijs]",
         );
       }
 
-      nextRequest.nextUrl.searchParams.delete("ts-rest");
+      nextRequest.nextUrl.searchParams.delete("yuqijs");
     }
 
     const request = new TsRestRequest(

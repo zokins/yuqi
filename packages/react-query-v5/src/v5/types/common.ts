@@ -1,4 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
+
 import {
   AppRoute,
   AppRouteDeleteNoBody,
@@ -10,7 +11,7 @@ import {
   ErrorHttpStatusCode,
   PartialClientInferRequest,
   SuccessfulHttpStatusCode,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import { MutationHooks, QueryHooks } from "./hooks";
 import { TsRestQueryClientFunctions } from "./query-client-functions";

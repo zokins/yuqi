@@ -1,15 +1,18 @@
-import * as express from 'express';
-import { initContract, ResponseValidationError } from '@ts-rest/core';
-import { apiBlog, contractTs } from '@ts-rest/example-contracts';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import { generateOpenApi } from '@ts-rest/open-api';
-import * as bodyParser from 'body-parser';
-import { Request, Response, NextFunction } from 'express';
-import { serve, setup } from 'swagger-ui-express';
-import { mockPostFixtureFactory } from './fixtures';
-import cors = require('cors');
-import { tsRouter } from './ts-router';
-import { getPost } from './get-post';
+import * as bodyParser from "body-parser";
+import * as express from "express";
+import { NextFunction, Request, Response } from "express";
+import { serve, setup } from "swagger-ui-express";
+
+import { initContract, ResponseValidationError } from "@yuqijs/core";
+import { apiBlog, contractTs } from "@yuqijs/example-contracts";
+import { createExpressEndpoints, initServer } from "@yuqijs/express";
+import { generateOpenApi } from "@yuqijs/openapi";
+
+import { mockPostFixtureFactory } from "./fixtures";
+import { getPost } from "./get-post";
+import { tsRouter } from "./ts-router";
+
+import cors = require("cors");
 
 const app = express();
 
@@ -23,8 +26,8 @@ const completedRouter = s.router(apiBlog, {
   getPost,
   getPosts: async ({ query }) => {
     const posts = [
-      mockPostFixtureFactory({ id: '1' }),
-      mockPostFixtureFactory({ id: '2' }),
+      mockPostFixtureFactory({ id: "1" }),
+      mockPostFixtureFactory({ id: "2" }),
     ];
 
     return {
@@ -56,7 +59,7 @@ const completedRouter = s.router(apiBlog, {
   deletePost: async () => {
     return {
       status: 200,
-      body: { message: 'Post deleted' },
+      body: { message: "Post deleted" },
     };
   },
   testPathParams: async ({ params }) => {
@@ -70,22 +73,22 @@ const completedRouter = s.router(apiBlog, {
 const validateResponseContact = initContract().router({
   testPathParams: {
     ...apiBlog.testPathParams,
-    path: '/validate-response/:id/:name',
+    path: "/validate-response/:id/:name",
   },
 });
 
 const openapi = generateOpenApi(apiBlog, {
-  info: { title: 'Play API', version: '0.1' },
+  info: { title: "Play API", version: "0.1" },
 });
 
 const apiDocs = express.Router();
 
 apiDocs.use(serve);
-apiDocs.get('/', setup(openapi));
+apiDocs.get("/", setup(openapi));
 
-app.use('/api-docs', apiDocs);
+app.use("/api-docs", apiDocs);
 
-app.get('/test', (req, res) => {
+app.get("/test", (req, res) => {
   return res.json(req.query);
 });
 
@@ -120,6 +123,6 @@ const port = process.env.port || 3333;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });
-server.on('error', console.error);
+server.on("error", console.error);
 
 export default app;

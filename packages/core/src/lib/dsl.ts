@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { Merge, Opaque, Prettify, WithoutUnknown } from "./type-utils";
+import type { Merge, Opaque, Prettify, WithoutUnknown } from "./type-utils";
 import { zodMerge } from "./zod-utils";
 
 type MixedZodError<A, B> = Opaque<{ a: A; b: B }, "MixedZodError">;
@@ -32,7 +32,7 @@ export type AppRouteResponse =
   | ContractNoBodyType
   | ContractOtherResponse<ContractAnyType>;
 
-type AppRouteCommon = {
+interface AppRouteCommon {
   path: Path;
   pathParams?: ContractAnyType;
   query?: ContractAnyType;
@@ -48,7 +48,7 @@ type AppRouteCommon = {
    * @deprecated Use `validateResponse` on the client options
    */
   validateResponseOnClient?: boolean;
-};
+}
 
 /**
  * A query endpoint. In REST terms, one using GET.
@@ -173,12 +173,12 @@ export type AppRouteStrictStatusCodes = Omit<AppRoute, "strictStatusCodes"> & {
 };
 
 /**
- * A router (or contract) in @ts-rest is a collection of more routers or
+ * A router (or contract) in @yuqijs is a collection of more routers or
  * individual routes
  */
-export type AppRouter = {
+export interface AppRouter {
   [key: string]: AppRouter | AppRoute;
-};
+}
 
 export type FlattenAppRouter<T extends AppRouter | AppRoute> =
   T extends AppRoute
@@ -191,7 +191,7 @@ export type FlattenAppRouter<T extends AppRouter | AppRoute> =
             : never;
       }[keyof T];
 
-export type RouterOptions<TPrefix extends string = string> = {
+export interface RouterOptions<TPrefix extends string = string> {
   baseHeaders?: unknown;
   strictStatusCodes?: boolean;
   pathPrefix?: TPrefix;
@@ -202,7 +202,7 @@ export type RouterOptions<TPrefix extends string = string> = {
    * @deprecated Use `validateResponse` on the client options
    */
   validateResponseOnClient?: boolean;
-};
+}
 
 /**
  * Differentiate between a route and a router
@@ -229,9 +229,9 @@ type NarrowObject<T> = {
 };
 
 /**
- * The instantiated ts-rest client
+ * The instantiated Yuqi client
  */
-type ContractInstance = {
+interface ContractInstance {
   /**
    * A collection of routes or routers
    */
@@ -280,7 +280,7 @@ type ContractInstance = {
   }) => ContractOtherResponse<T>;
   /** Use to indicate that a route takes no body or responds with no body */
   noBody: () => ContractNoBodyType;
-};
+}
 
 /**
  *
@@ -332,7 +332,7 @@ export const ContractPlainTypeRuntimeSymbol = Symbol(
 ) as any;
 
 /**
- * Instantiate a ts-rest client, primarily to access `router`, `response`, and `body`
+ * Instantiate a Yuqi client, primarily to access `router`, `response`, and `body`
  *
  * @returns {ContractInstance}
  */

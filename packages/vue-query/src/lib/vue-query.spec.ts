@@ -1,9 +1,10 @@
 import type { RenderHookResult } from "@testing-library/react-hooks";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import { waitFor } from "@testing-library/vue";
-import { ApiFetcher, initContract } from "@ts-rest/core";
 import { createApp, unref } from "vue";
 import { z } from "zod";
+
+import { ApiFetcher, initContract } from "@yuqijs/core";
 
 import { initQueryClient } from "./vue-query";
 

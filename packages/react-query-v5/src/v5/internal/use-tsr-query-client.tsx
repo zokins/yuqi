@@ -1,8 +1,9 @@
 "use client";
 
-import { AppRouter, ClientArgs } from "@ts-rest/core";
 import { createContext } from "react";
 import * as React from "react";
+
+import { AppRouter, ClientArgs } from "@yuqijs/core";
 
 import type { TsRestReactQueryClient } from "../types";
 

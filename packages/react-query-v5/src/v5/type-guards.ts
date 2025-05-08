@@ -5,7 +5,7 @@ import {
   exhaustiveGuard,
   InferResponseUndefinedStatusCodes,
   isUnknownErrorResponse,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 type FetchError = Error;
 

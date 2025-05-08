@@ -8,7 +8,8 @@ import {
   QueryState,
   SetDataOptions,
 } from "@tanstack/react-query";
-import { AppRoute, ClientArgs } from "@ts-rest/core";
+
+import { AppRoute, ClientArgs } from "@yuqijs/core";
 
 import { DataResponse, ErrorResponse } from "./common";
 import { TsRestQueryOptions } from "./hooks-options";

@@ -8,7 +8,8 @@ import {
   UseSuspenseInfiniteQueryResult as TanStackUseSuspenseInfiniteQueryResult,
   UseSuspenseQueryResult as TanStackUseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import { AppRoute, ClientArgs } from "@ts-rest/core";
+
+import { AppRoute, ClientArgs } from "@yuqijs/core";
 
 import { QueriesResults } from "../internal/queries-options";
 import { SuspenseQueriesResults } from "../internal/suspense-queries-options";

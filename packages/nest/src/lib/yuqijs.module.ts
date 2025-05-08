@@ -1,6 +1,6 @@
 import { ConfigurableModuleBuilder, Module } from "@nestjs/common";
 
-import { TsRestOptions } from "./ts-rest-options";
+import { TsRestOptions } from "./yuqijs-options";
 
 const {
   ConfigurableModuleClass,

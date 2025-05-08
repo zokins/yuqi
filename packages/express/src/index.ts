@@ -1,4 +1,4 @@
-export * from "./lib/ts-rest-express";
+export * from "./lib/yuqijs-express";
 export type {
   AppRouteQueryImplementation,
   AppRouteMutationImplementation,

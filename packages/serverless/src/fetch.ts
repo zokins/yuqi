@@ -1,2 +1,2 @@
-export * from "./lib/handlers/ts-rest-fetch";
+export * from "./lib/handlers/yuqijs-fetch";
 export * from "./index";

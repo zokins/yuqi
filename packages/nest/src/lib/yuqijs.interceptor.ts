@@ -8,19 +8,20 @@ import {
   Optional,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { FastifyReply } from "fastify";
+import { catchError, map, Observable, of, throwError } from "rxjs";
+
 import {
   AppRoute,
   isAppRouteOtherResponse,
   isAppRouteResponse,
   TsRestResponseError,
   validateResponse,
-} from "@ts-rest/core";
-import { FastifyReply } from "fastify";
-import { catchError, map, Observable, of, throwError } from "rxjs";
+} from "@yuqijs/core";
 
 import { TsRestAppRouteMetadataKey } from "./constants";
-import { evaluateTsRestOptions, MaybeTsRestOptions } from "./ts-rest-options";
-import { TS_REST_MODULE_OPTIONS_TOKEN } from "./ts-rest.module";
+import { evaluateTsRestOptions, MaybeTsRestOptions } from "./yuqijs-options";
+import { TS_REST_MODULE_OPTIONS_TOKEN } from "./yuqijs.module";
 
 @Injectable()
 export class TsRestInterceptor implements NestInterceptor {

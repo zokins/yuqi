@@ -12,6 +12,7 @@ import {
   QueryFunctionContext,
   QueryKey,
 } from "@tanstack/solid-query";
+
 import {
   AppRoute,
   AppRouteFunction,
@@ -31,7 +32,7 @@ import {
   SuccessfulHttpStatusCode,
   Without,
   ZodInferOrType,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute

@@ -1,11 +1,12 @@
 import { HttpRequest, HttpResponse, InvocationContext } from "@azure/functions";
-import { initContract, TsRestResponseError } from "@ts-rest/core";
 import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
 import { vi } from "vitest";
 import { z } from "zod";
 
+import { initContract, TsRestResponseError } from "@yuqijs/core";
+
 import { TsRestRequest } from "../request";
-import { createAzureFunctionHandler } from "./ts-rest-azure-function";
+import { createAzureFunctionHandler } from "./yuqijs-azure-function";
 
 const c = initContract();
 

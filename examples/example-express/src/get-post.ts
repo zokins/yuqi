@@ -1,6 +1,7 @@
-import { initServer } from '@ts-rest/express';
-import { mockPostFixtureFactory } from './fixtures';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { apiBlog } from "@yuqijs/example-contracts";
+import { initServer } from "@yuqijs/express";
+
+import { mockPostFixtureFactory } from "./fixtures";
 
 const s = initServer();
 export const getPost = s.route(apiBlog.getPost, async ({ params: { id } }) => {

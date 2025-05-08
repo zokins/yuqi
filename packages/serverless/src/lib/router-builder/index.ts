@@ -1,5 +1,6 @@
-import { AppRoute, AppRouter } from "@ts-rest/core";
 import { RequestHandler } from "itty-router";
+
+import { AppRoute, AppRouter } from "@yuqijs/core";
 
 import { TsRestRequest } from "../request";
 import { TsRestResponse } from "../response";

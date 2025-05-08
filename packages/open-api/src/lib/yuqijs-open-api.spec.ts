@@ -1,9 +1,10 @@
 import { extendApi } from "@anatine/zod-openapi";
-import { initContract } from "@ts-rest/core";
 import { SecurityRequirementObject } from "openapi3-ts";
 import { z } from "zod";
 
-import { generateOpenApi } from "./ts-rest-open-api";
+import { initContract } from "@yuqijs/core";
+
+import { generateOpenApi } from "./yuqijs-open-api";
 
 const c = initContract();
 
@@ -495,7 +496,7 @@ const expectedApiDoc = {
   },
 };
 
-describe("ts-rest-open-api", () => {
+describe("yuqijs-open-api", () => {
   describe("generateOpenApi", () => {
     it("should generate doc with defaults", async () => {
       const apiDoc = generateOpenApi(router, {

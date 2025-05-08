@@ -1,20 +1,21 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import {
-  initContract,
-  ResponseValidationError,
-  TsRestResponseError,
-} from "@ts-rest/core";
 import * as express from "express";
 import * as multer from "multer";
 import * as supertest from "supertest";
 import { z } from "zod";
 
 import {
+  initContract,
+  ResponseValidationError,
+  TsRestResponseError,
+} from "@yuqijs/core";
+
+import {
   CombinedRequestValidationErrorSchema,
   DefaultRequestValidationErrorSchema,
 } from "./request-validation-error";
-import { createExpressEndpoints, initServer } from "./ts-rest-express";
+import { createExpressEndpoints, initServer } from "./yuqijs-express";
 
 const upload = multer();
 
@@ -67,7 +68,7 @@ describe("strict mode", () => {
   });
 });
 
-describe("ts-rest-express", () => {
+describe("yuqijs-express", () => {
   it("should handle non-json response types from contract", async () => {
     const contract = c.router({
       postIndex: {

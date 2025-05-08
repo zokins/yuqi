@@ -8,11 +8,11 @@ const { exclude: _, ...swcJestConfig } = JSON.parse(
 );
 export default {
   testEnvironment: "node",
-  displayName: "ts-rest-fastify",
+  displayName: "yuqijs-fastify",
   preset: "../../../jest.preset.js",
   transform: {
     "^.+\\.[tj]s$": ["@swc/jest", swcJestConfig],
   },
   moduleFileExtensions: ["ts", "js", "html"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/fastify",
+  coverageDirectory: "../../../coverage/libs/yuqijs/fastify",
 };

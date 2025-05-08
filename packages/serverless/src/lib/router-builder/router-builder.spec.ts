@@ -1,8 +1,9 @@
-import { initContract } from "@ts-rest/core";
 import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
 import { z } from "zod";
 
-import { tsr } from "../handlers/ts-rest-fetch";
+import { initContract } from "@yuqijs/core";
+
+import { tsr } from "../handlers/yuqijs-fetch";
 import { CompleteRouter, RouterBuilder } from "./index";
 import { ContractSubContractPaths } from "./types";
 

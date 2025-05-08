@@ -1,13 +1,5 @@
 import { generateSchema } from "@anatine/zod-openapi";
 import {
-  AppRoute,
-  AppRouter,
-  extractZodObjectShape,
-  isAppRoute,
-  isZodObject,
-  isZodType,
-} from "@ts-rest/core";
-import {
   ExamplesObject,
   InfoObject,
   MediaTypeObject,
@@ -18,6 +10,15 @@ import {
   SchemaObject,
 } from "openapi3-ts";
 import { z } from "zod";
+
+import {
+  AppRoute,
+  AppRouter,
+  extractZodObjectShape,
+  isAppRoute,
+  isZodObject,
+  isZodType,
+} from "@yuqijs/core";
 
 type RouterPath = {
   id: string;

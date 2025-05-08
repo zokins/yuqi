@@ -6,6 +6,7 @@ import {
   UseQueryOptions as TanStackUseQueryOptions,
   UseQueryResult as TanStackUseQueryResult,
 } from "@tanstack/react-query";
+
 import {
   AppRoute,
   ClientArgs,
@@ -13,7 +14,7 @@ import {
   ErrorHttpStatusCode,
   PartialClientInferRequest,
   SuccessfulHttpStatusCode,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import { TsRestReactQueryClient } from "./react-query";
 

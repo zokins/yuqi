@@ -1,4 +1,11 @@
 import {
+  Express,
+  NextFunction,
+  Request,
+  Response,
+} from "express-serve-static-core";
+
+import {
   AppRoute,
   AppRouteDeleteNoBody,
   AppRouteMutation,
@@ -8,13 +15,7 @@ import {
   ServerInferRequest,
   ServerInferResponseBody,
   ServerInferResponses,
-} from "@ts-rest/core";
-import {
-  Express,
-  NextFunction,
-  Request,
-  Response,
-} from "express-serve-static-core";
+} from "@yuqijs/core";
 
 import { RequestValidationError } from "./request-validation-error";
 

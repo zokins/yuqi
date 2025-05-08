@@ -1,5 +1,6 @@
-import { initContract } from '@ts-rest/core';
-import { z } from 'zod';
+import { z } from "zod";
+
+import { initContract } from "@yuqijs/core";
 
 export interface Post {
   id: string;
@@ -24,8 +25,8 @@ const c = initContract();
 export const apiBlog = c.router(
   {
     createPost: {
-      method: 'POST',
-      path: '/posts',
+      method: "POST",
+      path: "/posts",
       responses: {
         201: PostSchema,
         400: z.object({ message: z.string() }),
@@ -36,11 +37,11 @@ export const apiBlog = c.router(
         published: z.boolean().optional(),
         description: z.string().optional(),
       }),
-      summary: 'Create a post',
-      metadata: { roles: ['user'] } as const,
+      summary: "Create a post",
+      metadata: { roles: ["user"] } as const,
     },
     updatePost: {
-      method: 'PATCH',
+      method: "PATCH",
       path: `/posts/:id`,
       responses: { 200: PostSchema },
       body: z.object({
@@ -49,41 +50,41 @@ export const apiBlog = c.router(
         published: z.boolean().optional(),
         description: z.string().optional(),
       }),
-      summary: 'Update a post',
+      summary: "Update a post",
       metadata: {
-        roles: ['user'],
-        resource: 'post',
-        identifierPath: 'params.id',
+        roles: ["user"],
+        resource: "post",
+        identifierPath: "params.id",
       } as const,
     },
     deletePost: {
-      method: 'DELETE',
+      method: "DELETE",
       path: `/posts/:id`,
       responses: {
         200: z.object({ message: z.string() }),
         404: z.object({ message: z.string() }),
       },
-      summary: 'Delete a post',
+      summary: "Delete a post",
       metadata: {
-        roles: ['user'],
-        resource: 'post',
-        identifierPath: 'params.id',
+        roles: ["user"],
+        resource: "post",
+        identifierPath: "params.id",
       } as const,
     },
     getPost: {
-      method: 'GET',
+      method: "GET",
       path: `/posts/:id`,
       responses: {
         200: PostSchema,
         404: z.null(),
       },
       query: null,
-      summary: 'Get a post by id',
-      metadata: { roles: ['guest', 'user'] } as const,
+      summary: "Get a post by id",
+      metadata: { roles: ["guest", "user"] } as const,
     },
     getPosts: {
-      method: 'GET',
-      path: '/posts',
+      method: "GET",
+      path: "/posts",
       responses: {
         200: z.object({
           posts: PostSchema.array(),
@@ -97,21 +98,21 @@ export const apiBlog = c.router(
         skip: z.string().transform(Number),
         search: z.string().optional(),
       }),
-      summary: 'Get all posts!',
+      summary: "Get all posts!",
       headers: z.object({
-        'x-pagination': z.coerce.number().optional(),
+        "x-pagination": z.coerce.number().optional(),
       }),
-      metadata: { roles: ['guest', 'user'] } as const,
+      metadata: { roles: ["guest", "user"] } as const,
     },
     testPathParams: {
-      method: 'GET',
-      path: '/test/:id/:name',
+      method: "GET",
+      path: "/test/:id/:name",
       pathParams: z.object({
         id: z
           .string()
           .transform(Number)
           .refine((v) => Number.isInteger(v), {
-            message: 'Must be an integer',
+            message: "Must be an integer",
           }),
       }),
       query: z.object({
@@ -121,15 +122,15 @@ export const apiBlog = c.router(
         200: z.object({
           id: z.number().lt(1000),
           name: z.string(),
-          defaultValue: z.string().default('hello world'),
+          defaultValue: z.string().default("hello world"),
         }),
       },
-      metadata: { roles: ['guest', 'user'] } as const,
+      metadata: { roles: ["guest", "user"] } as const,
     },
   },
   {
     baseHeaders: z.object({
-      'x-api-key': z.string(),
+      "x-api-key": z.string(),
     }),
   },
 );

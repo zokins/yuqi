@@ -1,5 +1,6 @@
-import { initContract } from '@ts-rest/core';
-import { z } from 'zod';
+import { z } from "zod";
+
+import { initContract } from "@yuqijs/core";
 
 export interface PostTs {
   id: string;
@@ -14,8 +15,8 @@ const c = initContract();
 
 export const contractTs = c.router({
   createPost: {
-    method: 'POST',
-    path: '/ts/posts',
+    method: "POST",
+    path: "/ts/posts",
     responses: {
       201: c.type<PostTs>(),
     },
@@ -24,20 +25,20 @@ export const contractTs = c.router({
       content: string;
       published?: boolean;
     }>(),
-    summary: 'Create a post',
+    summary: "Create a post",
   },
   getPost: {
-    method: 'GET',
+    method: "GET",
     path: `/ts/posts/:id`,
     responses: {
       200: c.type<PostTs>(),
       404: c.type<null>(),
     },
     query: null,
-    summary: 'Get a post by id',
+    summary: "Get a post by id",
   },
   getPosts: {
-    method: 'GET',
+    method: "GET",
     path: `/ts/posts`,
     responses: {
       200: c.type<{
@@ -52,6 +53,6 @@ export const contractTs = c.router({
       skip: z.number().optional(),
       search: z.string().optional(),
     }),
-    summary: 'Get all posts',
+    summary: "Get all posts",
   },
 });

@@ -1,4 +1,4 @@
-# @ts-rest/express
+# @yuqijs/express
 
 ## 3.52.1
 
@@ -28,7 +28,7 @@
 
 ### Patch Changes
 
-- b31454f: All ts-rest libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
+- b31454f: All yuqijs libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
 
 ## 3.49.0
 
@@ -112,7 +112,7 @@
 
 ### Minor Changes
 
-- 820658a: feat `@ts-rest/express`: Allow file downloads with Express
+- 820658a: feat `@yuqijs/express`: Allow file downloads with Express
 
 ## 3.32.0
 
@@ -122,16 +122,16 @@
 
 ### Patch Changes
 
-- 9bd7402: - `@ts-rest/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/ts-rest/ts-rest/issues/392))
-  - `@ts-rest/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/ts-rest/ts-rest/pull/414))
-  - `@ts-rest/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/ts-rest/ts-rest/issues/418))
+- 9bd7402: - `@yuqijs/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/yuqijs/yuqijs/issues/392))
+  - `@yuqijs/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/yuqijs/yuqijs/pull/414))
+  - `@yuqijs/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/yuqijs/yuqijs/issues/418))
 - 8cc95c5: add changeset for latest changes
 
 ## 3.30.4
 
 ### Patch Changes
 
-- 10dff96: - fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@ts-rest` peer dependency `zod` to minimum `^3.22.3`
+- 10dff96: - fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@yuqijs` peer dependency `zod` to minimum `^3.22.3`
   - ref PR: https://github.com/colinhacks/zod/pull/2824
 
 ## 3.30.3
@@ -144,14 +144,14 @@
 
 ### Minor Changes
 
-- 225921c: feat: added stronger typing for the `req` object in the route handler for '@ts-rest/express'
+- 225921c: feat: added stronger typing for the `req` object in the route handler for '@yuqijs/express'
 
 ## 3.29.0
 
 ### Patch Changes
 
-- 5f7b236: - bump `@ts-rest/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
-  - bump `@ts-rest/react-query` peer dependency `zod` to `^3.21.0`
+- 5f7b236: - bump `@yuqijs/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
+  - bump `@yuqijs/react-query` peer dependency `zod` to `^3.21.0`
   - upgrades NX to 16.7 for project root
 
 ## 3.28.0
@@ -197,7 +197,7 @@
 ### Minor Changes
 
 - 74bb4a8: Implement strict mode at a contract level. Strict mode ensures that only known responses are allowed by the type system. This applies both on the server and client side. Enable this with `strictStatusCodes: true` when defining a contract. If you would like to have the vanilla client throw an error when the response status is not known then you will need to use `throwOnUnknownStatus` when initializing the client.
-- 74e41dc: Add middleware directly through ts-rest with type-safe injected route object
+- 74e41dc: Add middleware directly through yuqijs with type-safe injected route object
 
 ## 3.22.0
 
@@ -253,7 +253,7 @@
 
 ### Patch Changes
 
-- 41a5fbb: Make @ts-rest/express ESM compatible
+- 41a5fbb: Make @yuqijs/express ESM compatible
 
 ## 3.16.0
 
@@ -302,8 +302,8 @@
 
 ### Minor Changes
 
-- 020a8c5: Allow optional [ts-rest] ... logging for express endpoints
-- 020a8c5: Pass express errors to next() rather than catching them and handling with ts-rest
+- 020a8c5: Allow optional [yuqijs] ... logging for express endpoints
+- 020a8c5: Pass express errors to next() rather than catching them and handling with yuqijs
 
 ## 3.8.0
 
@@ -367,7 +367,7 @@
 
 ### Minor Changes
 
-- 75f157a: Add Zod validation to @ts-rest/next
+- 75f157a: Add Zod validation to @yuqijs/next
 
 ## 2.0.1
 
@@ -396,4 +396,4 @@
 
 ### Minor Changes
 
-- 72dd65d: Extract express logic to @ts-rest/express
+- 72dd65d: Extract express logic to @yuqijs/express

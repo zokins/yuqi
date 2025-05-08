@@ -14,11 +14,11 @@ if (swcJestConfig.swcrc === undefined) {
 }
 
 export default {
-  displayName: "ts-rest-express",
+  displayName: "yuqijs-express",
   preset: "../../../jest.preset.js",
   transform: {
     "^.+\\.[tj]s$": ["@swc/jest", swcJestConfig],
   },
   moduleFileExtensions: ["ts", "js", "html"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/express",
+  coverageDirectory: "../../../coverage/libs/yuqijs/express",
 };

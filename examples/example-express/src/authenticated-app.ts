@@ -1,17 +1,19 @@
-import * as express from 'express';
-import { apiBlog } from '@ts-rest/example-contracts';
+import * as bodyParser from "body-parser";
+import * as express from "express";
+import { NextFunction, Request, Response } from "express";
+import * as jwt from "jsonwebtoken";
+import * as _ from "lodash";
+import * as passport from "passport";
+import { ExtractJwt, Strategy, VerifiedCallback } from "passport-jwt";
+
+import { apiBlog } from "@yuqijs/example-contracts";
 import {
   createExpressEndpoints,
   initServer,
   TsRestRequest,
-} from '@ts-rest/express';
-import * as bodyParser from 'body-parser';
-import { mockOwnedResource, mockPostFixtureFactory } from './fixtures';
-import { Strategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
-import * as passport from 'passport';
-import * as _ from 'lodash';
-import * as jwt from 'jsonwebtoken';
-import { NextFunction, Request, Response } from 'express';
+} from "@yuqijs/express";
+
+import { mockOwnedResource, mockPostFixtureFactory } from "./fixtures";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -22,28 +24,28 @@ declare global {
   }
 }
 
-const JWT_SECRET = 'SUPER_SUPER_SECRET_KEY';
+const JWT_SECRET = "SUPER_SUPER_SECRET_KEY";
 
 export const SAMPLE_OWNER_JWT = jwt.sign(
   {
-    id: 'mock-owner-id',
-    role: 'user',
+    id: "mock-owner-id",
+    role: "user",
   },
   JWT_SECRET,
 );
 
 export const SAMPLE_NON_OWNER_JWT = jwt.sign(
   {
-    id: 'mock-user-id',
-    role: 'user',
+    id: "mock-user-id",
+    role: "user",
   },
   JWT_SECRET,
 );
 
 export const SAMPLE_GUEST_JWT = jwt.sign(
   {
-    id: 'mock-guest-id',
-    role: 'guest',
+    id: "mock-guest-id",
+    role: "guest",
   },
   JWT_SECRET,
 );
@@ -57,7 +59,7 @@ passport.use(
   new Strategy(
     {
       secretOrKey: JWT_SECRET,
-      jwtFromRequest: ExtractJwt.fromHeader('x-api-key'),
+      jwtFromRequest: ExtractJwt.fromHeader("x-api-key"),
       passReqToCallback: true,
     },
     (req: express.Request, payload: any, done: VerifiedCallback) => {
@@ -92,8 +94,8 @@ const completedRouter = s.router(apiBlog, {
   },
   getPosts: async ({ query }) => {
     const posts = [
-      mockPostFixtureFactory({ id: '1' }),
-      mockPostFixtureFactory({ id: '2' }),
+      mockPostFixtureFactory({ id: "1" }),
+      mockPostFixtureFactory({ id: "2" }),
     ];
 
     return {
@@ -125,7 +127,7 @@ const completedRouter = s.router(apiBlog, {
   deletePost: {
     middleware: [
       (req, res, next) => {
-        res.setHeader('x-middleware', 'true');
+        res.setHeader("x-middleware", "true");
 
         next();
       },
@@ -133,7 +135,7 @@ const completedRouter = s.router(apiBlog, {
     handler: async () => {
       return {
         status: 200,
-        body: { message: 'Post deleted' },
+        body: { message: "Post deleted" },
       };
     },
   },
@@ -146,9 +148,9 @@ const completedRouter = s.router(apiBlog, {
 });
 
 createExpressEndpoints(apiBlog, completedRouter, app, {
-  requestValidationErrorHandler: 'combined',
+  requestValidationErrorHandler: "combined",
   globalMiddleware: [
-    passport.authenticate('jwt', { session: false }),
+    passport.authenticate("jwt", { session: false }),
     (req, res, next) => {
       const routeMetadata = req.tsRestRoute.metadata;
 
@@ -160,7 +162,7 @@ createExpressEndpoints(apiBlog, completedRouter, app, {
 
         if (resource.ownerId !== req.user?.id) {
           return res.status(403).json({
-            message: 'Forbidden... You are not the owner of this resource',
+            message: "Forbidden... You are not the owner of this resource",
           });
         }
       }
@@ -180,6 +182,6 @@ const port = process.env.port || 3334;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });
-server.on('error', console.error);
+server.on("error", console.error);
 
 export default app;

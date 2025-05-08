@@ -1,4 +1,4 @@
-# @ts-rest/react-query-v5
+# @yuqijs/react-query-v5
 
 ## 3.52.1
 

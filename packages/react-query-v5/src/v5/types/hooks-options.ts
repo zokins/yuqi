@@ -9,7 +9,8 @@ import {
   UseSuspenseInfiniteQueryOptions as TanStackUseSuspenseInfiniteQueryOptions,
   UseSuspenseQueryOptions as TanStackUseSuspenseQueryOptions,
 } from "@tanstack/react-query";
-import { AppRoute, ClientArgs, IfAllPropertiesOptional } from "@ts-rest/core";
+
+import { AppRoute, ClientArgs, IfAllPropertiesOptional } from "@yuqijs/core";
 
 import { QueriesOptions, QueriesResults } from "../internal/queries-options";
 import {

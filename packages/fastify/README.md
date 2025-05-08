@@ -1,11 +1,11 @@
-# ts-rest-fastify
+# yuqijs-fastify
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build ts-rest-fastify` to build the library.
+Run `nx build yuqijs-fastify` to build the library.
 
 ## Running unit tests
 
-Run `nx test ts-rest-fastify` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test yuqijs-fastify` to execute the unit tests via [Jest](https://jestjs.io).

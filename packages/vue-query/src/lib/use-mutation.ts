@@ -3,6 +3,7 @@ import type {
   UseMutationReturnType,
 } from "@tanstack/vue-query";
 import { useMutation } from "@tanstack/vue-query";
+
 import {
   AppRoute,
   AppRouteMutation,
@@ -10,7 +11,7 @@ import {
   ClientInferRequest,
   PartialClientInferRequest,
   ZodInferOrType,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import { DataResponse, ErrorResponse, queryFn } from "./common";
 

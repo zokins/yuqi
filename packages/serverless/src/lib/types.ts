@@ -1,12 +1,13 @@
+import { CorsOptions, RequestHandler } from "itty-router";
+import { z } from "zod";
+
 import {
   AppRoute,
   AppRouter,
   ServerInferRequest,
   ServerInferResponses,
   ZodErrorSchema,
-} from "@ts-rest/core";
-import { CorsOptions, RequestHandler } from "itty-router";
-import { z } from "zod";
+} from "@yuqijs/core";
 
 import { TsRestHttpError } from "./http-error";
 import { TsRestRequest } from "./request";

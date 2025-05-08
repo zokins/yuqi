@@ -14,11 +14,11 @@ if (swcJestConfig.swcrc === undefined) {
 }
 
 export default {
-  displayName: "ts-rest-nest",
+  displayName: "yuqijs-nest",
   preset: "../../../jest.preset.js",
   transform: {
     "^.+\\.[tj]s$": ["@swc/jest", swcJestConfig],
   },
   moduleFileExtensions: ["ts", "js", "html"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/nest",
+  coverageDirectory: "../../../coverage/libs/yuqijs/nest",
 };

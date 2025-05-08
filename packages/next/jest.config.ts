@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: "ts-rest-next",
+  displayName: "yuqijs-next",
   preset: "../../../jest.preset.js",
   globals: {},
   transform: {
@@ -12,5 +12,5 @@ export default {
     ],
   },
   moduleFileExtensions: ["ts", "js", "html"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/next",
+  coverageDirectory: "../../../coverage/libs/yuqijs/next",
 };

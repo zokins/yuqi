@@ -1,5 +1,6 @@
 import type { Context } from "aws-lambda";
-import { AppRouter } from "@ts-rest/core";
+
+import { AppRouter } from "@yuqijs/core";
 
 import {
   ApiGatewayEvent,

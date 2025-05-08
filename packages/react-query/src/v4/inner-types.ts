@@ -6,6 +6,7 @@ import {
   QueryFunctionContext,
   QueryKey,
 } from "@tanstack/react-query";
+
 import {
   AppRoute,
   AppRouteFunction,
@@ -13,7 +14,7 @@ import {
   AppRouteQuery,
   AreAllPropertiesOptional,
   PartialClientInferRequest,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import {
   DataResponse,

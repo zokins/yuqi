@@ -1,11 +1,11 @@
-# ts-rest-vue-query
+# yuqijs-vue-query
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build ts-rest-vue-query` to build the library.
+Run `nx build yuqijs-vue-query` to build the library.
 
 ## Running unit tests
 
-Run `nx test ts-rest-vue-query` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test yuqijs-vue-query` to execute the unit tests via [Jest](https://jestjs.io).

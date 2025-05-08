@@ -1,20 +1,21 @@
-import { app } from '@azure/functions';
-import { Post, apiBlog } from '@ts-rest/example-contracts';
-import { createAzureFunctionHandler, tsr } from '@ts-rest/serverless/azure';
+import { app } from "@azure/functions";
+
+import { apiBlog, Post } from "@yuqijs/example-contracts";
+import { createAzureFunctionHandler, tsr } from "@yuqijs/serverless/azure";
 
 const mockPostFixtureFactory = (partial: Partial<Post>): Post => ({
-  id: 'mock-id',
+  id: "mock-id",
   title: `Post`,
   content: `Content`,
   description: `Description`,
   published: true,
-  tags: ['tag1', 'tag2'],
+  tags: ["tag1", "tag2"],
   ...partial,
 });
 
 const router = tsr.router(apiBlog, {
   getPost: async ({ params: { id } }, { azureContext }) => {
-    azureContext.log('Received getPost request');
+    azureContext.log("Received getPost request");
 
     const post = mockPostFixtureFactory({ id });
 
@@ -32,8 +33,8 @@ const router = tsr.router(apiBlog, {
   },
   getPosts: async ({ query }) => {
     const posts = [
-      mockPostFixtureFactory({ id: '1' }),
-      mockPostFixtureFactory({ id: '2' }),
+      mockPostFixtureFactory({ id: "1" }),
+      mockPostFixtureFactory({ id: "2" }),
     ];
 
     return {
@@ -73,7 +74,7 @@ const router = tsr.router(apiBlog, {
       status: 200,
       body: {
         ...params,
-        shouldDelete: 'foo',
+        shouldDelete: "foo",
       },
     };
   },
@@ -84,9 +85,9 @@ const handler = createAzureFunctionHandler(apiBlog, router, {
   responseValidation: true,
 });
 
-app.http('apiBlog', {
-  methods: ['POST', 'PATCH', 'DELETE', 'GET'],
-  authLevel: 'anonymous',
-  route: '{*route}',
+app.http("apiBlog", {
+  methods: ["POST", "PATCH", "DELETE", "GET"],
+  authLevel: "anonymous",
+  route: "{*route}",
   handler,
 });

@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
+
 import {
   AppRoute,
   AppRouteQuery,
@@ -14,8 +16,7 @@ import {
   TsRestResponseError,
   validateResponse,
   ZodErrorSchema,
-} from "@ts-rest/core";
-import { z } from "zod";
+} from "@yuqijs/core";
 
 import { getPathParamsFromArray } from "./path-utils";
 
@@ -186,7 +187,7 @@ export const createNextRoute = <T extends AppRouter | AppRoute>(
 /**
  * Turn a completed set of Next routes into a Next.js compatible route.
  *
- * Should be exported from your [...ts-rest].tsx file.
+ * Should be exported from your [...yuqijs].tsx file.
  *
  * e.g.
  *
@@ -208,7 +209,7 @@ export const createNextRouter = <T extends AppRouter>(
     const combinedRouter = mergeRouterAndImplementation(routes, obj);
 
     // eslint-disable-next-line prefer-const
-    let { "ts-rest": params, ...query } = req.query;
+    let { yuqijs: params, ...query } = req.query;
 
     params = (params as string[]) || [];
     const route = getRouteImplementation(

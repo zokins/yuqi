@@ -1,9 +1,10 @@
-import { initContract, TsRestResponseError } from "@ts-rest/core";
 import fastify from "fastify";
 import * as supertest from "supertest";
 import { z } from "zod";
 
-import { initServer, RequestValidationErrorSchema } from "./ts-rest-fastify";
+import { initContract, TsRestResponseError } from "@yuqijs/core";
+
+import { initServer, RequestValidationErrorSchema } from "./yuqijs-fastify";
 
 declare module "fastify" {
   interface FastifyReply {
@@ -69,7 +70,7 @@ const contract = c.router({
 
 jest.setTimeout(30000);
 
-describe("ts-rest-fastify", () => {
+describe("yuqijs-fastify", () => {
   const s = initServer();
 
   const router = s.router(contract, {

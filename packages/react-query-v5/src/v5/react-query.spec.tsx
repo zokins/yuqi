@@ -11,11 +11,12 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import { ApiFetcher, initContract } from "@ts-rest/core";
 import * as React from "react";
 import { act } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { z } from "zod";
+
+import { ApiFetcher, initContract } from "@yuqijs/core";
 
 import { initTsrReactQuery } from "./init-tsr-react-query";
 import {

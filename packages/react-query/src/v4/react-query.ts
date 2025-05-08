@@ -14,6 +14,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useMemo } from "react";
+
 import {
   AppRoute,
   AppRouteMutation,
@@ -26,8 +28,7 @@ import {
   isErrorResponse,
   Without,
   ZodInferOrType,
-} from "@ts-rest/core";
-import { useMemo } from "react";
+} from "@yuqijs/core";
 
 import {
   AppRouteFunctions,

@@ -23,20 +23,21 @@ import {
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
-import { initContract } from "@ts-rest/core";
 import { Response } from "express";
 import { map, Observable } from "rxjs";
 import * as supertest from "supertest";
 import { z } from "zod";
+
+import { initContract } from "@yuqijs/core";
 
 import {
   RequestValidationErrorSchema,
   TsRestException,
   tsRestHandler,
   TsRestHandler,
-} from "./ts-rest-nest-handler";
-import { TsRest } from "./ts-rest.decorator";
-import { TsRestModule } from "./ts-rest.module";
+} from "./yuqijs-nest-handler";
+import { TsRest } from "./yuqijs.decorator";
+import { TsRestModule } from "./yuqijs.module";
 
 import path = require("path");
 
@@ -49,7 +50,7 @@ export type Expect<a extends true> = a;
 
 jest.setTimeout(10000);
 
-describe("ts-rest-nest-handler", () => {
+describe("yuqijs-nest-handler", () => {
   describe("multi-handler api", () => {
     it("should be able to implement a whole contract", async () => {
       const c = initContract();
@@ -723,7 +724,7 @@ describe("ts-rest-nest-handler", () => {
 
       const response = await supertest(app.getHttpServer())
         .post("/multi")
-        .field("messageAsField", "hello from ts-rest")
+        .field("messageAsField", "hello from yuqijs")
         .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
@@ -732,7 +733,7 @@ describe("ts-rest-nest-handler", () => {
       }).toEqual({
         status: 200,
         body: {
-          messageAsField: "hello from ts-rest",
+          messageAsField: "hello from yuqijs",
           fileSize: 11338,
         },
       });
@@ -1084,7 +1085,7 @@ describe("ts-rest-nest-handler", () => {
 
       const response = await supertest(app.getHttpServer())
         .post("/multi")
-        .field("messageAsField", "hello from ts-rest")
+        .field("messageAsField", "hello from yuqijs")
         .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
@@ -1093,7 +1094,7 @@ describe("ts-rest-nest-handler", () => {
       }).toEqual({
         status: 200,
         body: {
-          messageAsField: "hello from ts-rest",
+          messageAsField: "hello from yuqijs",
           fileSize: 11338,
         },
       });
@@ -1487,7 +1488,7 @@ describe("ts-rest-nest-handler", () => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({ myError: "my error" });
 
-      // verify exception filter received error from ts-rest handler
+      // verify exception filter received error from yuqijs handler
       expect(httpExceptionObserver).toHaveBeenCalledTimes(1);
       expect(httpExceptionObserver.mock.calls[0][0]).toMatchObject({
         status: 400,

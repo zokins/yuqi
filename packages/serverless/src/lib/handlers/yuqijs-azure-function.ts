@@ -3,7 +3,8 @@ import type {
   HttpResponse,
   InvocationContext,
 } from "@azure/functions";
-import { AppRouter } from "@ts-rest/core";
+
+import { AppRouter } from "@yuqijs/core";
 
 import {
   requestFromHttpRequest,

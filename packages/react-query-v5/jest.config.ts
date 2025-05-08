@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: "ts-rest-react-query-v5",
+  displayName: "yuqijs-react-query-v5",
   preset: "../../../jest.preset.js",
   transform: {
     "^.+\\.[tj]sx?$": [
@@ -9,5 +9,5 @@ export default {
     ],
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/react-query-v5",
+  coverageDirectory: "../../../coverage/libs/yuqijs/react-query-v5",
 };

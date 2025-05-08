@@ -3,6 +3,7 @@ import {
   QueryFunctionContext,
   QueryKey,
 } from "@tanstack/vue-query";
+
 import {
   AppRoute,
   AppRouteMutation,
@@ -14,7 +15,7 @@ import {
   fetchApi,
   isErrorResponse,
   SuccessfulHttpStatusCode,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 // Data response if it's a 2XX
 export type DataResponse<TAppRoute extends AppRoute> = ClientInferResponses<

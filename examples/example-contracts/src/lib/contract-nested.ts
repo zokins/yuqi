@@ -1,17 +1,18 @@
-import { initContract } from '@ts-rest/core';
-import { apiBlog } from './contract-blog';
+import { initContract } from "@yuqijs/core";
+
+import { apiBlog } from "./contract-blog";
 
 const c = initContract();
 
 const apiHealth = c.router({
   check: {
-    method: 'GET',
-    path: '/health',
+    method: "GET",
+    path: "/health",
     responses: {
       200: c.type<{ message: string }>(),
     },
     query: null,
-    summary: 'Check health',
+    summary: "Check health",
   },
 });
 

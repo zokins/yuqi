@@ -1,4 +1,4 @@
-import { AppRoute, AppRouter } from "@ts-rest/core";
+import { AppRoute, AppRouter } from "@yuqijs/core";
 
 import { AppRouteImplementationOrOptions } from "../types";
 

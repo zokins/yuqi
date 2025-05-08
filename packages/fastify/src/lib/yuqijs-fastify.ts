@@ -1,20 +1,23 @@
-import {
+import type * as fastify from "fastify";
+import { z } from "zod";
+
+import type {
   AppRoute,
   AppRouter,
-  checkZodSchema,
   FlattenAppRouter,
   HTTPStatusCode,
+  ServerInferRequest,
+  ServerInferResponses,
+} from "@yuqijs/core";
+import {
+  checkZodSchema,
   isAppRouteNoBody,
   isAppRouteOtherResponse,
   parseJsonQueryObject,
-  ServerInferRequest,
-  ServerInferResponses,
   TsRestResponseError,
   validateResponse,
   ZodErrorSchema,
-} from "@ts-rest/core";
-import * as fastify from "fastify";
-import { z } from "zod";
+} from "@yuqijs/core";
 
 export class RequestValidationError extends Error {
   constructor(
@@ -34,9 +37,9 @@ export const RequestValidationErrorSchema = z.object({
   bodyErrors: ZodErrorSchema.nullable(),
 });
 
-type FastifyContextConfig<T extends AppRouter | AppRoute> = {
+interface FastifyContextConfig<T extends AppRouter | AppRoute> {
   tsRestRoute: T extends AppRoute ? T : FlattenAppRouter<T>;
-};
+}
 
 type AppRouteImplementation<T extends AppRoute> = (
   input: ServerInferRequest<T, fastify.FastifyRequest["headers"]> & {
@@ -106,7 +109,7 @@ export type ApplicationHooks<TContract extends AppRouter> =
         >[];
   };
 
-type BaseRegisterRouterOptions = {
+interface BaseRegisterRouterOptions {
   logInitialization?: boolean;
   jsonQuery?: boolean;
   responseValidation?: boolean;
@@ -117,16 +120,16 @@ type BaseRegisterRouterOptions = {
         request: fastify.FastifyRequest,
         reply: fastify.FastifyReply,
       ) => void);
-};
+}
 
 type RegisterRouterOptions<T extends AppRouter> = BaseRegisterRouterOptions & {
   hooks?: ApplicationHooks<T>;
 };
 
-type AppRouteOptions<TRoute extends AppRoute> = {
+interface AppRouteOptions<TRoute extends AppRoute> {
   hooks?: RouteHooks<TRoute>;
   handler: AppRouteImplementation<TRoute>;
-};
+}
 
 type AppRouteImplementationOrOptions<TRoute extends AppRoute> =
   | AppRouteOptions<TRoute>
@@ -415,7 +418,7 @@ const registerRoute = <TAppRoute extends AppRoute>(
 /**
  *
  * @param routerImpl - the user's implementation of the router
- * @param appRouter - the `ts-rest` contract for this router
+ * @param appRouter - the Yuqi contract for this router
  * @param path - the path to the current router, e.g. ["posts", "getPosts"]
  * @param fastify  - the fastify instance to register the route on
  * @param options
@@ -429,7 +432,7 @@ const recursivelyRegisterRouter = <T extends AppRouter>(
 ) => {
   if (
     typeof routerImpl === "object" &&
-    typeof routerImpl?.["handler"] !== "function"
+    typeof routerImpl?.handler !== "function"
   ) {
     for (const key in routerImpl) {
       recursivelyRegisterRouter(
@@ -442,7 +445,7 @@ const recursivelyRegisterRouter = <T extends AppRouter>(
     }
   } else if (
     typeof routerImpl === "function" ||
-    typeof routerImpl?.["handler"] === "function"
+    typeof routerImpl?.handler === "function"
   ) {
     registerRoute(
       routerImpl as unknown as AppRouteImplementationOrOptions<AppRoute>,

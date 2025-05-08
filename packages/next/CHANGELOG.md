@@ -1,4 +1,4 @@
-# @ts-rest/next
+# @yuqijs/next
 
 ## 3.52.1
 
@@ -20,7 +20,7 @@
 
 ### Patch Changes
 
-- b31454f: All ts-rest libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
+- b31454f: All yuqijs libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
 
 ## 3.49.0
 
@@ -92,7 +92,7 @@
 
 ### Patch Changes
 
-- 6a5280c: Deprecate initNextClient. Use `initClient` from @ts-rest/core and use the `fetchOptions.next` parameter.
+- 6a5280c: Deprecate initNextClient. Use `initClient` from @yuqijs/core and use the `fetchOptions.next` parameter.
 
 ## 3.36.0
 
@@ -116,23 +116,23 @@
 
 ### Minor Changes
 
-- 3668247: feat: `@ts-rest/next` allow nextjs as a peer dependency
-- cb7aa3d: feat: `ts-rest/next` allow customization for zod validation errors
+- 3668247: feat: `@yuqijs/next` allow nextjs as a peer dependency
+- cb7aa3d: feat: `yuqijs/next` allow customization for zod validation errors
 
 ## 3.30.5
 
 ### Patch Changes
 
-- 9bd7402: - `@ts-rest/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/ts-rest/ts-rest/issues/392))
-  - `@ts-rest/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/ts-rest/ts-rest/pull/414))
-  - `@ts-rest/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/ts-rest/ts-rest/issues/418))
+- 9bd7402: - `@yuqijs/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/yuqijs/yuqijs/issues/392))
+  - `@yuqijs/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/yuqijs/yuqijs/pull/414))
+  - `@yuqijs/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/yuqijs/yuqijs/issues/418))
 - 8cc95c5: add changeset for latest changes
 
 ## 3.30.4
 
 ### Patch Changes
 
-- 10dff96: - fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@ts-rest` peer dependency `zod` to minimum `^3.22.3`
+- 10dff96: - fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@yuqijs` peer dependency `zod` to minimum `^3.22.3`
   - ref PR: https://github.com/colinhacks/zod/pull/2824
 
 ## 3.30.3
@@ -147,15 +147,15 @@
 
 ### Patch Changes
 
-- 5f7b236: - bump `@ts-rest/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
-  - bump `@ts-rest/react-query` peer dependency `zod` to `^3.21.0`
+- 5f7b236: - bump `@yuqijs/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
+  - bump `@yuqijs/react-query` peer dependency `zod` to `^3.21.0`
   - upgrades NX to 16.7 for project root
 
 ## 3.28.0
 
 ### Minor Changes
 
-- a7755ef: Adds support for fetch cache and support for Nextjs App Dir fetch, see this PR for more info: https://github.com/ts-rest/ts-rest/pull/315
+- a7755ef: Adds support for fetch cache and support for Nextjs App Dir fetch, see this PR for more info: https://github.com/yuqijs/yuqijs/pull/315
 
 ## 3.27.0
 
@@ -295,7 +295,7 @@
 
 ### Patch Changes
 
-- 35c64db: Move next lib utils out of @ts-rest/core to reduce bundle size
+- 35c64db: Move next lib utils out of @yuqijs/core to reduce bundle size
 
 ## 3.9.0
 
@@ -349,5 +349,5 @@
 
 ### Minor Changes
 
-- 75f157a: Add Zod validation to @ts-rest/next
+- 75f157a: Add Zod validation to @yuqijs/next
 - a80cc0f: Add initial Next implementation, with a single endpoint based implementation

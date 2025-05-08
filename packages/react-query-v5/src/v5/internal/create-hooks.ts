@@ -14,6 +14,7 @@ import {
   useSuspenseQueries,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+
 import {
   AppRoute,
   AppRouter,
@@ -24,7 +25,7 @@ import {
   isAppRoute,
   isAppRouteQuery,
   isErrorResponse,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import {
   DataResponse,

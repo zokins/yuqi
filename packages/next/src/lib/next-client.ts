@@ -8,7 +8,7 @@ import {
   isAppRoute,
   PartialClientInferRequest,
   Prettify,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 /**
  * Returned from a mutation or query call
@@ -48,7 +48,7 @@ export type InitClientArgs = ClientArgs & {
 };
 
 /**
- * @deprecated use `initClient` from `@ts-rest/core` instead
+ * @deprecated use `initClient` from `@yuqijs/core` instead
  */
 export const initNextClient = <
   T extends AppRouter,

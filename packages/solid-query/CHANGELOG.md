@@ -1,4 +1,4 @@
-# @ts-rest/solid-query
+# @yuqijs/solid-query
 
 ## 3.52.1
 
@@ -20,7 +20,7 @@
 
 ### Patch Changes
 
-- b31454f: All ts-rest libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
+- b31454f: All yuqijs libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
 
 ## 3.49.0
 
@@ -102,16 +102,16 @@
 
 ### Patch Changes
 
-- 9bd7402: - `@ts-rest/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/ts-rest/ts-rest/issues/392))
-  - `@ts-rest/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/ts-rest/ts-rest/pull/414))
-  - `@ts-rest/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/ts-rest/ts-rest/issues/418))
+- 9bd7402: - `@yuqijs/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/yuqijs/yuqijs/issues/392))
+  - `@yuqijs/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/yuqijs/yuqijs/pull/414))
+  - `@yuqijs/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/yuqijs/yuqijs/issues/418))
 - 8cc95c5: add changeset for latest changes
 
 ## 3.30.4
 
 ### Patch Changes
 
-- 10dff96: - fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@ts-rest` peer dependency `zod` to minimum `^3.22.3`
+- 10dff96: - fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@yuqijs` peer dependency `zod` to minimum `^3.22.3`
   - ref PR: https://github.com/colinhacks/zod/pull/2824
 
 ## 3.30.3
@@ -126,8 +126,8 @@
 
 ### Patch Changes
 
-- 5f7b236: - bump `@ts-rest/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
-  - bump `@ts-rest/react-query` peer dependency `zod` to `^3.21.0`
+- 5f7b236: - bump `@yuqijs/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
+  - bump `@yuqijs/react-query` peer dependency `zod` to `^3.21.0`
   - upgrades NX to 16.7 for project root
 
 ## 3.28.0
@@ -226,7 +226,7 @@
 - 3fa43d9: Export the default fetch API as `tsRestFetchApi` from the core library, enables you to easy modify the fetcher
 - 3fa43d9: Add the ability to remove a baseHeader on a per-request basis by setting the headers value to undefined
 - 3fa43d9: Add solid-query support for extra args and custom headers
-- 3fa43d9: Prettify the arguments of API calls, making it much clearer what data should be passed to ts-rest api calls (thanks @mattpocockuk!)
+- 3fa43d9: Prettify the arguments of API calls, making it much clearer what data should be passed to yuqijs api calls (thanks @mattpocockuk!)
 
 ## 3.17.0
 
@@ -332,4 +332,4 @@
 
 ### Minor Changes
 
-- c9a5a52: Add useInfiniteQuery support to @ts-rest/solid-query
+- c9a5a52: Add useInfiniteQuery support to @yuqijs/solid-query

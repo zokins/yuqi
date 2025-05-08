@@ -9,20 +9,21 @@ import {
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test } from "@nestjs/testing";
-import { initContract, TsRestResponseError } from "@ts-rest/core";
 import * as supertest from "supertest";
 import { z } from "zod";
+
+import { initContract, TsRestResponseError } from "@yuqijs/core";
 
 import {
   nestControllerContract,
   NestControllerInterface,
   NestRequestShapes,
   NestResponseShapes,
-} from "./ts-rest-nest";
-import { tsRestHandler, TsRestHandler } from "./ts-rest-nest-handler";
-import { TsRestRequest } from "./ts-rest-request.decorator";
-import { TsRest } from "./ts-rest.decorator";
-import { TsRestModule } from "./ts-rest.module";
+} from "./yuqijs-nest";
+import { tsRestHandler, TsRestHandler } from "./yuqijs-nest-handler";
+import { TsRestRequest } from "./yuqijs-request.decorator";
+import { TsRest } from "./yuqijs.decorator";
+import { TsRestModule } from "./yuqijs.module";
 
 const c = initContract();
 const postsRouter = c.router({
@@ -403,7 +404,7 @@ describe("request validation", () => {
   });
 });
 
-describe("ts-rest-nest", () => {
+describe("yuqijs-nest", () => {
   let app: INestApplication;
 
   afterEach(async () => {

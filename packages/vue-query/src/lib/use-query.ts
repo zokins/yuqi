@@ -5,6 +5,7 @@ import {
   UseQueryOptions,
   UseQueryReturnType,
 } from "@tanstack/vue-query";
+
 import {
   AppRoute,
   AppRouteMutation,
@@ -12,7 +13,7 @@ import {
   ClientArgs,
   ClientInferRequest,
   PartialClientInferRequest,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import { DataResponse, ErrorResponse, queryFn } from "./common";
 

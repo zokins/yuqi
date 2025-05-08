@@ -1,6 +1,7 @@
 import { IncomingHttpHeaders } from "http";
-import { initContract } from "@ts-rest/core";
 import { z } from "zod";
+
+import { initContract } from "@yuqijs/core";
 
 import { AppRouteImplementation } from "./types";
 

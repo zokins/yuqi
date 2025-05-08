@@ -7,18 +7,19 @@ import type {
   APIGatewayProxyEventV2,
   Context,
 } from "aws-lambda";
-import { initContract } from "@ts-rest/core";
 import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
 import merge from "ts-deepmerge";
 import { PartialDeep } from "type-fest";
 import { z } from "zod";
+
+import { initContract } from "@yuqijs/core";
 
 import { TsRestResponseError } from "../http-error";
 import { ApiGatewayEvent } from "../mappers/aws/api-gateway";
 import * as apiGatewayEventV1 from "../mappers/aws/test-data/api-gateway-event-v1.json";
 import * as apiGatewayEventV2 from "../mappers/aws/test-data/api-gateway-event-v2.json";
 import { TsRestResponse } from "../response";
-import { createLambdaHandler, tsr } from "./ts-rest-lambda";
+import { createLambdaHandler, tsr } from "./yuqijs-lambda";
 
 const c = initContract();
 
@@ -700,7 +701,7 @@ describe("tsRestLambda", () => {
           'Content-Disposition: form-data; name="file"; filename="a.html"\r\n' +
           "Content-Type: text/html\r\n" +
           "\r\n" +
-          "<html><body><h1>Hello ts-rest!</h1></body></html>\r\n" +
+          "<html><body><h1>Hello yuqijs!</h1></body></html>\r\n" +
           "-----WebKitFormBoundary7MA4YWxkTrZu0gW--",
       ).toString("base64"),
       headers: {
@@ -722,7 +723,7 @@ describe("tsRestLambda", () => {
           "multipart/form-data; boundary=---WebKitFormBoundary7MA4YWxkTrZu0gW",
         "x-is-base64-encoded-echo": "true",
       },
-      body: "<html><body><h1>Hello ts-rest!</h1></body></html>",
+      body: "<html><body><h1>Hello yuqijs!</h1></body></html>",
       isBase64Encoded: false,
     });
   });

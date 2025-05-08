@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: "ts-rest-open-api",
+  displayName: "yuqijs-open-api",
   preset: "../../../jest.preset.js",
   globals: {},
   transform: {
@@ -12,5 +12,5 @@ export default {
     ],
   },
   moduleFileExtensions: ["ts", "js", "html"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/open-api",
+  coverageDirectory: "../../../coverage/libs/yuqijs/open-api",
 };

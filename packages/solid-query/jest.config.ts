@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: "ts-rest-solid-query",
+  displayName: "yuqijs-solid-query",
   preset: "../../../jest.preset.js",
   transform: {
     "^.+\\.[tj]sx?$": [
@@ -9,5 +9,5 @@ export default {
     ],
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  coverageDirectory: "../../../coverage/libs/ts-rest/solid-query",
+  coverageDirectory: "../../../coverage/libs/yuqijs/solid-query",
 };

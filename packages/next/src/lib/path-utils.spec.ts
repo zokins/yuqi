@@ -1,4 +1,4 @@
-import { initContract } from "@ts-rest/core";
+import { initContract } from "@yuqijs/core";
 
 import { getPathParamsFromArray } from "./path-utils";
 

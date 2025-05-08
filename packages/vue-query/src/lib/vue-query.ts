@@ -8,7 +8,7 @@ import {
   getRouteQuery,
   isAppRoute,
   Without,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import {
   DataReturnInfiniteQuery,

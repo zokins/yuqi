@@ -1,10 +1,11 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
+
 import {
   initContract,
   ResponseValidationError,
   TsRestResponseError,
-} from "@ts-rest/core";
-import { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
+} from "@yuqijs/core";
 
 import {
   createNextRoute,
@@ -12,7 +13,7 @@ import {
   createSingleRouteHandler,
   RequestValidationError,
   RequestValidationErrorSchema,
-} from "./ts-rest-next";
+} from "./yuqijs-next";
 
 const c = initContract();
 
@@ -707,7 +708,7 @@ export const mockReq = (
   const req = {
     query: {
       ...args.query,
-      ["ts-rest"]: paramArray,
+      ["yuqijs"]: paramArray,
     },
     body: args.body,
     method: args.method,

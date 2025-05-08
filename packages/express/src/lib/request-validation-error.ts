@@ -1,5 +1,6 @@
-import { ZodErrorSchema } from "@ts-rest/core";
 import { z } from "zod";
+
+import { ZodErrorSchema } from "@yuqijs/core";
 
 export class RequestValidationError extends Error {
   constructor(

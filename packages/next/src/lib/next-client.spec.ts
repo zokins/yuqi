@@ -1,9 +1,10 @@
+import { z } from "zod";
+
 import {
   FetchOptions,
   initContract,
   OverrideableClientArgs,
-} from "@ts-rest/core";
-import { z } from "zod";
+} from "@yuqijs/core";
 
 import type { Equal, Expect } from "./test-helpers";
 import { initNextClient } from "./next-client";

@@ -3,9 +3,9 @@ import {
   AppRouter,
   ServerInferResponses,
   Without,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
-import { TsRestRequestShape } from "./ts-rest-request.decorator";
+import { TsRestRequestShape } from "./yuqijs-request.decorator";
 
 type AppRouterMethodShape<T extends AppRoute> = (
   ...args: any[]

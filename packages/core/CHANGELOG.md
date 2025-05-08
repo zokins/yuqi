@@ -1,4 +1,4 @@
-# @ts-rest/core
+# @yuqijs/core
 
 ## 3.52.1
 
@@ -33,7 +33,7 @@
 ### Patch Changes
 
 - 1f9fd4a: Fix client functions resolving as `any` in TS 5.5 when `dom` is not included in tsconfig libs
-- 740c538: Fix pnpm `Maximum call stack size exceeded` when installing @ts-rest/core
+- 740c538: Fix pnpm `Maximum call stack size exceeded` when installing @yuqijs/core
 
 ## 3.49.2
 
@@ -41,7 +41,7 @@
 
 ### Patch Changes
 
-- b31454f: All ts-rest libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
+- b31454f: All yuqijs libraries are now packaged in a better way to be compatible with as many bundlers as possible. The @tanstack/react-query `No QueryClient set` error should also occur much less now.
 
 ## 3.49.0
 
@@ -134,7 +134,7 @@
 
 ### Patch Changes
 
-- 0b9f249: Fix ts-rest overwriting a supplied content-type header
+- 0b9f249: Fix yuqijs overwriting a supplied content-type header
 - 15d4926: Fix invalid `extraHeaders` type when no headers are defined in the contract
 
 ## 3.37.0
@@ -167,7 +167,7 @@
 
 ### Minor Changes
 
-- c4fb3f6: feat: `@ts-rest/core`: Add support for `x-www-form-urlencoded` content-type to core client fetcher
+- c4fb3f6: feat: `@yuqijs/core`: Add support for `x-www-form-urlencoded` content-type to core client fetcher
 
 ## 3.31.0
 
@@ -175,30 +175,30 @@
 
 ### Patch Changes
 
-- 9bd7402: - `@ts-rest/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/ts-rest/ts-rest/issues/392))
-  - `@ts-rest/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/ts-rest/ts-rest/pull/414))
-  - `@ts-rest/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/ts-rest/ts-rest/issues/418))
+- 9bd7402: - `@yuqijs/fastify` fix: fastify deprecated routerPath property (fixes [#392](https://github.com/yuqijs/yuqijs/issues/392))
+  - `@yuqijs/open-api` fix: Pass through contentType to OpenApi schema ([#414](https://github.com/yuqijs/yuqijs/pull/414))
+  - `@yuqijs/core` fix: Content-type text/html returns blob body (fixes [#418](https://github.com/yuqijs/yuqijs/issues/418))
 - 8cc95c5: add changeset for latest changes
 
 ## 3.30.4
 
 ### Patch Changes
 
-- 10dff96: - (all packages) fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@ts-rest` peer dependency `zod` to minimum `^3.22.3`
+- 10dff96: - (all packages) fix: address `zod` [CVE](https://nvd.nist.gov/vuln/detail/CVE-2023-4316) with bump `@yuqijs` peer dependency `zod` to minimum `^3.22.3`
   - ref PR: https://github.com/colinhacks/zod/pull/2824
 
 ## 3.30.3
 
 ### Patch Changes
 
-- da48e62: fix: apply `validateResponseOnClient` recursively to nested App Routers in `@ts-rest/core` client
+- da48e62: fix: apply `validateResponseOnClient` recursively to nested App Routers in `@yuqijs/core` client
 
 ## 3.30.2
 
 ### Patch Changes
 
 - bd0161b: fix: content-type application/json will not be automatically included in client request if the route is GET or body is undefined/null
-  > if you need to send this header for whatever reason in a GET request/undefined body request, you can pass in runtime headers https://ts-rest.com/docs/core/#headers
+  > if you need to send this header for whatever reason in a GET request/undefined body request, you can pass in runtime headers https://yuqijs.com/docs/core/#headers
 
 ## 3.30.1
 
@@ -206,21 +206,21 @@
 
 ### Minor Changes
 
-- c056132: feat: add support for client-side response validation against contract schemas for `@ts-rest/core` (see docs for usage)
+- c056132: feat: add support for client-side response validation against contract schemas for `@yuqijs/core` (see docs for usage)
 
 ## 3.29.0
 
 ### Patch Changes
 
-- 5f7b236: - bump `@ts-rest/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
-  - bump `@ts-rest/react-query` peer dependency `zod` to `^3.21.0`
+- 5f7b236: - bump `@yuqijs/react-query` peer dependency `@tanstack/react-query` to `^4.0.0` (latest 4.33.0)
+  - bump `@yuqijs/react-query` peer dependency `zod` to `^3.21.0`
   - upgrades NX to 16.7 for project root
 
 ## 3.28.0
 
 ### Minor Changes
 
-- a7755ef: Adds support for fetch cache and support for Nextjs App Dir fetch (docs coming soon), see this PR for more info: https://github.com/ts-rest/ts-rest/pull/315
+- a7755ef: Adds support for fetch cache and support for Nextjs App Dir fetch (docs coming soon), see this PR for more info: https://github.com/yuqijs/yuqijs/pull/315
 - 16501dd: tsRestFetchApi should be more flexible when determining application/json content type header
 
 ## 3.27.0
@@ -243,7 +243,7 @@
 ### Minor Changes
 
 - fcf877d: Allow defining non-json response types in the contract
-- 48b138d: Add new `SingleHandler` and `MultiHandler` API to `@ts-rest/nest`
+- 48b138d: Add new `SingleHandler` and `MultiHandler` API to `@yuqijs/nest`
 - 2763208: Added `pathPrefix` to contract options to allow recursive path prefixing.
 
 ## 3.25.1
@@ -354,7 +354,7 @@ If you are using `axios`, you can return `new Headers(response.headers.toJSON())
 - 3fa43d9: Export the default fetch API as `tsRestFetchApi` from the core library, enables you to easy modify the fetcher
 - 3fa43d9: Add the ability to remove a baseHeader on a per-request basis by setting the headers value to undefined
 - 3fa43d9: Allow custom API to allow extra args, and type them in the individual api calls
-- 3fa43d9: Prettify the arguments of API calls, making it much clearer what data should be passed to ts-rest api calls (thanks @mattpocockuk!)
+- 3fa43d9: Prettify the arguments of API calls, making it much clearer what data should be passed to yuqijs api calls (thanks @mattpocockuk!)
 
 ## 3.17.0
 
@@ -443,7 +443,7 @@ If you are using `axios`, you can return `new Headers(response.headers.toJSON())
 
 ### Patch Changes
 
-- 35c64db: Move next lib utils out of @ts-rest/core to reduce bundle size
+- 35c64db: Move next lib utils out of @yuqijs/core to reduce bundle size
 
 ## 3.9.0
 
@@ -510,7 +510,7 @@ If you are using `axios`, you can return `new Headers(response.headers.toJSON())
 
 ### Minor Changes
 
-- 75f157a: Add Zod validation to @ts-rest/next
+- 75f157a: Add Zod validation to @yuqijs/next
 
 ## 2.0.1
 
@@ -550,7 +550,7 @@ If you are using `axios`, you can return `new Headers(response.headers.toJSON())
 
 ### Minor Changes
 
-- 72dd65d: Extract express logic to @ts-rest/express
+- 72dd65d: Extract express logic to @yuqijs/express
 
 ## 1.0.4
 

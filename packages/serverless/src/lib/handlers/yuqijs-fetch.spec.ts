@@ -1,7 +1,8 @@
-import { initContract, TsRestResponseError } from "@ts-rest/core";
 import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
 import { vi } from "vitest";
 import { z } from "zod";
+
+import { initContract, TsRestResponseError } from "@yuqijs/core";
 
 import { RequestValidationErrorSchema } from "../types";
 import {
@@ -9,7 +10,7 @@ import {
   FetchHandlerOptions,
   fetchRequestHandler,
   tsr,
-} from "./ts-rest-fetch";
+} from "./yuqijs-fetch";
 
 const c = initContract();
 
@@ -309,13 +310,13 @@ describe("fetchRequestHandler", () => {
         'Content-Disposition: form-data; name="file"; filename="a.html"\r\n' +
         "Content-Type: text/html\r\n" +
         "\r\n" +
-        "<html><body><h1>Hello ts-rest!</h1></body></html>\r\n" +
+        "<html><body><h1>Hello yuqijs!</h1></body></html>\r\n" +
         "-----WebKitFormBoundary7MA4YWxkTrZu0gW--",
     });
 
     const response = await testFetchRequestHandler(request);
     const expectedResponse = new Response(
-      "<html><body><h1>Hello ts-rest!</h1></body></html>",
+      "<html><body><h1>Hello yuqijs!</h1></body></html>",
       {
         headers: {
           "access-control-allow-credentials": "true",

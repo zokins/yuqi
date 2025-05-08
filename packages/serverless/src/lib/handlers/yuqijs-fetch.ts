@@ -1,4 +1,4 @@
-import { AppRouter } from "@ts-rest/core";
+import { AppRouter } from "@yuqijs/core";
 
 import { TsRestRequest } from "../request";
 import { createServerlessRouter } from "../router";

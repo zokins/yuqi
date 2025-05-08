@@ -9,6 +9,7 @@ import {
   Optional,
   PipeTransform,
 } from "@nestjs/common";
+
 import {
   AppRoute,
   AppRouteMutation,
@@ -16,11 +17,11 @@ import {
   parseJsonQueryObject,
   ServerInferRequest,
   zodErrorResponse,
-} from "@ts-rest/core";
+} from "@yuqijs/core";
 
 import { TsRestAppRouteMetadataKey } from "./constants";
-import { evaluateTsRestOptions, MaybeTsRestOptions } from "./ts-rest-options";
-import { TS_REST_MODULE_OPTIONS_TOKEN } from "./ts-rest.module";
+import { evaluateTsRestOptions, MaybeTsRestOptions } from "./yuqijs-options";
+import { TS_REST_MODULE_OPTIONS_TOKEN } from "./yuqijs.module";
 
 export type TsRestRequestShape<TRoute extends AppRoute> = ServerInferRequest<
   TRoute,

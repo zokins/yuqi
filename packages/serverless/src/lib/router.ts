@@ -1,3 +1,5 @@
+import { cors, Router, withParams } from "itty-router";
+
 import {
   AppRoute,
   AppRouter,
@@ -10,8 +12,7 @@ import {
   ResponseValidationError as ResponseValidationErrorCore,
   TsRestResponseError,
   validateResponse,
-} from "@ts-rest/core";
-import { cors, Router, withParams } from "itty-router";
+} from "@yuqijs/core";
 
 import { TsRestHttpError } from "./http-error";
 import { TsRestRequest } from "./request";

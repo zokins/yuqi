@@ -4,10 +4,11 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
-import { ApiFetcher, initContract } from "@ts-rest/core";
 import * as React from "react";
 import { act } from "react-dom/test-utils";
 import { z } from "zod";
+
+import { ApiFetcher, initContract } from "@yuqijs/core";
 
 import { initQueryClient, useTsRestQueryClient } from "./react-query";
 

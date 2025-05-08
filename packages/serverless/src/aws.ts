@@ -1,2 +1,2 @@
-export * from "./lib/handlers/ts-rest-lambda";
+export * from "./lib/handlers/yuqijs-lambda";
 export * from "./index";

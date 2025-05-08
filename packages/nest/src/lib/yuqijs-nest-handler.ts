@@ -21,6 +21,9 @@ import {
 } from "@nestjs/common";
 import { PATH_METADATA } from "@nestjs/common/constants";
 import { Reflector } from "@nestjs/core";
+import { mergeMap, Observable } from "rxjs";
+import { z } from "zod";
+
 import {
   AppRoute,
   AppRouter,
@@ -31,9 +34,7 @@ import {
   ServerInferResponses,
   TsRestResponseError,
   ZodErrorSchema,
-} from "@ts-rest/core";
-import { mergeMap, Observable } from "rxjs";
-import { z } from "zod";
+} from "@yuqijs/core";
 
 import {
   TsRestAppRouteMetadataKey,
@@ -43,9 +44,9 @@ import {
   evaluateTsRestOptions,
   MaybeTsRestOptions,
   TsRestOptions,
-} from "./ts-rest-options";
-import { TsRestRequestShape } from "./ts-rest-request.decorator";
-import { TS_REST_MODULE_OPTIONS_TOKEN } from "./ts-rest.module";
+} from "./yuqijs-options";
+import { TsRestRequestShape } from "./yuqijs-request.decorator";
+import { TS_REST_MODULE_OPTIONS_TOKEN } from "./yuqijs.module";
 
 type TsRestAppRouteMetadata = {
   appRoute: AppRoute;
