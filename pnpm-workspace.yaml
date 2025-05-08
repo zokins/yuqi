@@ -1,3 +1,22 @@
 packages:
-  - 'apps/**/*'
-  - 'libs/**/*'
+  - 'apps/*'
+  - 'packages/*'
+  - 'examples/*'
+  - 'tooling/*'
+
+catalog:
+  # Dev tooling
+  eslint: ^9.25.1
+  prettier: ^3.5.3
+  typescript: ^5.8.3
+
+  # Misc
+  zod: ^3.24.3
+
+  # Tanstack & tRPC
+  "@tanstack/react-query": ^5.69.0
+  "@trpc/client": ^11.1.0
+  "@trpc/tanstack-react-query": ^11.1.0
+
+onlyBuiltDependencies:
+  - esbuild

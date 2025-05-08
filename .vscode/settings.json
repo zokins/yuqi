@@ -1,15 +1,24 @@
 {
-  "cSpell.words": [
-    "fastify",
-    "openapi",
-    "solidjs",
-    "tanstack",
-    "todos",
-    "TRPC",
-    "ts-rest"
-  ],
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": "file:///Users/olly/projects/ts-rest/.github/workflows/deploy.yml"
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[typescript,typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.formatOnSave": true,
+    "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
+    "eslint.runtime": "node",
+    "eslint.workingDirectories": [
+      { "pattern": "apps/*/" },
+      { "pattern": "packages/*/" },
+      { "pattern": "tooling/*/" },
+      { "pattern": "examples/*/" }
+    ],
+    "prettier.ignorePath": ".gitignore",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "typescript.preferences.autoImportFileExcludePatterns": [
+     
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
   }
-}

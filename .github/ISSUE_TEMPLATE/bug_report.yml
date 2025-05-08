@@ -1,7 +1,7 @@
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
 name: Bug report
 description: Create a report to help us improve
-labels: ['bug', 'needs investigation']
+labels: ["bug", "needs investigation"]
 body:
   - type: textarea
     id: description
@@ -41,9 +41,9 @@ body:
     validations:
       required: true
   - type: textarea
-    id: ts-rest-version
+    id: yuqi-version
     attributes:
-      label: ts-rest version
-      description: Which version of the ts-rest packages are you using?
+      label: yuqi version
+      description: Which version of the Yuqi packages are you using?
     validations:
       required: true

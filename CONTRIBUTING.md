@@ -5,8 +5,8 @@ Thanks for wanting to contribute to the project! Below is some guidance for help
 ## Development workflow
 
 ```bash
-git clone git@github.com:ts-rest/ts-rest.git
-cd ts-rest
+git clone git@github.com:zokins/yuqi.git
+cd yuqi
 pnpm install
 ```
 
