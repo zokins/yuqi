@@ -1,24 +1,24 @@
-import { AppRoute } from './dsl';
+import { AppRoute } from "./dsl";
 import {
   ClientInferResponses,
   InferResponseUndefinedStatusCodes,
-} from './infer-types';
+} from "./infer-types";
 import {
   ErrorHttpStatusCode,
   HTTPStatusCode,
   SuccessfulHttpStatusCode,
-} from './status-codes';
+} from "./status-codes";
 
 export const isResponse = <T extends AppRoute>(
   response: unknown,
   contractEndpoint?: T,
 ): response is ClientInferResponses<T, HTTPStatusCode> => {
   return (
-    typeof response === 'object' &&
+    typeof response === "object" &&
     response !== null &&
-    'status' in response &&
-    'body' in response &&
-    typeof response.status === 'number' &&
+    "status" in response &&
+    "body" in response &&
+    typeof response.status === "number" &&
     response.status >= 200 &&
     response.status < 600 &&
     (contractEndpoint?.strictStatusCodes
@@ -56,7 +56,7 @@ export const isUnknownResponse = <T extends AppRoute>(
 ): response is ClientInferResponses<
   T,
   InferResponseUndefinedStatusCodes<T>,
-  'ignore'
+  "ignore"
 > => {
   return (
     isResponse(response) &&
@@ -72,7 +72,7 @@ export const isUnknownSuccessResponse = <T extends AppRoute>(
 ): response is ClientInferResponses<
   T,
   InferResponseUndefinedStatusCodes<T, SuccessfulHttpStatusCode>,
-  'ignore'
+  "ignore"
 > => {
   return (
     isSuccessResponse(response) && isUnknownResponse(response, contractEndpoint)
@@ -85,7 +85,7 @@ export const isUnknownErrorResponse = <T extends AppRoute>(
 ): response is ClientInferResponses<
   T,
   InferResponseUndefinedStatusCodes<T, ErrorHttpStatusCode>,
-  'ignore'
+  "ignore"
 > => {
   return (
     isErrorResponse(response) && isUnknownResponse(response, contractEndpoint)

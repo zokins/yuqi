@@ -1,8 +1,9 @@
-import { Merge, Opaque, Prettify, WithoutUnknown } from './type-utils';
-import { zodMerge } from './zod-utils';
-import { z } from 'zod';
+import { z } from "zod";
 
-type MixedZodError<A, B> = Opaque<{ a: A; b: B }, 'MixedZodError'>;
+import { Merge, Opaque, Prettify, WithoutUnknown } from "./type-utils";
+import { zodMerge } from "./zod-utils";
+
+type MixedZodError<A, B> = Opaque<{ a: A; b: B }, "MixedZodError">;
 
 /**
  * The path with colon-prefixed parameters
@@ -11,10 +12,10 @@ type MixedZodError<A, B> = Opaque<{ a: A; b: B }, 'MixedZodError'>;
 type Path = string;
 
 declare const NullSymbol: unique symbol;
-export const ContractNoBody = Symbol('ContractNoBody');
+export const ContractNoBody = Symbol("ContractNoBody");
 
-export type ContractPlainType<T> = Opaque<T, 'ContractPlainType'>;
-export type ContractNullType = Opaque<typeof NullSymbol, 'ContractNullType'>;
+export type ContractPlainType<T> = Opaque<T, "ContractPlainType">;
+export type ContractNullType = Opaque<typeof NullSymbol, "ContractNullType">;
 export type ContractNoBodyType = typeof ContractNoBody;
 export type ContractAnyType =
   | z.ZodSchema
@@ -23,7 +24,7 @@ export type ContractAnyType =
   | null;
 export type ContractOtherResponse<T extends ContractAnyType> = Opaque<
   { contentType: string; body: T },
-  'ContractOtherResponse'
+  "ContractOtherResponse"
 >;
 
 export type AppRouteResponse =
@@ -53,7 +54,7 @@ type AppRouteCommon = {
  * A query endpoint. In REST terms, one using GET.
  */
 export type AppRouteQuery = AppRouteCommon & {
-  method: 'GET';
+  method: "GET";
 };
 
 /**
@@ -61,11 +62,11 @@ export type AppRouteQuery = AppRouteCommon & {
  * PATCH, or DELETE.
  */
 export type AppRouteMutation = AppRouteCommon & {
-  method: 'POST' | 'DELETE' | 'PUT' | 'PATCH';
+  method: "POST" | "DELETE" | "PUT" | "PATCH";
   contentType?:
-    | 'application/json'
-    | 'multipart/form-data'
-    | 'application/x-www-form-urlencoded';
+    | "application/json"
+    | "multipart/form-data"
+    | "application/x-www-form-urlencoded";
   body: ContractAnyType | ContractNoBodyType;
 };
 
@@ -74,17 +75,17 @@ export type AppRouteMutation = AppRouteCommon & {
  * PATCH, or DELETE.
  */
 export type AppRouteDeleteNoBody = AppRouteCommon & {
-  method: 'DELETE';
+  method: "DELETE";
 };
 
 type ValidatedHeaders<
   T extends AppRoute,
   TOptions extends RouterOptions,
   TOptionsApplied = ApplyOptions<T, TOptions>,
-> = 'headers' extends keyof TOptionsApplied
-  ? TOptionsApplied['headers'] extends MixedZodError<infer A, infer B>
+> = "headers" extends keyof TOptionsApplied
+  ? TOptionsApplied["headers"] extends MixedZodError<infer A, infer B>
     ? {
-        _error: 'Cannot mix plain object types with Zod objects for headers';
+        _error: "Cannot mix plain object types with Zod objects for headers";
         a: A;
         b: B;
       }
@@ -103,8 +104,8 @@ type RecursivelyProcessAppRouter<
   [K in keyof T]: T[K] extends AppRoute
     ? ValidatedHeaders<T[K], TOptions>
     : T[K] extends AppRouter
-    ? RecursivelyProcessAppRouter<T[K], TOptions>
-    : T[K];
+      ? RecursivelyProcessAppRouter<T[K], TOptions>
+      : T[K];
 };
 
 type RecursivelyApplyOptions<
@@ -114,60 +115,60 @@ type RecursivelyApplyOptions<
   [TRouterKey in keyof TRouter]: TRouter[TRouterKey] extends AppRoute
     ? Prettify<ApplyOptions<TRouter[TRouterKey], TOptions>>
     : TRouter[TRouterKey] extends AppRouter
-    ? RecursivelyApplyOptions<TRouter[TRouterKey], TOptions>
-    : TRouter[TRouterKey];
+      ? RecursivelyApplyOptions<TRouter[TRouterKey], TOptions>
+      : TRouter[TRouterKey];
 };
 
 type UniversalMerge<A, B> = A extends z.AnyZodObject
   ? B extends z.AnyZodObject
     ? z.ZodObject<
-        z.objectUtil.MergeShapes<A['shape'], B['shape']>,
-        B['_def']['unknownKeys'],
-        B['_def']['catchall']
+        z.objectUtil.MergeShapes<A["shape"], B["shape"]>,
+        B["_def"]["unknownKeys"],
+        B["_def"]["catchall"]
       >
     : unknown extends B
-    ? A
-    : MixedZodError<A, B>
+      ? A
+      : MixedZodError<A, B>
   : unknown extends A
-  ? B
-  : B extends z.AnyZodObject
-  ? MixedZodError<A, B>
-  : unknown extends B
-  ? A
-  : Prettify<
-      Merge<
-        A extends ContractPlainType<infer APlain> ? APlain : A,
-        B extends ContractPlainType<infer BPlain> ? BPlain : B
-      >
-    >;
+    ? B
+    : B extends z.AnyZodObject
+      ? MixedZodError<A, B>
+      : unknown extends B
+        ? A
+        : Prettify<
+            Merge<
+              A extends ContractPlainType<infer APlain> ? APlain : A,
+              B extends ContractPlainType<infer BPlain> ? BPlain : B
+            >
+          >;
 
 type ApplyOptions<
   TRoute extends AppRoute,
   TOptions extends RouterOptions,
-> = Omit<TRoute, 'headers' | 'path' | 'responses'> &
+> = Omit<TRoute, "headers" | "path" | "responses"> &
   WithoutUnknown<{
-    path: TOptions['pathPrefix'] extends string
-      ? `${TOptions['pathPrefix']}${TRoute['path']}`
-      : TRoute['path'];
-    headers: UniversalMerge<TOptions['baseHeaders'], TRoute['headers']>;
-    strictStatusCodes: TRoute['strictStatusCodes'] extends boolean
-      ? TRoute['strictStatusCodes']
-      : TOptions['strictStatusCodes'] extends boolean
-      ? TOptions['strictStatusCodes']
-      : unknown;
-    responses: 'commonResponses' extends keyof TOptions
-      ? Prettify<Merge<TOptions['commonResponses'], TRoute['responses']>>
-      : TRoute['responses'];
-    metadata: 'metadata' extends keyof TOptions
-      ? Prettify<Merge<TOptions['metadata'], TRoute['metadata']>>
-      : TRoute['metadata'];
+    path: TOptions["pathPrefix"] extends string
+      ? `${TOptions["pathPrefix"]}${TRoute["path"]}`
+      : TRoute["path"];
+    headers: UniversalMerge<TOptions["baseHeaders"], TRoute["headers"]>;
+    strictStatusCodes: TRoute["strictStatusCodes"] extends boolean
+      ? TRoute["strictStatusCodes"]
+      : TOptions["strictStatusCodes"] extends boolean
+        ? TOptions["strictStatusCodes"]
+        : unknown;
+    responses: "commonResponses" extends keyof TOptions
+      ? Prettify<Merge<TOptions["commonResponses"], TRoute["responses"]>>
+      : TRoute["responses"];
+    metadata: "metadata" extends keyof TOptions
+      ? Prettify<Merge<TOptions["metadata"], TRoute["metadata"]>>
+      : TRoute["metadata"];
   }>;
 
 /**
  * A union of all possible endpoint types.
  */
 export type AppRoute = AppRouteQuery | AppRouteMutation | AppRouteDeleteNoBody;
-export type AppRouteStrictStatusCodes = Omit<AppRoute, 'strictStatusCodes'> & {
+export type AppRouteStrictStatusCodes = Omit<AppRoute, "strictStatusCodes"> & {
   strictStatusCodes: true;
 };
 
@@ -186,8 +187,8 @@ export type FlattenAppRouter<T extends AppRouter | AppRoute> =
         [TKey in keyof T]: T[TKey] extends AppRoute
           ? T[TKey]
           : T[TKey] extends AppRouter
-          ? FlattenAppRouter<T[TKey]>
-          : never;
+            ? FlattenAppRouter<T[TKey]>
+            : never;
       }[keyof T];
 
 export type RouterOptions<TPrefix extends string = string> = {
@@ -210,11 +211,11 @@ export type RouterOptions<TPrefix extends string = string> = {
  * @returns
  */
 export const isAppRoute = (obj: AppRoute | AppRouter): obj is AppRoute => {
-  return 'method' in obj && 'path' in obj;
+  return "method" in obj && "path" in obj;
 };
 
 export const isAppRouteQuery = (route: AppRoute): route is AppRouteQuery => {
-  return route.method === 'GET';
+  return route.method === "GET";
 };
 
 export const isAppRouteMutation = (
@@ -327,7 +328,7 @@ const recursivelyApplyOptions = <T extends AppRouter>(
 };
 
 export const ContractPlainTypeRuntimeSymbol = Symbol(
-  'ContractPlainType',
+  "ContractPlainType",
 ) as any;
 
 /**

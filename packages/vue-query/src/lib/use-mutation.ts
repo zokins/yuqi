@@ -1,8 +1,8 @@
 import type {
   MutationOptions,
   UseMutationReturnType,
-} from '@tanstack/vue-query';
-import { useMutation } from '@tanstack/vue-query';
+} from "@tanstack/vue-query";
+import { useMutation } from "@tanstack/vue-query";
 import {
   AppRoute,
   AppRouteMutation,
@@ -10,8 +10,9 @@ import {
   ClientInferRequest,
   PartialClientInferRequest,
   ZodInferOrType,
-} from '@ts-rest/core';
-import { DataResponse, ErrorResponse, queryFn } from './common';
+} from "@ts-rest/core";
+
+import { DataResponse, ErrorResponse, queryFn } from "./common";
 
 // Used pn X.useMutation
 export type DataReturnMutation<
@@ -36,7 +37,7 @@ export const getRouteUseMutation =
     route: TAppRoute,
     clientArgs: TClientArgs,
   ) =>
-  (options?: MutationOptions<TAppRoute['responses']>) => {
+  (options?: MutationOptions<TAppRoute["responses"]>) => {
     const mutationFunction = async (
       args?: ClientInferRequest<AppRouteMutation, ClientArgs>,
     ) => {
@@ -47,7 +48,7 @@ export const getRouteUseMutation =
 
     return useMutation({
       mutationFn: mutationFunction as () => Promise<
-        ZodInferOrType<TAppRoute['responses']>
+        ZodInferOrType<TAppRoute["responses"]>
       >,
       ...options,
     });

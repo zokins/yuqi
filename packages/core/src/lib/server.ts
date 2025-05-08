@@ -1,22 +1,22 @@
-import { HTTPStatusCode } from './status-codes';
-import { checkZodSchema } from './zod-utils';
-import { ResponseValidationError } from './response-validation-error';
 import {
   AppRoute,
   ContractAnyType,
   ContractNoBody,
   ContractNoBodyType,
   ContractOtherResponse,
-} from './dsl';
+} from "./dsl";
+import { ResponseValidationError } from "./response-validation-error";
+import { HTTPStatusCode } from "./status-codes";
+import { checkZodSchema } from "./zod-utils";
 
 export const isAppRouteResponse = (
   value: unknown,
 ): value is { status: HTTPStatusCode; body?: any } => {
   return (
     value != null &&
-    typeof value === 'object' &&
-    'status' in value &&
-    typeof value.status === 'number'
+    typeof value === "object" &&
+    "status" in value &&
+    typeof value.status === "number"
   );
 };
 
@@ -28,8 +28,8 @@ export const isAppRouteOtherResponse = (
 ): response is ContractOtherResponse<ContractAnyType> => {
   return (
     response != null &&
-    typeof response === 'object' &&
-    'contentType' in response
+    typeof response === "object" &&
+    "contentType" in response
   );
 };
 

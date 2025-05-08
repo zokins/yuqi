@@ -11,19 +11,21 @@ type ResolveOptionalPathParam<T extends string> =
  * @params T - The URL e.g. /posts/:id
  * @params TAcc - Accumulator object
  */
-type RecursivelyExtractPathParams<T extends string> = T extends ''
+type RecursivelyExtractPathParams<T extends string> = T extends ""
   ? Record<never, never>
   : T extends `${infer Left}/:${infer PathParam}/${infer Right}`
-  ? ResolveOptionalPathParam<PathParam> &
-      RecursivelyExtractPathParams<Left> &
-      RecursivelyExtractPathParams<Right>
-  : T extends `:${infer PathParam}/${infer Right}`
-  ? ResolveOptionalPathParam<PathParam> & RecursivelyExtractPathParams<Right>
-  : T extends `${infer Left}/:${infer PathParam}`
-  ? ResolveOptionalPathParam<PathParam> & RecursivelyExtractPathParams<Left>
-  : T extends `:${infer PathParam}`
-  ? ResolveOptionalPathParam<PathParam>
-  : Record<never, never>;
+    ? ResolveOptionalPathParam<PathParam> &
+        RecursivelyExtractPathParams<Left> &
+        RecursivelyExtractPathParams<Right>
+    : T extends `:${infer PathParam}/${infer Right}`
+      ? ResolveOptionalPathParam<PathParam> &
+          RecursivelyExtractPathParams<Right>
+      : T extends `${infer Left}/:${infer PathParam}`
+        ? ResolveOptionalPathParam<PathParam> &
+            RecursivelyExtractPathParams<Left>
+        : T extends `:${infer PathParam}`
+          ? ResolveOptionalPathParam<PathParam>
+          : Record<never, never>;
 
 /**
  * Extract path params from path function
@@ -55,7 +57,7 @@ export const insertParamsIntoPath = <T extends string>({
 
   return path.replace(/\/?:([^/?]+)\??/g, (matched, p) =>
     pathParams[p]
-      ? `${matched.startsWith('/') ? '/' : ''}${pathParams[p]}`
-      : '',
+      ? `${matched.startsWith("/") ? "/" : ""}${pathParams[p]}`
+      : "",
   );
 };

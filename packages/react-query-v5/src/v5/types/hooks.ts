@@ -1,11 +1,13 @@
-import { AppRoute, AppRouteFunction, ClientArgs } from '@ts-rest/core';
 import {
   FetchInfiniteQueryOptions,
   FetchQueryOptions,
   InfiniteData,
-  QueryKey,
   QueryClient,
-} from '@tanstack/react-query';
+  QueryKey,
+} from "@tanstack/react-query";
+import { AppRoute, AppRouteFunction, ClientArgs } from "@ts-rest/core";
+
+import { DataResponse, ErrorResponse, RequestData } from "./common";
 import {
   TsRestQueryOptions,
   UseInfiniteQueryOptions,
@@ -19,8 +21,7 @@ import {
   UseSuspenseInfiniteQueryOptions,
   UseSuspenseQueriesOptions,
   UseSuspenseQueryOptions,
-} from './hooks-options';
-import { DataResponse, ErrorResponse, RequestData } from './common';
+} from "./hooks-options";
 import {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
@@ -31,7 +32,7 @@ import {
   UseSuspenseInfiniteQueryResult,
   UseSuspenseQueriesResult,
   UseSuspenseQueryResult,
-} from './hooks-results';
+} from "./hooks-results";
 
 export interface QueryHooks<
   TAppRoute extends AppRoute,

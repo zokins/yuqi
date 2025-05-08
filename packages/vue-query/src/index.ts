@@ -1,2 +1,2 @@
-export * from './lib/vue-query';
-export * from './lib/use-mutation';
+export * from "./lib/vue-query";
+export * from "./lib/use-mutation";

@@ -1,19 +1,19 @@
 import {
   FetchQueryOptions,
+  QueryClient,
   QueryFilters,
   QueryFunction,
   QueryFunctionContext,
   QueryKey,
   UseInfiniteQueryOptions as TanStackUseInfiniteQueryOptions,
-  useInfiniteQuery,
   UseMutationOptions as TanStackUseMutationOptions,
-  useMutation,
   UseQueryOptions as TanStackUseQueryOptions,
+  useInfiniteQuery,
+  useMutation,
   useQueries,
   useQuery,
   useQueryClient,
-  QueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 import {
   AppRoute,
   AppRouteMutation,
@@ -26,14 +26,15 @@ import {
   isErrorResponse,
   Without,
   ZodInferOrType,
-} from '@ts-rest/core';
-import { useMemo } from 'react';
+} from "@ts-rest/core";
+import { useMemo } from "react";
+
 import {
   AppRouteFunctions,
   AppRouteFunctionsWithQueryClient,
   DataReturnQueries,
-} from './inner-types';
-import { ReactQueryClientArgs } from './types';
+} from "./inner-types";
+import { ReactQueryClientArgs } from "./types";
 
 const queryFn = <
   TAppRoute extends AppRoute,
@@ -42,7 +43,7 @@ const queryFn = <
   route: TAppRoute,
   clientArgs: TClientArgs,
   args?: ClientInferRequest<AppRouteMutation, ReactQueryClientArgs>,
-): QueryFunction<TAppRoute['responses']> => {
+): QueryFunction<TAppRoute["responses"]> => {
   return async (queryFnContext?: QueryFunctionContext) => {
     const fetchApiArgs = evaluateFetchApiArgs(route, clientArgs, args);
     const result = await fetchApi({
@@ -72,7 +73,7 @@ const getRouteUseQuery = <
   return (
     queryKey: QueryKey,
     args?: ClientInferRequest<AppRouteMutation, ReactQueryClientArgs>,
-    options?: TanStackUseQueryOptions<TAppRoute['responses']>,
+    options?: TanStackUseQueryOptions<TAppRoute["responses"]>,
   ) => {
     const dataFn = queryFn(route, clientArgs, args);
 
@@ -114,9 +115,9 @@ const getRouteUseInfiniteQuery = <
     argsMapper: (
       context: QueryFunctionContext,
     ) => ClientInferRequest<AppRouteMutation, ReactQueryClientArgs>,
-    options?: TanStackUseInfiniteQueryOptions<TAppRoute['responses']>,
+    options?: TanStackUseInfiniteQueryOptions<TAppRoute["responses"]>,
   ) => {
-    const dataFn: QueryFunction<TAppRoute['responses']> = async (context) => {
+    const dataFn: QueryFunction<TAppRoute["responses"]> = async (context) => {
       const resultingQueryArgs = argsMapper(context);
 
       const innerDataFn = queryFn(route, clientArgs, resultingQueryArgs);
@@ -135,7 +136,7 @@ const getRouteUseMutation = <
   route: TAppRoute,
   clientArgs: TClientArgs,
 ) => {
-  return (options?: TanStackUseMutationOptions<TAppRoute['responses']>) => {
+  return (options?: TanStackUseMutationOptions<TAppRoute["responses"]>) => {
     const mutationFunction = async (
       args?: ClientInferRequest<AppRouteMutation, ReactQueryClientArgs>,
     ) => {
@@ -146,7 +147,7 @@ const getRouteUseMutation = <
 
     return useMutation({
       mutationFn: mutationFunction as () => Promise<
-        ZodInferOrType<TAppRoute['responses']>
+        ZodInferOrType<TAppRoute["responses"]>
       >,
       ...options,
     });
@@ -166,11 +167,11 @@ export type TsRestReactQueryClient<
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<AppRouteFunctions<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? TsRestReactQueryClient<T[TKey], TClientArgs>
-    : never;
+      ? TsRestReactQueryClient<T[TKey], TClientArgs>
+      : never;
 };
 
-const ClientParameters = Symbol('ClientParameters');
+const ClientParameters = Symbol("ClientParameters");
 
 export const initQueryClient = <
   T extends AppRouter,
@@ -337,8 +338,8 @@ export type UseTsRestQueryClient<
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<AppRouteFunctionsWithQueryClient<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? UseTsRestQueryClient<T[TKey], TClientArgs>
-    : never;
+      ? UseTsRestQueryClient<T[TKey], TClientArgs>
+      : never;
 };
 
 export const useTsRestQueryClient = <

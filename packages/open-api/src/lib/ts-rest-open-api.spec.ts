@@ -1,8 +1,9 @@
-import { initContract } from '@ts-rest/core';
-import { z } from 'zod';
-import { generateOpenApi } from './ts-rest-open-api';
-import { extendApi } from '@anatine/zod-openapi';
-import { SecurityRequirementObject } from 'openapi3-ts';
+import { extendApi } from "@anatine/zod-openapi";
+import { initContract } from "@ts-rest/core";
+import { SecurityRequirementObject } from "openapi3-ts";
+import { z } from "zod";
+
+import { generateOpenApi } from "./ts-rest-open-api";
 
 const c = initContract();
 
@@ -18,19 +19,19 @@ const commentSchema = z.object({
 
 const postsRouter = c.router({
   getPost: {
-    method: 'GET',
+    method: "GET",
     path: `/posts/:id`,
     responses: {
       200: c.type<Post | null>(),
     },
   },
   findPosts: {
-    method: 'GET',
+    method: "GET",
     path: `/posts`,
     query: z.object({
       search: z.string().nullish(),
-      sortBy: z.enum(['title', 'date']).default('date').optional(),
-      sort: z.enum(['asc', 'desc']).default('asc').optional(),
+      sortBy: z.enum(["title", "date"]).default("date").optional(),
+      sort: z.enum(["asc", "desc"]).default("asc").optional(),
       obj: z.object({
         a: z.string(),
       }),
@@ -40,8 +41,8 @@ const postsRouter = c.router({
     },
   },
   createPost: {
-    method: 'POST',
-    path: '/posts',
+    method: "POST",
+    path: "/posts",
     deprecated: true,
     responses: {
       200: c.type<Post>(),
@@ -53,8 +54,8 @@ const postsRouter = c.router({
   },
   comments: c.router({
     getPostComments: {
-      method: 'GET',
-      path: '/posts/:id/comments',
+      method: "GET",
+      path: "/posts/:id/comments",
       responses: {
         200: z
           .object({
@@ -64,31 +65,31 @@ const postsRouter = c.router({
               z.array(commentSchema.extend({ author: z.string() })),
             ]),
           })
-          .describe('Post comments'),
+          .describe("Post comments"),
       },
     },
   }),
   getPostComment: {
-    method: 'GET',
+    method: "GET",
     path: `/posts/:id/comments/:commentId`,
     pathParams: z.object({
-      commentId: z.string().length(5).describe('the comment ID'),
+      commentId: z.string().length(5).describe("the comment ID"),
     }),
     responses: {
       200: c.type<Post | null>(),
     },
   },
   auth: {
-    method: 'POST',
-    path: '/auth',
+    method: "POST",
+    path: "/auth",
     deprecated: undefined,
     responses: {
       200: c.type<string>(),
     },
     headers: z.object({
-      'x-client-id': z.string(),
-      'x-api-key': z.string(),
-      'x-tenant-id': z.string().optional(),
+      "x-client-id": z.string(),
+      "x-api-key": z.string(),
+      "x-tenant-id": z.string().optional(),
     }),
     body: z.never(),
   },
@@ -97,15 +98,15 @@ const postsRouter = c.router({
 const router = c.router({
   posts: postsRouter,
   health: {
-    method: 'GET',
-    path: '/health',
-    summary: 'Health API',
+    method: "GET",
+    path: "/health",
+    summary: "Health API",
     description: `Check the application's health status`,
     responses: {
       200: c.type<{ message: string }>(),
     },
     metadata: {
-      openApiTags: ['Custom Health Tag'],
+      openApiTags: ["Custom Health Tag"],
       openApiSecurity: [
         {
           BasicAuth: [],
@@ -114,30 +115,30 @@ const router = c.router({
     },
   },
   mediaExamples: {
-    method: 'POST',
-    path: '/media-examples',
+    method: "POST",
+    path: "/media-examples",
     query: z.object({
       foo: extendApi(z.string(), {
         // this will only be added when jsonQuery is enabled
         mediaExamples: {
-          one: { value: 'foo' },
-          two: { value: 'bar' },
+          one: { value: "foo" },
+          two: { value: "bar" },
         },
       }),
     }),
-    summary: 'Examples API',
+    summary: "Examples API",
     description: `Check that examples can be added to body and response types`,
     body: extendApi(z.object({ id: z.string() }), {
       mediaExamples: {
-        one: { value: { id: 'foo' } },
-        two: { value: { id: 'bar' } },
+        one: { value: { id: "foo" } },
+        two: { value: { id: "bar" } },
       },
     }),
     responses: {
       200: extendApi(z.object({ id: z.string() }), {
         mediaExamples: {
-          three: { value: { id: 'foo' } },
-          four: { value: { id: 'bar' } },
+          three: { value: { id: "foo" } },
+          four: { value: { id: "bar" } },
         },
       }),
     },
@@ -146,139 +147,139 @@ const router = c.router({
 
 const expectedApiDoc = {
   info: {
-    title: 'Blog API',
-    version: '0.1',
+    title: "Blog API",
+    version: "0.1",
   },
-  openapi: '3.0.2',
+  openapi: "3.0.2",
   paths: {
-    '/health': {
+    "/health": {
       get: {
         deprecated: undefined,
         description: "Check the application's health status",
         parameters: [],
         responses: {
-          '200': {
-            description: '200',
+          "200": {
+            description: "200",
           },
         },
-        summary: 'Health API',
+        summary: "Health API",
         tags: [],
       },
     },
-    '/media-examples': {
+    "/media-examples": {
       post: {
         deprecated: undefined,
         description: `Check that examples can be added to body and response types`,
         parameters: [
           {
-            in: 'query',
-            name: 'foo',
+            in: "query",
+            name: "foo",
             required: true,
             schema: {
-              type: 'string',
+              type: "string",
             },
           },
         ],
         requestBody: {
-          description: 'Body',
+          description: "Body",
           content: {
-            'application/json': {
+            "application/json": {
               schema: {
                 properties: {
                   id: {
-                    type: 'string',
+                    type: "string",
                   },
                 },
-                required: ['id'],
-                type: 'object',
+                required: ["id"],
+                type: "object",
               },
               examples: {
-                one: { value: { id: 'foo' } },
-                two: { value: { id: 'bar' } },
+                one: { value: { id: "foo" } },
+                two: { value: { id: "bar" } },
               },
             },
           },
         },
         responses: {
-          '200': {
+          "200": {
             content: {
-              'application/json': {
+              "application/json": {
                 examples: {
-                  three: { value: { id: 'foo' } },
-                  four: { value: { id: 'bar' } },
+                  three: { value: { id: "foo" } },
+                  four: { value: { id: "bar" } },
                 },
                 schema: {
                   properties: {
                     id: {
-                      type: 'string',
+                      type: "string",
                     },
                   },
-                  required: ['id'],
-                  type: 'object',
+                  required: ["id"],
+                  type: "object",
                 },
               },
             },
             description: `200`,
           },
         },
-        summary: 'Examples API',
+        summary: "Examples API",
         tags: [],
       },
     },
-    '/posts': {
+    "/posts": {
       get: {
         deprecated: undefined,
         description: undefined,
         parameters: [
           {
-            name: 'search',
-            in: 'query',
+            name: "search",
+            in: "query",
             schema: {
               nullable: true,
-              type: 'string',
+              type: "string",
             },
           },
           {
-            name: 'sortBy',
-            in: 'query',
+            name: "sortBy",
+            in: "query",
             schema: {
-              type: 'string',
-              default: 'date',
-              enum: ['title', 'date'],
+              type: "string",
+              default: "date",
+              enum: ["title", "date"],
             },
           },
           {
-            name: 'sort',
-            in: 'query',
+            name: "sort",
+            in: "query",
             schema: {
-              type: 'string',
-              default: 'asc',
-              enum: ['asc', 'desc'],
+              type: "string",
+              default: "asc",
+              enum: ["asc", "desc"],
             },
           },
           {
-            in: 'query',
-            name: 'obj',
+            in: "query",
+            name: "obj",
             required: true,
-            style: 'deepObject',
+            style: "deepObject",
             schema: {
               properties: {
                 a: {
-                  type: 'string',
+                  type: "string",
                 },
               },
-              required: ['a'],
-              type: 'object',
+              required: ["a"],
+              type: "object",
             },
           },
         ],
         responses: {
-          '200': {
-            description: '200',
+          "200": {
+            description: "200",
           },
         },
         summary: undefined,
-        tags: ['posts'],
+        tags: ["posts"],
       },
       post: {
         deprecated: true,
@@ -286,75 +287,75 @@ const expectedApiDoc = {
         parameters: [],
         requestBody: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: {
                 properties: {
                   published: {
-                    type: 'boolean',
+                    type: "boolean",
                   },
                   title: {
-                    type: 'string',
+                    type: "string",
                   },
                 },
-                required: ['title'],
-                type: 'object',
+                required: ["title"],
+                type: "object",
               },
             },
           },
-          description: 'Body',
+          description: "Body",
         },
         responses: {
-          '200': {
-            description: '200',
+          "200": {
+            description: "200",
           },
         },
         summary: undefined,
-        tags: ['posts'],
+        tags: ["posts"],
       },
     },
-    '/posts/{id}': {
+    "/posts/{id}": {
       get: {
         deprecated: undefined,
         description: undefined,
         parameters: [
           {
-            in: 'path',
-            name: 'id',
+            in: "path",
+            name: "id",
             required: true,
             schema: {
-              type: 'string',
+              type: "string",
             },
           },
         ],
         responses: {
-          '200': {
-            description: '200',
+          "200": {
+            description: "200",
           },
         },
         summary: undefined,
-        tags: ['posts'],
+        tags: ["posts"],
       },
     },
-    '/posts/{id}/comments': {
+    "/posts/{id}/comments": {
       get: {
         deprecated: undefined,
         description: undefined,
         parameters: [
           {
-            in: 'path',
-            name: 'id',
+            in: "path",
+            name: "id",
             required: true,
             schema: {
-              type: 'string',
+              type: "string",
             },
           },
         ],
         responses: {
-          '200': {
+          "200": {
             content: {
-              'application/json': {
+              "application/json": {
                 schema: {
-                  description: 'Post comments',
+                  description: "Post comments",
                   properties: {
                     comments: {
                       oneOf: [
@@ -362,120 +363,120 @@ const expectedApiDoc = {
                           items: {
                             properties: {
                               id: {
-                                type: 'number',
+                                type: "number",
                               },
                               title: {
-                                type: 'string',
+                                type: "string",
                               },
                             },
-                            required: ['id', 'title'],
-                            type: 'object',
+                            required: ["id", "title"],
+                            type: "object",
                           },
-                          type: 'array',
+                          type: "array",
                         },
                         {
                           items: {
                             properties: {
                               author: {
-                                type: 'string',
+                                type: "string",
                               },
                               id: {
-                                type: 'number',
+                                type: "number",
                               },
                               title: {
-                                type: 'string',
+                                type: "string",
                               },
                             },
-                            required: ['id', 'title', 'author'],
-                            type: 'object',
+                            required: ["id", "title", "author"],
+                            type: "object",
                           },
-                          type: 'array',
+                          type: "array",
                         },
                       ],
                     },
                     booleanString: {
-                      type: 'string',
+                      type: "string",
                     },
                   },
-                  required: ['booleanString', 'comments'],
-                  type: 'object',
+                  required: ["booleanString", "comments"],
+                  type: "object",
                 },
               },
             },
-            description: 'Post comments',
+            description: "Post comments",
           },
         },
         summary: undefined,
-        tags: ['posts', 'comments'],
+        tags: ["posts", "comments"],
       },
     },
-    '/posts/{id}/comments/{commentId}': {
+    "/posts/{id}/comments/{commentId}": {
       get: {
         deprecated: undefined,
         description: undefined,
         parameters: [
           {
-            in: 'path',
-            name: 'id',
+            in: "path",
+            name: "id",
             required: true,
             schema: {
-              type: 'string',
+              type: "string",
             },
           },
           {
-            in: 'path',
-            name: 'commentId',
+            in: "path",
+            name: "commentId",
             required: true,
-            description: 'the comment ID',
+            description: "the comment ID",
             schema: {
-              type: 'string',
+              type: "string",
               minLength: 5,
               maxLength: 5,
             },
           },
         ],
         responses: {
-          '200': {
-            description: '200',
+          "200": {
+            description: "200",
           },
         },
         summary: undefined,
-        tags: ['posts'],
+        tags: ["posts"],
       },
     },
-    '/auth': {
+    "/auth": {
       post: {
         deprecated: undefined,
         description: undefined,
         parameters: [
           {
-            name: 'x-client-id',
-            in: 'header',
+            name: "x-client-id",
+            in: "header",
             schema: {
-              type: 'string',
+              type: "string",
             },
             required: true,
           },
           {
-            name: 'x-api-key',
-            in: 'header',
+            name: "x-api-key",
+            in: "header",
             schema: {
-              type: 'string',
+              type: "string",
             },
             required: true,
           },
           {
-            name: 'x-tenant-id',
-            in: 'header',
+            name: "x-tenant-id",
+            in: "header",
             schema: {
-              type: 'string',
+              type: "string",
             },
           },
         ],
         requestBody: {
-          description: 'Body',
+          description: "Body",
           content: {
-            'application/json': {
+            "application/json": {
               schema: {
                 readOnly: true,
               },
@@ -483,32 +484,32 @@ const expectedApiDoc = {
           },
         },
         responses: {
-          '200': {
-            description: '200',
+          "200": {
+            description: "200",
           },
         },
         summary: undefined,
-        tags: ['posts'],
+        tags: ["posts"],
       },
     },
   },
 };
 
-describe('ts-rest-open-api', () => {
-  describe('generateOpenApi', () => {
-    it('should generate doc with defaults', async () => {
+describe("ts-rest-open-api", () => {
+  describe("generateOpenApi", () => {
+    it("should generate doc with defaults", async () => {
       const apiDoc = generateOpenApi(router, {
-        info: { title: 'Blog API', version: '0.1' },
+        info: { title: "Blog API", version: "0.1" },
       });
 
       expect(apiDoc).toStrictEqual(expectedApiDoc);
     });
 
-    it('should generate doc with operation ids', async () => {
+    it("should generate doc with operation ids", async () => {
       const apiDoc = generateOpenApi(
         router,
         {
-          info: { title: 'Blog API', version: '0.1' },
+          info: { title: "Blog API", version: "0.1" },
         },
         { setOperationId: true },
       );
@@ -516,123 +517,123 @@ describe('ts-rest-open-api', () => {
       expect(apiDoc).toEqual({
         ...expectedApiDoc,
         paths: {
-          '/health': {
+          "/health": {
             get: {
-              ...expectedApiDoc.paths['/health'].get,
-              operationId: 'health',
+              ...expectedApiDoc.paths["/health"].get,
+              operationId: "health",
             },
           },
-          '/media-examples': {
+          "/media-examples": {
             post: {
-              ...expectedApiDoc.paths['/media-examples'].post,
-              operationId: 'mediaExamples',
+              ...expectedApiDoc.paths["/media-examples"].post,
+              operationId: "mediaExamples",
             },
           },
-          '/posts': {
+          "/posts": {
             get: {
-              ...expectedApiDoc.paths['/posts'].get,
-              operationId: 'findPosts',
+              ...expectedApiDoc.paths["/posts"].get,
+              operationId: "findPosts",
             },
             post: {
-              ...expectedApiDoc.paths['/posts'].post,
-              operationId: 'createPost',
+              ...expectedApiDoc.paths["/posts"].post,
+              operationId: "createPost",
             },
           },
-          '/posts/{id}': {
+          "/posts/{id}": {
             get: {
-              ...expectedApiDoc.paths['/posts/{id}'].get,
-              operationId: 'getPost',
+              ...expectedApiDoc.paths["/posts/{id}"].get,
+              operationId: "getPost",
             },
           },
-          '/posts/{id}/comments': {
+          "/posts/{id}/comments": {
             get: {
-              ...expectedApiDoc.paths['/posts/{id}/comments'].get,
-              operationId: 'getPostComments',
+              ...expectedApiDoc.paths["/posts/{id}/comments"].get,
+              operationId: "getPostComments",
             },
           },
-          '/posts/{id}/comments/{commentId}': {
+          "/posts/{id}/comments/{commentId}": {
             get: {
-              ...expectedApiDoc.paths['/posts/{id}/comments/{commentId}'].get,
-              operationId: 'getPostComment',
+              ...expectedApiDoc.paths["/posts/{id}/comments/{commentId}"].get,
+              operationId: "getPostComment",
             },
           },
-          '/auth': {
+          "/auth": {
             post: {
-              ...expectedApiDoc.paths['/auth'].post,
-              operationId: 'auth',
+              ...expectedApiDoc.paths["/auth"].post,
+              operationId: "auth",
             },
           },
         },
       });
     });
 
-    it('should generate doc with concatenated path operation ids', async () => {
+    it("should generate doc with concatenated path operation ids", async () => {
       const apiDoc = generateOpenApi(
         router,
         {
-          info: { title: 'Blog API', version: '0.1' },
+          info: { title: "Blog API", version: "0.1" },
         },
-        { setOperationId: 'concatenated-path' },
+        { setOperationId: "concatenated-path" },
       );
 
       expect(apiDoc).toEqual({
         ...expectedApiDoc,
         paths: {
-          '/health': {
+          "/health": {
             get: {
-              ...expectedApiDoc.paths['/health'].get,
-              operationId: 'health',
+              ...expectedApiDoc.paths["/health"].get,
+              operationId: "health",
             },
           },
-          '/media-examples': {
+          "/media-examples": {
             post: {
-              ...expectedApiDoc.paths['/media-examples'].post,
-              operationId: 'mediaExamples',
+              ...expectedApiDoc.paths["/media-examples"].post,
+              operationId: "mediaExamples",
             },
           },
-          '/posts': {
+          "/posts": {
             get: {
-              ...expectedApiDoc.paths['/posts'].get,
-              operationId: 'posts.findPosts',
+              ...expectedApiDoc.paths["/posts"].get,
+              operationId: "posts.findPosts",
             },
             post: {
-              ...expectedApiDoc.paths['/posts'].post,
-              operationId: 'posts.createPost',
+              ...expectedApiDoc.paths["/posts"].post,
+              operationId: "posts.createPost",
             },
           },
-          '/posts/{id}': {
+          "/posts/{id}": {
             get: {
-              ...expectedApiDoc.paths['/posts/{id}'].get,
-              operationId: 'posts.getPost',
+              ...expectedApiDoc.paths["/posts/{id}"].get,
+              operationId: "posts.getPost",
             },
           },
-          '/posts/{id}/comments': {
+          "/posts/{id}/comments": {
             get: {
-              ...expectedApiDoc.paths['/posts/{id}/comments'].get,
-              operationId: 'posts.comments.getPostComments',
+              ...expectedApiDoc.paths["/posts/{id}/comments"].get,
+              operationId: "posts.comments.getPostComments",
             },
           },
-          '/posts/{id}/comments/{commentId}': {
+          "/posts/{id}/comments/{commentId}": {
             get: {
-              ...expectedApiDoc.paths['/posts/{id}/comments/{commentId}'].get,
-              operationId: 'posts.getPostComment',
+              ...expectedApiDoc.paths["/posts/{id}/comments/{commentId}"].get,
+              operationId: "posts.getPostComment",
             },
           },
-          '/auth': {
+          "/auth": {
             post: {
-              ...expectedApiDoc.paths['/auth'].post,
-              operationId: 'posts.auth',
+              ...expectedApiDoc.paths["/auth"].post,
+              operationId: "posts.auth",
             },
           },
         },
       });
     });
 
-    it('should generate doc with json query', async () => {
+    it("should generate doc with json query", async () => {
       const apiDoc = generateOpenApi(
         router,
         {
-          info: { title: 'Blog API', version: '0.1' },
+          info: { title: "Blog API", version: "0.1" },
         },
         { jsonQuery: true },
       );
@@ -641,93 +642,93 @@ describe('ts-rest-open-api', () => {
         ...expectedApiDoc,
         paths: {
           ...expectedApiDoc.paths,
-          '/media-examples': {
-            ...expectedApiDoc.paths['/media-examples'],
+          "/media-examples": {
+            ...expectedApiDoc.paths["/media-examples"],
             post: {
-              ...expectedApiDoc.paths['/media-examples'].post,
+              ...expectedApiDoc.paths["/media-examples"].post,
               parameters: [
                 {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       examples: {
                         one: {
-                          value: 'foo',
+                          value: "foo",
                         },
                         two: {
-                          value: 'bar',
+                          value: "bar",
                         },
                       },
                       schema: {
-                        type: 'string',
+                        type: "string",
                       },
                     },
                   },
-                  in: 'query',
-                  name: 'foo',
+                  in: "query",
+                  name: "foo",
                   required: true,
                 },
               ],
             },
           },
-          '/posts': {
-            ...expectedApiDoc.paths['/posts'],
+          "/posts": {
+            ...expectedApiDoc.paths["/posts"],
             get: {
-              ...expectedApiDoc.paths['/posts'].get,
+              ...expectedApiDoc.paths["/posts"].get,
               parameters: [
                 {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       schema: {
-                        type: 'string',
+                        type: "string",
                         nullable: true,
                       },
                     },
                   },
-                  in: 'query',
-                  name: 'search',
+                  in: "query",
+                  name: "search",
                 },
                 {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       schema: {
-                        default: 'date',
-                        enum: ['title', 'date'],
-                        type: 'string',
+                        default: "date",
+                        enum: ["title", "date"],
+                        type: "string",
                       },
                     },
                   },
-                  in: 'query',
-                  name: 'sortBy',
+                  in: "query",
+                  name: "sortBy",
                 },
                 {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       schema: {
-                        default: 'asc',
-                        enum: ['asc', 'desc'],
-                        type: 'string',
+                        default: "asc",
+                        enum: ["asc", "desc"],
+                        type: "string",
                       },
                     },
                   },
-                  in: 'query',
-                  name: 'sort',
+                  in: "query",
+                  name: "sort",
                 },
                 {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       schema: {
                         properties: {
                           a: {
-                            type: 'string',
+                            type: "string",
                           },
                         },
-                        required: ['a'],
-                        type: 'object',
+                        required: ["a"],
+                        type: "object",
                       },
                     },
                   },
-                  in: 'query',
-                  name: 'obj',
+                  in: "query",
+                  name: "obj",
                   required: true,
                 },
               ],
@@ -737,11 +738,11 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('should throw when duplicate operationIds', async () => {
+    it("should throw when duplicate operationIds", async () => {
       const router = c.router({
         posts: postsRouter,
         getPost: {
-          method: 'GET',
+          method: "GET",
           path: `/posts/:id`,
           responses: {
             200: c.type<Post | null>(),
@@ -753,18 +754,18 @@ describe('ts-rest-open-api', () => {
         generateOpenApi(
           router,
           {
-            info: { title: 'Blog API', version: '0.1' },
+            info: { title: "Blog API", version: "0.1" },
           },
           { setOperationId: true },
         ),
       ).toThrowError(/getPost/);
     });
 
-    it('should not throw when duplicate operationIds with concatenated paths', async () => {
+    it("should not throw when duplicate operationIds with concatenated paths", async () => {
       const router = c.router({
         posts: postsRouter,
         getPost: {
-          method: 'GET',
+          method: "GET",
           path: `/posts/:id`,
           responses: {
             200: c.type<Post | null>(),
@@ -776,21 +777,21 @@ describe('ts-rest-open-api', () => {
         generateOpenApi(
           router,
           {
-            info: { title: 'Blog API', version: '0.1' },
+            info: { title: "Blog API", version: "0.1" },
           },
-          { setOperationId: 'concatenated-path' },
+          { setOperationId: "concatenated-path" },
         ),
       ).not.toThrowError(/getPost/);
     });
 
-    it('should add custom fields with operationMapper', async () => {
+    it("should add custom fields with operationMapper", async () => {
       const hasCustomTags = (
         metadata: unknown,
       ): metadata is { openApiTags: string[] } => {
         return (
           !!metadata &&
-          typeof metadata === 'object' &&
-          'openApiTags' in metadata
+          typeof metadata === "object" &&
+          "openApiTags" in metadata
         );
       };
 
@@ -799,20 +800,20 @@ describe('ts-rest-open-api', () => {
       ): metadata is { openApiSecurity: SecurityRequirementObject[] } => {
         return (
           !!metadata &&
-          typeof metadata === 'object' &&
-          'openApiSecurity' in metadata
+          typeof metadata === "object" &&
+          "openApiSecurity" in metadata
         );
       };
 
       const apiDoc = generateOpenApi(
         router,
         {
-          info: { title: 'Blog API', version: '0.1' },
+          info: { title: "Blog API", version: "0.1" },
           components: {
             securitySchemes: {
               BasicAuth: {
-                type: 'http',
-                scheme: 'basic',
+                type: "http",
+                scheme: "basic",
               },
             },
           },
@@ -837,10 +838,10 @@ describe('ts-rest-open-api', () => {
         ...expectedApiDoc,
         paths: {
           ...expectedApiDoc.paths,
-          '/health': {
-            ...expectedApiDoc.paths['/health'],
+          "/health": {
+            ...expectedApiDoc.paths["/health"],
             get: {
-              ...expectedApiDoc.paths['/health'].get,
+              ...expectedApiDoc.paths["/health"].get,
               tags: router.health.metadata.openApiTags,
               security: router.health.metadata.openApiSecurity,
             },
@@ -849,61 +850,61 @@ describe('ts-rest-open-api', () => {
         components: {
           securitySchemes: {
             BasicAuth: {
-              type: 'http',
-              scheme: 'basic',
+              type: "http",
+              scheme: "basic",
             },
           },
         },
       });
     });
 
-    it('works with zod refine', () => {
+    it("works with zod refine", () => {
       const routerWithRefine = c.router({
         endpointWithZodRefine: {
-          method: 'GET',
-          path: '/refine',
+          method: "GET",
+          path: "/refine",
           responses: {
             200: c.type<null>(),
           },
           query: z
             .object({
-              foo: z.string().describe('Foo'),
+              foo: z.string().describe("Foo"),
             })
-            .refine((v) => v.foo === 'bar', {
-              message: 'foo must be bar',
+            .refine((v) => v.foo === "bar", {
+              message: "foo must be bar",
             }),
         },
       });
 
       const schema = generateOpenApi(routerWithRefine, {
-        info: { title: 'Blog API', version: '0.1' },
+        info: { title: "Blog API", version: "0.1" },
       });
 
       expect(schema).toEqual({
         info: {
-          title: 'Blog API',
-          version: '0.1',
+          title: "Blog API",
+          version: "0.1",
         },
-        openapi: '3.0.2',
+        openapi: "3.0.2",
         paths: {
-          '/refine': {
+          "/refine": {
             get: {
               deprecated: undefined,
               description: undefined,
               parameters: [
                 {
-                  description: 'Foo',
-                  in: 'query',
-                  name: 'foo',
+                  description: "Foo",
+                  in: "query",
+                  name: "foo",
                   required: true,
                   schema: {
-                    type: 'string',
+                    type: "string",
                   },
                 },
               ],
               responses: {
-                '200': {
-                  description: '200',
+                "200": {
+                  description: "200",
                 },
               },
               summary: undefined,
@@ -914,65 +915,65 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('works with zod optional query parameters', () => {
+    it("works with zod optional query parameters", () => {
       const routerWithRefine = c.router({
         endpointWithZodRefine: {
-          method: 'GET',
-          path: '/optional',
+          method: "GET",
+          path: "/optional",
           responses: {
             200: c.type<null>(),
           },
           query: z.object({
             foo: z
               .object({
-                baz: z.string().describe('Baz').optional(),
-                bar: z.string().describe('Bar').optional(),
+                baz: z.string().describe("Baz").optional(),
+                bar: z.string().describe("Bar").optional(),
               })
-              .describe('Foo')
+              .describe("Foo")
               .optional(),
           }),
         },
       });
 
       const schema = generateOpenApi(routerWithRefine, {
-        info: { title: 'Blog API', version: '0.1' },
+        info: { title: "Blog API", version: "0.1" },
       });
 
       expect(schema).toEqual({
         info: {
-          title: 'Blog API',
-          version: '0.1',
+          title: "Blog API",
+          version: "0.1",
         },
-        openapi: '3.0.2',
+        openapi: "3.0.2",
         paths: {
-          '/optional': {
+          "/optional": {
             get: {
               deprecated: undefined,
               description: undefined,
               parameters: [
                 {
-                  description: 'Foo',
-                  in: 'query',
-                  name: 'foo',
+                  description: "Foo",
+                  in: "query",
+                  name: "foo",
                   schema: {
                     properties: {
                       bar: {
-                        description: 'Bar',
-                        type: 'string',
+                        description: "Bar",
+                        type: "string",
                       },
                       baz: {
-                        description: 'Baz',
-                        type: 'string',
+                        description: "Baz",
+                        type: "string",
                       },
                     },
-                    type: 'object',
+                    type: "object",
                   },
-                  style: 'deepObject',
+                  style: "deepObject",
                 },
               ],
               responses: {
-                '200': {
-                  description: '200',
+                "200": {
+                  description: "200",
                 },
               },
               summary: undefined,
@@ -983,11 +984,11 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('works with zod transform', () => {
+    it("works with zod transform", () => {
       const routerWithTransform = c.router({
         endpointWithZodTransform: {
-          method: 'GET',
-          path: '/transform',
+          method: "GET",
+          path: "/transform",
           responses: {
             200: c.type<null>(),
           },
@@ -1000,33 +1001,33 @@ describe('ts-rest-open-api', () => {
       });
 
       const schema = generateOpenApi(routerWithTransform, {
-        info: { title: 'Blog API', version: '0.1' },
+        info: { title: "Blog API", version: "0.1" },
       });
 
       expect(schema).toEqual({
         info: {
-          title: 'Blog API',
-          version: '0.1',
+          title: "Blog API",
+          version: "0.1",
         },
-        openapi: '3.0.2',
+        openapi: "3.0.2",
         paths: {
-          '/transform': {
+          "/transform": {
             get: {
               deprecated: undefined,
               description: undefined,
               parameters: [
                 {
-                  in: 'query',
-                  name: 'foo',
+                  in: "query",
+                  name: "foo",
                   required: true,
                   schema: {
-                    type: 'string',
+                    type: "string",
                   },
                 },
               ],
               responses: {
-                '200': {
-                  description: '200',
+                "200": {
+                  description: "200",
                 },
               },
               summary: undefined,
@@ -1037,12 +1038,12 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('works with multipart/form-data', () => {
+    it("works with multipart/form-data", () => {
       const routerWithTransform = c.router({
         formEndpoint: {
-          method: 'POST',
-          path: '/form',
-          contentType: 'multipart/form-data',
+          method: "POST",
+          path: "/form",
+          contentType: "multipart/form-data",
           body: z.object({
             file: z.string(),
           }),
@@ -1053,40 +1054,40 @@ describe('ts-rest-open-api', () => {
       });
 
       const schema = generateOpenApi(routerWithTransform, {
-        info: { title: 'Form API', version: '0.1' },
+        info: { title: "Form API", version: "0.1" },
       });
 
       expect(schema).toEqual({
         info: {
-          title: 'Form API',
-          version: '0.1',
+          title: "Form API",
+          version: "0.1",
         },
-        openapi: '3.0.2',
+        openapi: "3.0.2",
         paths: {
-          '/form': {
+          "/form": {
             post: {
               deprecated: undefined,
               description: undefined,
               parameters: [],
               requestBody: {
                 content: {
-                  'multipart/form-data': {
+                  "multipart/form-data": {
                     schema: {
                       properties: {
                         file: {
-                          type: 'string',
+                          type: "string",
                         },
                       },
-                      required: ['file'],
-                      type: 'object',
+                      required: ["file"],
+                      type: "object",
                     },
                   },
                 },
-                description: 'Body',
+                description: "Body",
               },
               responses: {
-                '200': {
-                  description: '200',
+                "200": {
+                  description: "200",
                 },
               },
               summary: undefined,
@@ -1097,19 +1098,19 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('should extract references by title', () => {
+    it("should extract references by title", () => {
       const entity = extendApi(
         z.object({
           file: z.string(),
         }),
         {
-          title: 'Body',
+          title: "Body",
         },
       );
       const routerWithTransform = c.router({
         formEndpoint: {
-          method: 'PUT',
-          path: '/title',
+          method: "PUT",
+          path: "/title",
           body: entity,
           responses: {
             200: entity,
@@ -1118,7 +1119,7 @@ describe('ts-rest-open-api', () => {
       });
 
       const schema = generateOpenApi(routerWithTransform, {
-        info: { title: 'Title API', version: '0.1' },
+        info: { title: "Title API", version: "0.1" },
       });
 
       expect(schema).toEqual({
@@ -1127,44 +1128,44 @@ describe('ts-rest-open-api', () => {
             Body: {
               properties: {
                 file: {
-                  type: 'string',
+                  type: "string",
                 },
               },
-              required: ['file'],
-              title: 'Body',
-              type: 'object',
+              required: ["file"],
+              title: "Body",
+              type: "object",
             },
           },
         },
         info: {
-          title: 'Title API',
-          version: '0.1',
+          title: "Title API",
+          version: "0.1",
         },
-        openapi: '3.0.2',
+        openapi: "3.0.2",
         paths: {
-          '/title': {
+          "/title": {
             put: {
               parameters: [],
               requestBody: {
                 content: {
-                  'application/json': {
+                  "application/json": {
                     schema: {
-                      $ref: '#/components/schemas/Body',
+                      $ref: "#/components/schemas/Body",
                     },
                   },
                 },
-                description: 'Body',
+                description: "Body",
               },
               responses: {
-                '200': {
+                "200": {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       schema: {
-                        $ref: '#/components/schemas/Body',
+                        $ref: "#/components/schemas/Body",
                       },
                     },
                   },
-                  description: '200',
+                  description: "200",
                 },
               },
               tags: [],
@@ -1174,13 +1175,13 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('should extract nested references by title', () => {
+    it("should extract nested references by title", () => {
       const child = extendApi(
         z.object({
           file: z.string(),
         }),
         {
-          title: 'Child',
+          title: "Child",
         },
       );
       const parent = extendApi(
@@ -1188,13 +1189,13 @@ describe('ts-rest-open-api', () => {
           child: child,
         }),
         {
-          title: 'Parent',
+          title: "Parent",
         },
       );
       const routerWithTransform = c.router({
         formEndpoint: {
-          method: 'PUT',
-          path: '/title',
+          method: "PUT",
+          path: "/title",
           body: child,
           responses: {
             200: parent,
@@ -1203,7 +1204,7 @@ describe('ts-rest-open-api', () => {
       });
 
       const schema = generateOpenApi(routerWithTransform, {
-        info: { title: 'Title API', version: '0.1' },
+        info: { title: "Title API", version: "0.1" },
       });
 
       expect(schema).toEqual({
@@ -1212,54 +1213,54 @@ describe('ts-rest-open-api', () => {
             Child: {
               properties: {
                 file: {
-                  type: 'string',
+                  type: "string",
                 },
               },
-              required: ['file'],
-              title: 'Child',
-              type: 'object',
+              required: ["file"],
+              title: "Child",
+              type: "object",
             },
             Parent: {
               properties: {
                 child: {
-                  $ref: '#/components/schemas/Child',
+                  $ref: "#/components/schemas/Child",
                 },
               },
-              required: ['child'],
-              title: 'Parent',
-              type: 'object',
+              required: ["child"],
+              title: "Parent",
+              type: "object",
             },
           },
         },
         info: {
-          title: 'Title API',
-          version: '0.1',
+          title: "Title API",
+          version: "0.1",
         },
-        openapi: '3.0.2',
+        openapi: "3.0.2",
         paths: {
-          '/title': {
+          "/title": {
             put: {
               parameters: [],
               requestBody: {
                 content: {
-                  'application/json': {
+                  "application/json": {
                     schema: {
-                      $ref: '#/components/schemas/Child',
+                      $ref: "#/components/schemas/Child",
                     },
                   },
                 },
-                description: 'Body',
+                description: "Body",
               },
               responses: {
-                '200': {
+                "200": {
                   content: {
-                    'application/json': {
+                    "application/json": {
                       schema: {
-                        $ref: '#/components/schemas/Parent',
+                        $ref: "#/components/schemas/Parent",
                       },
                     },
                   },
-                  description: '200',
+                  description: "200",
                 },
               },
               tags: [],
@@ -1269,17 +1270,17 @@ describe('ts-rest-open-api', () => {
       });
     });
 
-    it('should throw if duplicated title', () => {
+    it("should throw if duplicated title", () => {
       const routerWithTransform = c.router({
         formEndpoint: {
-          method: 'PUT',
-          path: '/title',
+          method: "PUT",
+          path: "/title",
           body: extendApi(
             z.object({
               file: z.string(),
             }),
             {
-              title: 'Body',
+              title: "Body",
             },
           ),
           responses: {
@@ -1288,7 +1289,7 @@ describe('ts-rest-open-api', () => {
                 otherFile: z.string(),
               }),
               {
-                title: 'Body',
+                title: "Body",
               },
             ),
           },
@@ -1297,7 +1298,7 @@ describe('ts-rest-open-api', () => {
 
       expect(() =>
         generateOpenApi(routerWithTransform, {
-          info: { title: 'Title API', version: '0.1' },
+          info: { title: "Title API", version: "0.1" },
         }),
       ).toThrowError(/already exists with a different schema/);
     });

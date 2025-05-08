@@ -1,30 +1,32 @@
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
+
 import {
   QueryClient,
   QueryClientProvider,
   skipToken,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 import {
-  waitFor,
   renderHook,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
-} from '@testing-library/react';
-import { ApiFetcher, initContract } from '@ts-rest/core';
-import * as React from 'react';
-import { act } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { z } from 'zod';
-import { initTsrReactQuery } from './init-tsr-react-query';
+} from "@testing-library/react";
+import { ApiFetcher, initContract } from "@ts-rest/core";
+import * as React from "react";
+import { act } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { z } from "zod";
+
+import { initTsrReactQuery } from "./init-tsr-react-query";
 import {
+  exhaustiveGuard,
   isFetchError,
   isNotKnownResponseError,
   isUnknownErrorResponse,
-  exhaustiveGuard,
-} from './type-guards';
+} from "./type-guards";
 
 // mute errors at ErrorBoundary when using suspense functions
-window.addEventListener('error', (event) => {
+window.addEventListener("error", (event) => {
   event.preventDefault();
 });
 
@@ -50,16 +52,16 @@ export type User = {
 const postsRouter = c.router(
   {
     getPost: {
-      method: 'GET',
+      method: "GET",
       path: `/posts/:id`,
       responses: {
         200: c.type<Post>(),
-        404: c.type<{ message: 'not found' }>(),
+        404: c.type<{ message: "not found" }>(),
       },
     },
     getPosts: {
-      method: 'GET',
-      path: '/posts',
+      method: "GET",
+      path: "/posts",
       responses: {
         200: c.type<{ posts: Post[] }>(),
       },
@@ -69,8 +71,8 @@ const postsRouter = c.router(
       }),
     },
     createPost: {
-      method: 'POST',
-      path: '/posts',
+      method: "POST",
+      path: "/posts",
       responses: {
         200: c.type<Post>(),
       },
@@ -83,8 +85,8 @@ const postsRouter = c.router(
       }),
     },
     mutationWithQuery: {
-      method: 'POST',
-      path: '/posts',
+      method: "POST",
+      path: "/posts",
       responses: {
         200: c.type<Post>(),
       },
@@ -94,7 +96,7 @@ const postsRouter = c.router(
       }),
     },
     updatePost: {
-      method: 'PUT',
+      method: "PUT",
       path: `/posts/:id`,
       responses: {
         200: c.type<Post>(),
@@ -108,7 +110,7 @@ const postsRouter = c.router(
       }),
     },
     patchPost: {
-      method: 'PATCH',
+      method: "PATCH",
       path: `/posts/:id`,
       responses: {
         200: c.type<Post>(),
@@ -116,7 +118,7 @@ const postsRouter = c.router(
       body: null,
     },
     deletePost: {
-      method: 'DELETE',
+      method: "DELETE",
       path: `/posts/:id`,
       responses: {
         200: c.type<boolean>(),
@@ -124,18 +126,18 @@ const postsRouter = c.router(
       body: null,
     },
     uploadImage: {
-      method: 'POST',
+      method: "POST",
       path: `/posts/:id/image`,
       responses: {
         200: c.type<Post>(),
       },
-      contentType: 'multipart/form-data',
+      contentType: "multipart/form-data",
       body: c.body<{ image: File }>(),
     },
   },
   {
     baseHeaders: z.object({
-      'x-test': z.string(),
+      "x-test": z.string(),
     }),
   },
 );
@@ -144,8 +146,8 @@ const postsRouter = c.router(
 const contract = c.router({
   posts: postsRouter,
   health: {
-    method: 'GET',
-    path: '/health',
+    method: "GET",
+    path: "/health",
     responses: {
       200: c.type<{ message: string }>(),
     },
@@ -157,9 +159,9 @@ const api = jest.fn();
 let queryClient = new QueryClient();
 
 const tsr = initTsrReactQuery(contract, {
-  baseUrl: 'https://api.com',
+  baseUrl: "https://api.com",
   baseHeaders: {
-    'x-test': 'test',
+    "x-test": "test",
   },
   api: api as ApiFetcher,
 });
@@ -170,7 +172,7 @@ const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
       <tsr.ReactQueryProvider>
         <ErrorBoundary
           fallbackRender={({ error }) => (
-            <p>{error?.body?.message || error?.message || 'Error'}</p>
+            <p>{error?.body?.message || error?.message || "Error"}</p>
           )}
         >
           <React.Suspense fallback={<p>loading</p>}>{children}</React.Suspense>
@@ -190,23 +192,23 @@ const SUCCESS_RESPONSE = {
 const ERROR_RESPONSE = {
   status: 500,
   body: {
-    message: 'Internal Server Error',
+    message: "Internal Server Error",
   },
 };
 
-describe('react-query', () => {
+describe("react-query", () => {
   beforeEach(() => {
     queryClient = new QueryClient();
     api.mockReset();
   });
 
-  it('useQuery should handle success', async () => {
+  it("useQuery should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.health.useQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
         });
       },
       {
@@ -219,11 +221,11 @@ describe('react-query', () => {
     expect(result.current.contractEndpoint).toEqual(contract.health);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/health',
+      method: "GET",
+      path: "https://api.com/health",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.health,
       signal: expect.any(AbortSignal),
@@ -239,11 +241,11 @@ describe('react-query', () => {
     expect(result.current.data).toStrictEqual(SUCCESS_RESPONSE);
   });
 
-  it('useQuery should handle skipToken', async () => {
+  it("useQuery should handle skipToken", async () => {
     const { result } = renderHook(
       () => {
         return tsr.health.useQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
           queryData: skipToken,
         });
       },
@@ -260,19 +262,19 @@ describe('react-query', () => {
     expect(api).toHaveBeenCalledTimes(0);
   });
 
-  it('useQuery should handle error response', async () => {
+  it("useQuery should handle error response", async () => {
     api.mockResolvedValue({
       status: 404,
-      body: { message: 'not found' },
+      body: { message: "not found" },
     });
 
     const { result } = renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['posts', '1'],
+          queryKey: ["posts", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
           retry: false,
@@ -292,11 +294,11 @@ describe('react-query', () => {
 
     expect(useQueryResult.error).toEqual({
       status: 404,
-      body: { message: 'not found' },
+      body: { message: "not found" },
     });
 
     if (useQueryResult.isPending) {
-      throw new Error('isPending should be false');
+      throw new Error("isPending should be false");
     }
 
     try {
@@ -326,7 +328,7 @@ describe('react-query', () => {
 
       if (isFetchError(useQueryResult.error)) {
         throw new Error(
-          'useQueryResult.error should be a response, got `Error` instead',
+          "useQueryResult.error should be a response, got `Error` instead",
         );
       }
 
@@ -350,7 +352,7 @@ describe('react-query', () => {
 
       if (useQueryResult.error.status === 404) {
         // can safely access `body.message` because we excluded non-response Errors and undefined responses
-        return expect(useQueryResult.error.body.message).toEqual('not found');
+        return expect(useQueryResult.error.body.message).toEqual("not found");
       }
 
       return exhaustiveGuard(useQueryResult.error);
@@ -360,7 +362,7 @@ describe('react-query', () => {
     noop(useQueryResult.data.body.title);
   });
 
-  it('useInfiniteQuery should handle success', async () => {
+  it("useInfiniteQuery should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const PAGE_SIZE = 10;
@@ -368,7 +370,7 @@ describe('react-query', () => {
     const { result } = renderHook(
       () => {
         return tsr.posts.getPosts.useInfiniteQuery({
-          queryKey: ['posts'],
+          queryKey: ["posts"],
           queryData: ({ pageParam }) => ({
             query: {
               skip: pageParam.skip,
@@ -395,15 +397,15 @@ describe('react-query', () => {
     expect(result.current.contractEndpoint).toEqual(contract.posts.getPosts);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts?skip=0&take=10',
+      method: "GET",
+      path: "https://api.com/posts?skip=0&take=10",
       body: undefined,
       rawQuery: {
         skip: 0,
         take: 10,
       },
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPosts,
       signal: expect.any(AbortSignal),
@@ -422,7 +424,7 @@ describe('react-query', () => {
     });
   });
 
-  it('prefetchInfiniteQuery should set data for useInfiniteQuery', async () => {
+  it("prefetchInfiniteQuery should set data for useInfiniteQuery", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const PAGE_SIZE = 10;
@@ -431,7 +433,7 @@ describe('react-query', () => {
       () => {
         const tsrQueryClient = tsr.useQueryClient();
         return tsrQueryClient.posts.getPosts.prefetchInfiniteQuery({
-          queryKey: ['posts'],
+          queryKey: ["posts"],
           queryData: {
             query: {
               skip: 0,
@@ -449,15 +451,15 @@ describe('react-query', () => {
     await prefetchResult.current;
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts?skip=0&take=10',
+      method: "GET",
+      path: "https://api.com/posts?skip=0&take=10",
       body: undefined,
       rawQuery: {
         skip: 0,
         take: 10,
       },
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPosts,
       signal: expect.any(AbortSignal),
@@ -469,7 +471,7 @@ describe('react-query', () => {
     const { result } = renderHook(
       () => {
         return tsr.posts.getPosts.useInfiniteQuery({
-          queryKey: ['posts'],
+          queryKey: ["posts"],
           queryData: ({ pageParam }) => ({
             query: {
               skip: pageParam.skip,
@@ -505,13 +507,13 @@ describe('react-query', () => {
     });
   });
 
-  it('useSuspenseQuery should handle success', async () => {
+  it("useSuspenseQuery should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.health.useSuspenseQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
         });
       },
       {
@@ -519,17 +521,17 @@ describe('react-query', () => {
       },
     );
 
-    await waitForElementToBeRemoved(await screen.findByText('loading'));
+    await waitForElementToBeRemoved(await screen.findByText("loading"));
 
     expect(result.current.data).toStrictEqual(SUCCESS_RESPONSE);
     expect(result.current.contractEndpoint).toEqual(contract.health);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/health',
+      method: "GET",
+      path: "https://api.com/health",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.health,
       signal: expect.any(AbortSignal),
@@ -539,13 +541,13 @@ describe('react-query', () => {
     });
   });
 
-  it('useQuery with select should handle success', async () => {
-    api.mockResolvedValue({ status: 200, body: { message: 'hello world' } });
+  it("useQuery with select should handle success", async () => {
+    api.mockResolvedValue({ status: 200, body: { message: "hello world" } });
 
     const { result } = renderHook(
       () => {
         return tsr.health.useQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
           select: (data) => data.body.message,
         });
       },
@@ -559,11 +561,11 @@ describe('react-query', () => {
     expect(result.current.isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/health',
+      method: "GET",
+      path: "https://api.com/health",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.health,
       signal: expect.any(AbortSignal),
@@ -576,22 +578,22 @@ describe('react-query', () => {
       expect(result.current.isPending).toStrictEqual(false);
     });
 
-    expect(result.current.data).toStrictEqual('hello world');
+    expect(result.current.data).toStrictEqual("hello world");
   });
 
-  it('useQuery should accept extra headers', async () => {
+  it("useQuery should accept extra headers", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
             headers: {
-              'x-test': 'test',
+              "x-test": "test",
             },
           },
         });
@@ -606,11 +608,11 @@ describe('react-query', () => {
     expect(result.current.isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -620,22 +622,22 @@ describe('react-query', () => {
     });
   });
 
-  it('useQuery should override base headers', async () => {
+  it("useQuery should override base headers", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
             headers: {
-              'x-test': 'foo',
+              "x-test": "foo",
             },
             extraHeaders: {
-              'content-type': 'application/xml',
+              "content-type": "application/xml",
             },
           },
         });
@@ -650,12 +652,12 @@ describe('react-query', () => {
     expect(result.current.isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'content-type': 'application/xml',
-        'x-test': 'foo',
+        "content-type": "application/xml",
+        "x-test": "foo",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -665,19 +667,19 @@ describe('react-query', () => {
     });
   });
 
-  it('useQuery should remove header if value is undefined', async () => {
+  it("useQuery should remove header if value is undefined", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
             extraHeaders: {
-              'content-type': undefined,
+              "content-type": undefined,
             },
           },
         });
@@ -692,11 +694,11 @@ describe('react-query', () => {
     expect(result.current.isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -706,16 +708,16 @@ describe('react-query', () => {
     });
   });
 
-  it('useQuery should accept non-json string response', () => {
+  it("useQuery should accept non-json string response", () => {
     api.mockResolvedValue({
       status: 200,
-      body: 'Hello World',
+      body: "Hello World",
     });
 
     const { result } = renderHook(
       () => {
         return tsr.health.useQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
         });
       },
       {
@@ -728,11 +730,11 @@ describe('react-query', () => {
     expect(result.current.isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/health',
+      method: "GET",
+      path: "https://api.com/health",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.health,
       signal: expect.any(AbortSignal),
@@ -745,18 +747,18 @@ describe('react-query', () => {
       expect(result.current.isPending).toStrictEqual(false);
       expect(result.current.data).toStrictEqual({
         status: 200,
-        body: 'Hello World',
+        body: "Hello World",
       });
     });
   });
 
-  it('useQuery should handle failure', async () => {
+  it("useQuery should handle failure", async () => {
     api.mockResolvedValue(ERROR_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.health.useQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
           retry: false,
         });
       },
@@ -768,11 +770,11 @@ describe('react-query', () => {
     expect(result.current.isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/health',
+      method: "GET",
+      path: "https://api.com/health",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.health,
       signal: expect.any(AbortSignal),
@@ -790,13 +792,13 @@ describe('react-query', () => {
     expect(result.current.error).toStrictEqual(ERROR_RESPONSE);
   });
 
-  it('useSuspenseQuery should handle failure', async () => {
+  it("useSuspenseQuery should handle failure", async () => {
     api.mockResolvedValue(ERROR_RESPONSE);
 
     const { result } = renderHook(
       () => {
         return tsr.health.useSuspenseQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
           retry: false,
         });
       },
@@ -804,17 +806,17 @@ describe('react-query', () => {
     );
 
     expect(
-      await screen.findByText('Internal Server Error'),
+      await screen.findByText("Internal Server Error"),
     ).toBeInTheDocument();
 
     expect(result.current).toStrictEqual(null);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/health',
+      method: "GET",
+      path: "https://api.com/health",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.health,
       signal: expect.any(AbortSignal),
@@ -824,11 +826,11 @@ describe('react-query', () => {
     });
   });
 
-  it('useSuspenseQuery should not allow skipToken', async () => {
+  it("useSuspenseQuery should not allow skipToken", async () => {
     renderHook(
       () => {
         return tsr.health.useSuspenseQuery({
-          queryKey: ['health'],
+          queryKey: ["health"],
           // @ts-expect-error - skipToken is not allowed in suspense
           queryData: skipToken,
         });
@@ -837,7 +839,7 @@ describe('react-query', () => {
     );
   });
 
-  it('should handle mutation', async () => {
+  it("should handle mutation", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
@@ -860,34 +862,34 @@ describe('react-query', () => {
     await act(() =>
       result.current.mutateAsync({
         body: {
-          description: 'test',
-          title: 'test',
-          content: '',
-          authorId: '1',
+          description: "test",
+          title: "test",
+          content: "",
+          authorId: "1",
         },
       }),
     );
 
     expect(api).toHaveBeenCalledWith({
-      method: 'POST',
-      path: 'https://api.com/posts',
+      method: "POST",
+      path: "https://api.com/posts",
       body: JSON.stringify({
-        description: 'test',
-        title: 'test',
-        content: '',
-        authorId: '1',
+        description: "test",
+        title: "test",
+        content: "",
+        authorId: "1",
       }),
       headers: {
-        'content-type': 'application/json',
-        'x-test': 'test',
+        "content-type": "application/json",
+        "x-test": "test",
       },
       rawBody: {
-        authorId: '1',
-        content: '',
-        description: 'test',
-        title: 'test',
+        authorId: "1",
+        content: "",
+        description: "test",
+        title: "test",
       },
-      contentType: 'application/json',
+      contentType: "application/json",
       route: contract.posts.createPost,
       signal: undefined,
       fetchOptions: {},
@@ -900,7 +902,7 @@ describe('react-query', () => {
     expect(result.current.data).toStrictEqual(SUCCESS_RESPONSE);
   });
 
-  it('useQueries should handle success', async () => {
+  it("useQueries should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
@@ -908,18 +910,18 @@ describe('react-query', () => {
         return tsr.posts.getPost.useQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 params: {
-                  id: '1',
+                  id: "1",
                 },
               },
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: {
                 params: {
-                  id: '2',
+                  id: "2",
                 },
               },
             },
@@ -938,11 +940,11 @@ describe('react-query', () => {
     expect(result.current[1].isPending).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -952,11 +954,11 @@ describe('react-query', () => {
     });
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/2',
+      method: "GET",
+      path: "https://api.com/posts/2",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -975,7 +977,7 @@ describe('react-query', () => {
     expect(result.current[1].data).toStrictEqual(SUCCESS_RESPONSE);
   });
 
-  it('useQueries should handle skipToken', async () => {
+  it("useQueries should handle skipToken", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
@@ -983,15 +985,15 @@ describe('react-query', () => {
         return tsr.posts.getPost.useQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 params: {
-                  id: '1',
+                  id: "1",
                 },
               },
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: skipToken,
             },
           ],
@@ -1018,11 +1020,11 @@ describe('react-query', () => {
     expect(result.current[1].data).toStrictEqual(undefined);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1034,7 +1036,7 @@ describe('react-query', () => {
     expect(api).toHaveBeenCalledTimes(1);
   });
 
-  it('useQueries should handle `select`', async () => {
+  it("useQueries should handle `select`", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
@@ -1042,13 +1044,13 @@ describe('react-query', () => {
         return tsr.posts.getPosts.useQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 query: { take: 10 },
               },
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: {
                 query: { skip: 10, take: 10 },
               },
@@ -1079,10 +1081,10 @@ describe('react-query', () => {
       SUCCESS_RESPONSE.body.posts,
     );
 
-    expect(result.current[1].data?.toFixed(5)).toStrictEqual('0.00000');
+    expect(result.current[1].data?.toFixed(5)).toStrictEqual("0.00000");
   });
 
-  it('useQueries should handle `combine`', async () => {
+  it("useQueries should handle `combine`", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
@@ -1090,13 +1092,13 @@ describe('react-query', () => {
         return tsr.posts.getPosts.useQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 query: { take: 10 },
               },
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: {
                 query: { skip: 10, take: 10 },
               },
@@ -1125,7 +1127,7 @@ describe('react-query', () => {
     expect(result.current.data).toEqual([SUCCESS_RESPONSE, SUCCESS_RESPONSE]);
   });
 
-  it('useSuspenseQueries should handle success', async () => {
+  it("useSuspenseQueries should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const { result } = renderHook(
@@ -1133,18 +1135,18 @@ describe('react-query', () => {
         return tsr.posts.getPost.useSuspenseQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 params: {
-                  id: '1',
+                  id: "1",
                 },
               },
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: {
                 params: {
-                  id: '2',
+                  id: "2",
                 },
               },
             },
@@ -1156,14 +1158,14 @@ describe('react-query', () => {
       },
     );
 
-    await waitForElementToBeRemoved(await screen.findByText('loading'));
+    await waitForElementToBeRemoved(await screen.findByText("loading"));
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1173,11 +1175,11 @@ describe('react-query', () => {
     });
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/2',
+      method: "GET",
+      path: "https://api.com/posts/2",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1191,7 +1193,7 @@ describe('react-query', () => {
     expect(result.current[1].data).toStrictEqual(SUCCESS_RESPONSE);
   });
 
-  it('useQueries should handle failure', async () => {
+  it("useQueries should handle failure", async () => {
     api.mockResolvedValue(ERROR_RESPONSE);
 
     const { result } = renderHook(
@@ -1199,19 +1201,19 @@ describe('react-query', () => {
         return tsr.posts.getPost.useQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 params: {
-                  id: '1',
+                  id: "1",
                 },
               },
               retry: false,
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: {
                 params: {
-                  id: '2',
+                  id: "2",
                 },
               },
               retry: false,
@@ -1233,11 +1235,11 @@ describe('react-query', () => {
     expect(result.current[1].isLoading).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1247,11 +1249,11 @@ describe('react-query', () => {
     });
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/2',
+      method: "GET",
+      path: "https://api.com/posts/2",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1275,7 +1277,7 @@ describe('react-query', () => {
     expect(result.current[1].error).toStrictEqual(ERROR_RESPONSE);
   });
 
-  it('useQueries should handle success and failure', async () => {
+  it("useQueries should handle success and failure", async () => {
     api
       .mockResolvedValueOnce(SUCCESS_RESPONSE)
       .mockResolvedValueOnce(ERROR_RESPONSE);
@@ -1285,19 +1287,19 @@ describe('react-query', () => {
         return tsr.posts.getPost.useQueries({
           queries: [
             {
-              queryKey: ['posts', '1'],
+              queryKey: ["posts", "1"],
               queryData: {
                 params: {
-                  id: '1',
+                  id: "1",
                 },
               },
               retry: false,
             },
             {
-              queryKey: ['posts', '2'],
+              queryKey: ["posts", "2"],
               queryData: {
                 params: {
-                  id: '2',
+                  id: "2",
                 },
               },
               retry: false,
@@ -1319,11 +1321,11 @@ describe('react-query', () => {
     expect(result.current[1].isLoading).toStrictEqual(true);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1333,11 +1335,11 @@ describe('react-query', () => {
     });
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/2',
+      method: "GET",
+      path: "https://api.com/posts/2",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1360,17 +1362,17 @@ describe('react-query', () => {
     expect(result.current[1].error).toStrictEqual(ERROR_RESPONSE);
   });
 
-  it('fetchQuery should handle success', async () => {
+  it("fetchQuery should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     renderHook(
       () => {
         const queryClient = tsr.useQueryClient();
         return queryClient.posts.getPost.fetchQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
         });
@@ -1381,11 +1383,11 @@ describe('react-query', () => {
     );
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1395,7 +1397,7 @@ describe('react-query', () => {
     });
   });
 
-  it('fetchQuery should handle failure', async () => {
+  it("fetchQuery should handle failure", async () => {
     api.mockResolvedValue(ERROR_RESPONSE);
 
     const { result } = renderHook(
@@ -1403,10 +1405,10 @@ describe('react-query', () => {
         try {
           const queryClient = tsr.useQueryClient();
           return await queryClient.posts.getPost.fetchQuery({
-            queryKey: ['post', '1'],
+            queryKey: ["post", "1"],
             queryData: {
               params: {
-                id: '1',
+                id: "1",
               },
             },
           });
@@ -1422,11 +1424,11 @@ describe('react-query', () => {
     expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1436,17 +1438,17 @@ describe('react-query', () => {
     });
   });
 
-  it('prefetchQuery should handle success', async () => {
+  it("prefetchQuery should handle success", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     renderHook(
       () => {
         const queryClient = tsr.useQueryClient();
         return queryClient.posts.getPost.prefetchQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
         });
@@ -1457,11 +1459,11 @@ describe('react-query', () => {
     );
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1471,16 +1473,16 @@ describe('react-query', () => {
     });
   });
 
-  it('getQueryData should return already fetched data', async () => {
+  it("getQueryData should return already fetched data", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
         });
@@ -1495,7 +1497,7 @@ describe('react-query', () => {
     const { result } = renderHook(
       () => {
         const queryClient = tsr.useQueryClient();
-        return queryClient.posts.getPost.getQueryData(['post', '1']);
+        return queryClient.posts.getPost.getQueryData(["post", "1"]);
       },
       {
         wrapper: ReactQueryProvider,
@@ -1507,11 +1509,11 @@ describe('react-query', () => {
     expect(api).toHaveBeenCalledTimes(1);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1521,20 +1523,20 @@ describe('react-query', () => {
     });
   });
 
-  it('setQueryData should overwrite data returned from api', async () => {
+  it("setQueryData should overwrite data returned from api", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     const data = {
       status: 200,
       headers: new Headers({
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       }),
       body: {
-        id: '1',
-        title: 'foo',
-        description: 'bar',
-        authorId: '1',
-        content: 'baz',
+        id: "1",
+        title: "foo",
+        description: "bar",
+        authorId: "1",
+        content: "baz",
         published: true,
       } as Post,
     } as const;
@@ -1542,10 +1544,10 @@ describe('react-query', () => {
     renderHook(
       () => {
         tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
           staleTime: 10000,
@@ -1561,7 +1563,7 @@ describe('react-query', () => {
     renderHook(
       () => {
         const queryClient = tsr.useQueryClient();
-        return queryClient.posts.getPost.setQueryData(['post', '1'], data);
+        return queryClient.posts.getPost.setQueryData(["post", "1"], data);
       },
       {
         wrapper: ReactQueryProvider,
@@ -1571,10 +1573,10 @@ describe('react-query', () => {
     const { result } = renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
           staleTime: 10000,
@@ -1591,16 +1593,16 @@ describe('react-query', () => {
     });
   });
 
-  it('removeQueries should remove fetched data', async () => {
+  it("removeQueries should remove fetched data", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
         });
@@ -1615,7 +1617,7 @@ describe('react-query', () => {
     renderHook(
       () => {
         const queryClient = tsr.useQueryClient();
-        return queryClient.removeQueries({ queryKey: ['post', '1'] });
+        return queryClient.removeQueries({ queryKey: ["post", "1"] });
       },
       {
         wrapper: ReactQueryProvider,
@@ -1625,7 +1627,7 @@ describe('react-query', () => {
     const { result } = renderHook(
       () => {
         const queryClient = tsr.useQueryClient();
-        return queryClient.posts.getPost.getQueryData(['post', '1']);
+        return queryClient.posts.getPost.getQueryData(["post", "1"]);
       },
       {
         wrapper: ReactQueryProvider,
@@ -1637,11 +1639,11 @@ describe('react-query', () => {
     expect(api).toHaveBeenCalledTimes(1);
 
     expect(api).toHaveBeenCalledWith({
-      method: 'GET',
-      path: 'https://api.com/posts/1',
+      method: "GET",
+      path: "https://api.com/posts/1",
       body: undefined,
       headers: {
-        'x-test': 'test',
+        "x-test": "test",
       },
       route: contract.posts.getPost,
       signal: expect.any(AbortSignal),
@@ -1651,16 +1653,16 @@ describe('react-query', () => {
     });
   });
 
-  it('refetchQueries should trigger query again', async () => {
+  it("refetchQueries should trigger query again", async () => {
     api.mockResolvedValue(SUCCESS_RESPONSE);
 
     renderHook(
       () => {
         return tsr.posts.getPost.useQuery({
-          queryKey: ['post', '1'],
+          queryKey: ["post", "1"],
           queryData: {
             params: {
-              id: '1',
+              id: "1",
             },
           },
         });
@@ -1676,7 +1678,7 @@ describe('react-query', () => {
       renderHook(
         () => {
           const queryClient = tsr.useQueryClient();
-          return queryClient.refetchQueries({ queryKey: ['post', '1'] });
+          return queryClient.refetchQueries({ queryKey: ["post", "1"] });
         },
         {
           wrapper: ReactQueryProvider,
@@ -1687,7 +1689,7 @@ describe('react-query', () => {
     expect(api).toHaveBeenCalledTimes(2);
   });
 
-  it('useTsrQueryClient should throw if not using provider', async () => {
+  it("useTsrQueryClient should throw if not using provider", async () => {
     renderHook(
       () => {
         return tsr.useQueryClient();
@@ -1706,7 +1708,7 @@ describe('react-query', () => {
     );
 
     expect(document.body).toContainHTML(
-      'tsrQueryClient not initialized. Use TsRestReactQueryProvider to initialize one.',
+      "tsrQueryClient not initialized. Use TsRestReactQueryProvider to initialize one.",
     );
   });
 });

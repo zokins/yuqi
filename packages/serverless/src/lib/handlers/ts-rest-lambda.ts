@@ -1,17 +1,18 @@
-import type { Context } from 'aws-lambda';
-import { AppRouter } from '@ts-rest/core';
+import type { Context } from "aws-lambda";
+import { AppRouter } from "@ts-rest/core";
+
 import {
   ApiGatewayEvent,
   ApiGatewayResponse,
   requestFromEvent,
   responseToResult,
-} from '../mappers/aws/api-gateway';
-import { createServerlessRouter } from '../router';
+} from "../mappers/aws/api-gateway";
+import { createServerlessRouter } from "../router";
 import {
   createTsr,
   RouterImplementationOrFluentRouter,
   ServerlessHandlerOptions,
-} from '../types';
+} from "../types";
 
 type LambdaPlatformArgs = {
   rawEvent: ApiGatewayEvent;

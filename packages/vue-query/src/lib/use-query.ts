@@ -1,10 +1,10 @@
 import {
-  useQuery,
-  QueryKey,
-  UseQueryReturnType,
-  UseQueryOptions,
   QueryFunctionContext,
-} from '@tanstack/vue-query';
+  QueryKey,
+  useQuery,
+  UseQueryOptions,
+  UseQueryReturnType,
+} from "@tanstack/vue-query";
 import {
   AppRoute,
   AppRouteMutation,
@@ -12,33 +12,35 @@ import {
   ClientArgs,
   ClientInferRequest,
   PartialClientInferRequest,
-} from '@ts-rest/core';
-import { DataResponse, ErrorResponse, queryFn } from './common';
+} from "@ts-rest/core";
+
+import { DataResponse, ErrorResponse, queryFn } from "./common";
 
 // Used on X.useQuery
 export type DataReturnQuery<
   TAppRoute extends AppRoute,
   TClientArgs extends ClientArgs,
   TArgs = PartialClientInferRequest<TAppRoute, TClientArgs>,
-> = AreAllPropertiesOptional<TArgs> extends true
-  ? <TData = DataResponse<TAppRoute>>(
-      queryKey: QueryKey,
-      args?: (context: QueryFunctionContext<QueryKey>) => TArgs,
-      options?: UseQueryOptions<
-        DataResponse<TAppRoute>,
-        ErrorResponse<TAppRoute>,
-        TData
-      >,
-    ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>
-  : <TData = DataResponse<TAppRoute>>(
-      queryKey: QueryKey,
-      args: (context: QueryFunctionContext<QueryKey>) => TArgs,
-      options?: UseQueryOptions<
-        DataResponse<TAppRoute>,
-        ErrorResponse<TAppRoute>,
-        TData
-      >,
-    ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>;
+> =
+  AreAllPropertiesOptional<TArgs> extends true
+    ? <TData = DataResponse<TAppRoute>>(
+        queryKey: QueryKey,
+        args?: (context: QueryFunctionContext<QueryKey>) => TArgs,
+        options?: UseQueryOptions<
+          DataResponse<TAppRoute>,
+          ErrorResponse<TAppRoute>,
+          TData
+        >,
+      ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>
+    : <TData = DataResponse<TAppRoute>>(
+        queryKey: QueryKey,
+        args: (context: QueryFunctionContext<QueryKey>) => TArgs,
+        options?: UseQueryOptions<
+          DataResponse<TAppRoute>,
+          ErrorResponse<TAppRoute>,
+          TData
+        >,
+      ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>;
 
 export const getRouteUseQuery = <
   TAppRoute extends AppRoute,

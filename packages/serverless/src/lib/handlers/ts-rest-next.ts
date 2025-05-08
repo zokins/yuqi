@@ -1,12 +1,13 @@
-import { AppRouter } from '@ts-rest/core';
-import type { NextRequest, NextResponse } from 'next/server';
-import { createServerlessRouter } from '../router';
+import type { NextRequest, NextResponse } from "next/server";
+import { AppRouter } from "@ts-rest/core";
+
+import { TsRestRequest } from "../request";
+import { createServerlessRouter } from "../router";
 import {
   createTsr,
   RouterImplementationOrFluentRouter,
   ServerlessHandlerOptions,
-} from '../types';
-import { TsRestRequest } from '../request';
+} from "../types";
 
 type NextPlatformArgs = {
   nextRequest: NextRequest;
@@ -18,7 +19,7 @@ export type NextHandlerOptions<TRequestExtension> = ServerlessHandlerOptions<
   NextPlatformArgs,
   TRequestExtension
 > & {
-  handlerType: 'app-router' | 'pages-router-edge';
+  handlerType: "app-router" | "pages-router-edge";
 };
 
 export const createNextHandler = <T extends AppRouter, TRequestExtension>(
@@ -37,14 +38,14 @@ export const createNextHandler = <T extends AppRouter, TRequestExtension>(
   >(contract, router, options);
 
   return async (nextRequest: NextRequest): Promise<NextResponse> => {
-    if (options.handlerType === 'pages-router-edge') {
-      if (!nextRequest.nextUrl.searchParams.has('ts-rest')) {
+    if (options.handlerType === "pages-router-edge") {
+      if (!nextRequest.nextUrl.searchParams.has("ts-rest")) {
         throw new Error(
-          'Please make sure your catch-all route file is named [...ts-rest]',
+          "Please make sure your catch-all route file is named [...ts-rest]",
         );
       }
 
-      nextRequest.nextUrl.searchParams.delete('ts-rest');
+      nextRequest.nextUrl.searchParams.delete("ts-rest");
     }
 
     const request = new TsRestRequest(

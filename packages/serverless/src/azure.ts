@@ -1,2 +1,2 @@
-export * from './lib/handlers/ts-rest-azure-function';
-export * from './index';
+export * from "./lib/handlers/ts-rest-azure-function";
+export * from "./index";

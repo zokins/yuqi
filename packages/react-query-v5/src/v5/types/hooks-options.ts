@@ -2,20 +2,21 @@ import {
   InfiniteData,
   QueryFunctionContext,
   QueryKey,
+  SkipToken,
   UseInfiniteQueryOptions as TanStackUseInfiniteQueryOptions,
   UseMutationOptions as TanStackUseMutationOptions,
   UseQueryOptions as TanStackUseQueryOptions,
   UseSuspenseInfiniteQueryOptions as TanStackUseSuspenseInfiniteQueryOptions,
   UseSuspenseQueryOptions as TanStackUseSuspenseQueryOptions,
-  SkipToken,
-} from '@tanstack/react-query';
-import { AppRoute, ClientArgs, IfAllPropertiesOptional } from '@ts-rest/core';
-import { QueriesOptions, QueriesResults } from '../internal/queries-options';
+} from "@tanstack/react-query";
+import { AppRoute, ClientArgs, IfAllPropertiesOptional } from "@ts-rest/core";
+
+import { QueriesOptions, QueriesResults } from "../internal/queries-options";
 import {
   SuspenseQueriesOptions,
   SuspenseQueriesResults,
-} from '../internal/suspense-queries-options';
-import { DataResponse, ErrorResponse, RequestData } from './common';
+} from "../internal/suspense-queries-options";
+import { DataResponse, ErrorResponse, RequestData } from "./common";
 
 export type TsRestQueryOptions<
   TAppRoute extends AppRoute,
@@ -69,7 +70,7 @@ export type UseQueryOptions<
     ErrorResponse<TAppRoute>,
     TData
   >,
-  'queryFn'
+  "queryFn"
 > &
   TsRestQueryOptions<TAppRoute, TClientArgs>;
 
@@ -119,7 +120,7 @@ export type UseSuspenseQueryOptions<
     ErrorResponse<TAppRoute>,
     TData
   >,
-  'queryFn'
+  "queryFn"
 > &
   TsRestSuspenseQueryOptions<TAppRoute, TClientArgs>;
 
@@ -137,7 +138,7 @@ export type UseInfiniteQueryOptions<
     QueryKey,
     TPageParam
   >,
-  'queryFn'
+  "queryFn"
 > &
   TsRestInfiniteQueryOptions<TAppRoute, TClientArgs, TPageParam>;
 
@@ -175,7 +176,7 @@ export type UseSuspenseInfiniteQueryOptions<
     QueryKey,
     TPageParam
   >,
-  'queryFn'
+  "queryFn"
 > &
   TsRestSuspenseInfiniteQueryOptions<TAppRoute, TClientArgs, TPageParam>;
 

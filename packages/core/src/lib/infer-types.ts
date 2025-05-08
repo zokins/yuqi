@@ -1,4 +1,10 @@
 import {
+  ApiFetcher,
+  ClientArgs,
+  FetchOptions,
+  OverrideableClientArgs,
+} from "./client";
+import {
   AppRoute,
   AppRouteMutation,
   AppRouter,
@@ -6,8 +12,9 @@ import {
   ContractAnyType,
   ContractNoBodyType,
   ContractOtherResponse,
-} from './dsl';
-import { HTTPStatusCode } from './status-codes';
+} from "./dsl";
+import { ParamsFromUrl } from "./paths";
+import { HTTPStatusCode } from "./status-codes";
 import {
   And,
   Extends,
@@ -21,42 +28,32 @@ import {
   Without,
   ZodInferOrType,
   ZodInputOrType,
-} from './type-utils';
-import {
-  ApiFetcher,
-  ClientArgs,
-  OverrideableClientArgs,
-  FetchOptions,
-} from './client';
-import { ParamsFromUrl } from './paths';
+} from "./type-utils";
 
 type ExtractExtraParametersFromClientArgs<
-  TClientArgs extends Pick<ClientArgs, 'api'>,
-> = TClientArgs['api'] extends ApiFetcher
-  ? Omit<Parameters<TClientArgs['api']>[0], keyof Parameters<ApiFetcher>[0]>
+  TClientArgs extends Pick<ClientArgs, "api">,
+> = TClientArgs["api"] extends ApiFetcher
+  ? Omit<Parameters<TClientArgs["api"]>[0], keyof Parameters<ApiFetcher>[0]>
   : {};
 
 /**
  * Extract the path params from the path in the contract
  */
-type PathParamsFromUrl<T extends AppRoute> = ParamsFromUrl<
-  T['path']
-> extends infer U
-  ? U
-  : never;
+type PathParamsFromUrl<T extends AppRoute> =
+  ParamsFromUrl<T["path"]> extends infer U ? U : never;
 
 /**
  * Merge `PathParamsFromUrl<T>` with pathParams schema if it exists
  */
 type PathParamsWithCustomValidators<
   T extends AppRoute,
-  TClientOrServer extends 'client' | 'server' = 'server',
-> = 'pathParams' extends keyof T
+  TClientOrServer extends "client" | "server" = "server",
+> = "pathParams" extends keyof T
   ? Merge<
       PathParamsFromUrl<T>,
-      TClientOrServer extends 'server'
-        ? ZodInferOrType<T['pathParams']>
-        : ZodInputOrType<T['pathParams']>
+      TClientOrServer extends "server"
+        ? ZodInferOrType<T["pathParams"]>
+        : ZodInputOrType<T["pathParams"]>
     >
   : PathParamsFromUrl<T>;
 
@@ -71,8 +68,8 @@ export type InferResponseDefinedStatusCodes<
   T extends AppRoute,
   TStatus extends HTTPStatusCode = HTTPStatusCode,
 > = {
-  [K in keyof T['responses'] & TStatus]: K;
-}[keyof T['responses'] & TStatus];
+  [K in keyof T["responses"] & TStatus]: K;
+}[keyof T["responses"] & TStatus];
 
 export type InferResponseUndefinedStatusCodes<
   T extends AppRoute,
@@ -82,86 +79,86 @@ export type InferResponseUndefinedStatusCodes<
 type AppRouteResponses<
   T extends AppRoute,
   TStatus extends HTTPStatusCode,
-  TClientOrServer extends 'client' | 'server',
-  TStrictStatusCodes extends 'default' | 'ignore' | 'force' = 'default',
+  TClientOrServer extends "client" | "server",
+  TStrictStatusCodes extends "default" | "ignore" | "force" = "default",
 > =
   | {
-      [K in keyof T['responses'] & TStatus]: {
+      [K in keyof T["responses"] & TStatus]: {
         status: K;
-        body: TClientOrServer extends 'server'
-          ? ZodInputOrType<ResolveResponseType<T['responses'][K]>>
-          : ZodInferOrType<ResolveResponseType<T['responses'][K]>>;
-      } & (TClientOrServer extends 'client'
+        body: TClientOrServer extends "server"
+          ? ZodInputOrType<ResolveResponseType<T["responses"][K]>>
+          : ZodInferOrType<ResolveResponseType<T["responses"][K]>>;
+      } & (TClientOrServer extends "client"
         ? {
             headers: Headers;
           }
         : {});
-    }[keyof T['responses'] & TStatus]
+    }[keyof T["responses"] & TStatus]
   | (Or<
-      Extends<TStrictStatusCodes, 'force'>,
+      Extends<TStrictStatusCodes, "force">,
       And<
         Extends<T, AppRouteStrictStatusCodes>,
-        Not<Extends<TStrictStatusCodes, 'ignore'>>
+        Not<Extends<TStrictStatusCodes, "ignore">>
       >
     > extends true
       ? never
-      : Exclude<TStatus, keyof T['responses']> extends never
-      ? never
-      : {
-          status: Exclude<TStatus, keyof T['responses']>;
-          body: unknown;
-        } & (TClientOrServer extends 'client'
-          ? {
-              headers: Headers;
-            }
-          : {}));
+      : Exclude<TStatus, keyof T["responses"]> extends never
+        ? never
+        : {
+            status: Exclude<TStatus, keyof T["responses"]>;
+            body: unknown;
+          } & (TClientOrServer extends "client"
+            ? {
+                headers: Headers;
+              }
+            : {}));
 
 export type ServerInferResponses<
   T extends AppRoute | AppRouter,
   TStatus extends HTTPStatusCode = HTTPStatusCode,
-  TStrictStatusCodes extends 'default' | 'ignore' | 'force' = 'default',
+  TStrictStatusCodes extends "default" | "ignore" | "force" = "default",
 > = T extends AppRoute
-  ? Prettify<AppRouteResponses<T, TStatus, 'server', TStrictStatusCodes>>
+  ? Prettify<AppRouteResponses<T, TStatus, "server", TStrictStatusCodes>>
   : T extends AppRouter
-  ? {
-      [TKey in keyof T]: ServerInferResponses<
-        T[TKey],
-        TStatus,
-        TStrictStatusCodes
-      >;
-    }
-  : never;
+    ? {
+        [TKey in keyof T]: ServerInferResponses<
+          T[TKey],
+          TStatus,
+          TStrictStatusCodes
+        >;
+      }
+    : never;
 
 export type ClientInferResponses<
   T extends AppRoute | AppRouter,
   TStatus extends HTTPStatusCode = HTTPStatusCode,
-  TStrictStatusCodes extends 'default' | 'ignore' | 'force' = 'default',
+  TStrictStatusCodes extends "default" | "ignore" | "force" = "default",
 > = T extends AppRoute
-  ? Prettify<AppRouteResponses<T, TStatus, 'client', TStrictStatusCodes>>
+  ? Prettify<AppRouteResponses<T, TStatus, "client", TStrictStatusCodes>>
   : T extends AppRouter
-  ? {
-      [TKey in keyof T]: ClientInferResponses<
-        T[TKey],
-        TStatus,
-        TStrictStatusCodes
-      >;
-    }
-  : never;
+    ? {
+        [TKey in keyof T]: ClientInferResponses<
+          T[TKey],
+          TStatus,
+          TStrictStatusCodes
+        >;
+      }
+    : never;
 
 export type ServerInferResponseBody<
   T extends AppRoute,
-  TStatus extends keyof T['responses'] = keyof T['responses'],
-> = Prettify<AppRouteResponses<T, TStatus & HTTPStatusCode, 'server'>['body']>;
+  TStatus extends keyof T["responses"] = keyof T["responses"],
+> = Prettify<AppRouteResponses<T, TStatus & HTTPStatusCode, "server">["body"]>;
 
 export type ClientInferResponseBody<
   T extends AppRoute,
-  TStatus extends keyof T['responses'] = keyof T['responses'],
-> = Prettify<AppRouteResponses<T, TStatus & HTTPStatusCode, 'client'>['body']>;
+  TStatus extends keyof T["responses"] = keyof T["responses"],
+> = Prettify<AppRouteResponses<T, TStatus & HTTPStatusCode, "client">["body"]>;
 
 type BodyWithoutFileIfMultiPart<T extends AppRouteMutation> =
-  T['contentType'] extends 'multipart/form-data'
-    ? Without<ZodInferOrType<T['body']>, File | File[]>
-    : ZodInferOrType<T['body']>;
+  T["contentType"] extends "multipart/form-data"
+    ? Without<ZodInferOrType<T["body"]>, File | File[]>
+    : ZodInferOrType<T["body"]>;
 
 export type ServerInferRequest<
   T extends AppRoute | AppRouter,
@@ -176,15 +173,15 @@ export type ServerInferRequest<
           body: T extends AppRouteMutation
             ? BodyWithoutFileIfMultiPart<T>
             : never;
-          query: 'query' extends keyof T ? ZodInferOrType<T['query']> : never;
-          headers: 'headers' extends keyof T
+          query: "query" extends keyof T ? ZodInferOrType<T["query"]> : never;
+          headers: "headers" extends keyof T
             ? Prettify<
-                LowercaseKeys<ZodInferOrType<T['headers']>> &
+                LowercaseKeys<ZodInferOrType<T["headers"]>> &
                   ([TServerHeaders] extends [never]
                     ? {}
                     : Omit<
                         TServerHeaders,
-                        keyof LowercaseKeys<ZodInferOrType<T['headers']>>
+                        keyof LowercaseKeys<ZodInferOrType<T["headers"]>>
                       >)
               >
             : TServerHeaders;
@@ -193,17 +190,17 @@ export type ServerInferRequest<
       >
     >
   : T extends AppRouter
-  ? { [TKey in keyof T]: ServerInferRequest<T[TKey], TServerHeaders> }
-  : never;
+    ? { [TKey in keyof T]: ServerInferRequest<T[TKey], TServerHeaders> }
+    : never;
 
 type ClientInferRequestBase<
   T extends AppRoute,
-  TClientArgs extends Omit<ClientArgs, 'baseUrl'> = {},
-  THeaders = 'headers' extends keyof T
+  TClientArgs extends Omit<ClientArgs, "baseUrl"> = {},
+  THeaders = "headers" extends keyof T
     ? Prettify<
         PartialByLooseKeys<
-          LowercaseKeys<ZodInputOrType<T['headers']>>,
-          keyof LowercaseKeys<TClientArgs['baseHeaders']>
+          LowercaseKeys<ZodInputOrType<T["headers"]>>,
+          keyof LowercaseKeys<TClientArgs["baseHeaders"]>
         >
       >
     : never,
@@ -211,24 +208,24 @@ type ClientInferRequestBase<
 > = Prettify<
   Without<
     {
-      params: [keyof PathParamsWithCustomValidators<T, 'client'>] extends [
+      params: [keyof PathParamsWithCustomValidators<T, "client">] extends [
         never,
       ]
         ? never
-        : Prettify<PathParamsWithCustomValidators<T, 'client'>>;
+        : Prettify<PathParamsWithCustomValidators<T, "client">>;
       body: T extends AppRouteMutation
-        ? T['body'] extends null
+        ? T["body"] extends null
           ? never
-          : T['contentType'] extends 'multipart/form-data'
-          ? FormData | ZodInputOrType<T['body']>
-          : T['contentType'] extends 'application/x-www-form-urlencoded'
-          ? string | ZodInputOrType<T['body']>
-          : ZodInputOrType<T['body']>
+          : T["contentType"] extends "multipart/form-data"
+            ? FormData | ZodInputOrType<T["body"]>
+            : T["contentType"] extends "application/x-www-form-urlencoded"
+              ? string | ZodInputOrType<T["body"]>
+              : ZodInputOrType<T["body"]>
         : never;
-      query: 'query' extends keyof T
-        ? T['query'] extends null
+      query: "query" extends keyof T
+        ? T["query"] extends null
           ? never
-          : ZodInputOrType<T['query']>
+          : ZodInputOrType<T["query"]>
         : never;
       headers: THeaders;
       extraHeaders?: [THeaders] extends [never]
@@ -242,14 +239,14 @@ type ClientInferRequestBase<
       /**
        * @deprecated Use `fetchOptions.cache` instead
        */
-      cache?: 'cache' extends keyof TFetchOptions
-        ? TFetchOptions['cache']
+      cache?: "cache" extends keyof TFetchOptions
+        ? TFetchOptions["cache"]
         : never;
 
       /**
        * @deprecated Use `fetchOptions.next` instead
        */
-      next?: 'next' extends keyof TFetchOptions ? TFetchOptions['next'] : never;
+      next?: "next" extends keyof TFetchOptions ? TFetchOptions["next"] : never;
     } & ExtractExtraParametersFromClientArgs<TClientArgs>,
     never
   >
@@ -257,14 +254,14 @@ type ClientInferRequestBase<
 
 export type ClientInferRequest<
   T extends AppRoute | AppRouter,
-  TClientArgs extends Omit<ClientArgs, 'baseUrl'> = {},
+  TClientArgs extends Omit<ClientArgs, "baseUrl"> = {},
 > = T extends AppRoute
   ? ClientInferRequestBase<T, TClientArgs>
   : T extends AppRouter
-  ? { [TKey in keyof T]: ClientInferRequest<T[TKey]> }
-  : never;
+    ? { [TKey in keyof T]: ClientInferRequest<T[TKey]> }
+    : never;
 
 export type PartialClientInferRequest<
   TRoute extends AppRoute,
-  TClientArgs extends Omit<ClientArgs, 'baseUrl'> = {},
+  TClientArgs extends Omit<ClientArgs, "baseUrl"> = {},
 > = OptionalIfAllOptional<ClientInferRequest<TRoute, TClientArgs>>;

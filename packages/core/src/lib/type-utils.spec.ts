@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { z } from 'zod';
-import { Equal, Expect } from './test-helpers';
+import { z } from "zod";
+
+import { Equal, Expect } from "./test-helpers";
 import {
   AreAllPropertiesOptional,
   Without,
   ZodInferOrType,
-} from './type-utils';
+} from "./type-utils";
 
 const zodObject = z.object({ title: z.string() });
 type Test1 = ZodInferOrType<typeof zodObject>;
@@ -15,7 +16,7 @@ type Test2 = ZodInferOrType<typeof zodObject>;
 
 type Test3 = ZodInferOrType<{ title: string }>;
 
-it.todo('should infer type');
+it.todo("should infer type");
 
 type AreAllPropertiesOptional1 = Expect<
   Equal<AreAllPropertiesOptional<{ a: string; b?: string }>, false>

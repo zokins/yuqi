@@ -1,13 +1,13 @@
-import { z } from 'zod';
-import { initContract } from '@ts-rest/core';
-import { AppRouteImplementation } from './types';
-import { IncomingHttpHeaders } from 'http';
+import { IncomingHttpHeaders } from "http";
+import { initContract } from "@ts-rest/core";
+import { z } from "zod";
 
-export type Equal<a, b> = (<T>() => T extends a ? 1 : 2) extends <
-  T,
->() => T extends b ? 1 : 2
-  ? true
-  : false;
+import { AppRouteImplementation } from "./types";
+
+export type Equal<a, b> =
+  (<T>() => T extends a ? 1 : 2) extends <T>() => T extends b ? 1 : 2
+    ? true
+    : false;
 
 export type Expect<a extends true> = a;
 
@@ -15,7 +15,7 @@ const c = initContract();
 
 const contract = c.router({
   postSomethingIndex: {
-    method: 'POST',
+    method: "POST",
     path: `/:something/index.html`,
     body: z.object({
       echoHtml: z.string(),
@@ -24,30 +24,30 @@ const contract = c.router({
       extraPath: z.string().optional(),
     }),
     headers: z.object({
-      'x-application-index': z.literal('index'),
+      "x-application-index": z.literal("index"),
     }),
     pathParams: z.object({
       something: z.string(),
     }),
     responses: {
       200: c.otherResponse({
-        contentType: 'text/html',
+        contentType: "text/html",
         body: z.string().regex(/^<([a-z][a-z0-9]*)\b[^>]*>(.*?)<\/\1>$/im),
       }),
     },
   },
 });
 
-it('should have type inference on req', () => {
+it("should have type inference on req", () => {
   type PostIndexImplementation = AppRouteImplementation<
     typeof contract.postSomethingIndex
   >;
 
   type PostIndexParam = Parameters<PostIndexImplementation>[0];
 
-  type PostIndexReq = PostIndexParam['req'];
+  type PostIndexReq = PostIndexParam["req"];
 
-  type PostIndexBod = PostIndexReq['body'];
+  type PostIndexBod = PostIndexReq["body"];
 
   type ShouldHaveReq = Expect<
     Equal<
@@ -58,18 +58,18 @@ it('should have type inference on req', () => {
     >
   >;
 
-  type PostIndexHeaders = PostIndexReq['headers'];
+  type PostIndexHeaders = PostIndexReq["headers"];
 
   type ShouldHaveHeaders = Expect<
     Equal<
       PostIndexHeaders,
       {
-        'x-application-index': 'index';
+        "x-application-index": "index";
       } & IncomingHttpHeaders
     >
   >;
 
-  type PostIndexQuery = PostIndexReq['query'];
+  type PostIndexQuery = PostIndexReq["query"];
 
   type ShouldHaveQuery = Expect<
     Equal<
@@ -80,7 +80,7 @@ it('should have type inference on req', () => {
     >
   >;
 
-  type PostIndexParams = PostIndexReq['params'];
+  type PostIndexParams = PostIndexReq["params"];
 
   type ShouldHaveParams = Expect<
     Equal<

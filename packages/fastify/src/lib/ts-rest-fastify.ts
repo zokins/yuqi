@@ -63,8 +63,8 @@ export type RouterImplementation<T extends AppRouter> = {
   [TKey in keyof T]: T[TKey] extends AppRouter
     ? RouterImplementation<T[TKey]>
     : T[TKey] extends AppRoute
-    ? AppRouteImplementationOrOptions<T[TKey]>
-    : never;
+      ? AppRouteImplementationOrOptions<T[TKey]>
+      : never;
 };
 
 export type RouteHooks<T extends AppRouter | AppRoute> = Pick<

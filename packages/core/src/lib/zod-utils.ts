@@ -1,17 +1,17 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const isZodType = (obj: unknown): obj is z.ZodTypeAny => {
-  return typeof (obj as z.ZodTypeAny)?.safeParse === 'function';
+  return typeof (obj as z.ZodTypeAny)?.safeParse === "function";
 };
 
 export const isZodObject = (
   obj: unknown,
 ): obj is z.AnyZodObject | z.ZodEffects<z.AnyZodObject> => {
-  if (typeof (obj as z.AnyZodObject)?.passthrough === 'function') {
+  if (typeof (obj as z.AnyZodObject)?.passthrough === "function") {
     return true;
   }
 
-  if (typeof (obj as z.ZodEffects<z.ZodTypeAny>)?.innerType === 'function') {
+  if (typeof (obj as z.ZodEffects<z.ZodTypeAny>)?.innerType === "function") {
     return isZodObject((obj as z.ZodEffects<z.ZodTypeAny>)?.innerType());
   }
 
@@ -19,7 +19,7 @@ export const isZodObject = (
 };
 
 export const isZodObjectStrict = (obj: unknown): obj is z.AnyZodObject => {
-  return typeof (obj as z.AnyZodObject)?.passthrough === 'function';
+  return typeof (obj as z.AnyZodObject)?.passthrough === "function";
 };
 
 export const extractZodObjectShape = <
@@ -28,10 +28,10 @@ export const extractZodObjectShape = <
   obj: T,
 ): any => {
   if (!isZodObject(obj)) {
-    throw new Error('Unknown zod object type');
+    throw new Error("Unknown zod object type");
   }
 
-  if ('innerType' in obj) {
+  if ("innerType" in obj) {
     return extractZodObjectShape(obj.innerType());
   }
 
@@ -74,7 +74,7 @@ export const checkZodSchema = (
       return {
         success: true,
         data:
-          passThroughExtraKeys && typeof data === 'object'
+          passThroughExtraKeys && typeof data === "object"
             ? { ...data, ...result.data }
             : result.data,
       };
@@ -95,7 +95,7 @@ export const checkZodSchema = (
 // Convert a ZodError to a plain object because ZodError extends Error and causes problems with NestJS
 export const zodErrorResponse = (
   error: z.ZodError,
-): Pick<z.ZodError, 'name' | 'issues'> => {
+): Pick<z.ZodError, "name" | "issues"> => {
   return {
     name: error.name,
     issues: error.issues,
@@ -103,7 +103,7 @@ export const zodErrorResponse = (
 };
 
 export const ZodErrorSchema = z.object({
-  name: z.literal('ZodError'),
+  name: z.literal("ZodError"),
   issues: z.array(
     z
       .object({

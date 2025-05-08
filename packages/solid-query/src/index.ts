@@ -1,1 +1,1 @@
-export * from './lib/solid-query';
+export * from "./lib/solid-query";

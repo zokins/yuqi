@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { createContext } from 'react';
-import * as React from 'react';
-import { AppRouter, ClientArgs } from '@ts-rest/core';
-import type { TsRestReactQueryClient } from '../types';
+import { AppRouter, ClientArgs } from "@ts-rest/core";
+import { createContext } from "react";
+import * as React from "react";
+
+import type { TsRestReactQueryClient } from "../types";
 
 export const TsrQueryClientContext = createContext<
   TsRestReactQueryClient<any, any> | undefined
@@ -19,7 +20,7 @@ export const useTsrQueryClient = <
 
   if (!tsrQueryClient) {
     throw new Error(
-      'tsrQueryClient not initialized. Use TsRestReactQueryProvider to initialize one.',
+      "tsrQueryClient not initialized. Use TsRestReactQueryProvider to initialize one.",
     );
   }
 

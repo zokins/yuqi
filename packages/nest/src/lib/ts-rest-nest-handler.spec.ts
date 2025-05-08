@@ -1,11 +1,3 @@
-import { initContract } from '@ts-rest/core';
-import {
-  RequestValidationErrorSchema,
-  TsRestException,
-  tsRestHandler,
-  TsRestHandler,
-} from './ts-rest-nest-handler';
-import { z } from 'zod';
 import {
   ArgumentsHost,
   Body,
@@ -24,39 +16,48 @@ import {
   Res,
   UploadedFile,
   UseInterceptors,
-} from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import * as supertest from 'supertest';
-import { TsRest } from './ts-rest.decorator';
-import { FileInterceptor } from '@nestjs/platform-express';
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { Response } from 'express';
-import { map, Observable } from 'rxjs';
-import { TsRestModule } from './ts-rest.module';
-import path = require('path');
+} from "@nestjs/platform-fastify";
+import { Test } from "@nestjs/testing";
+import { initContract } from "@ts-rest/core";
+import { Response } from "express";
+import { map, Observable } from "rxjs";
+import * as supertest from "supertest";
+import { z } from "zod";
 
-export type Equal<a, b> = (<T>() => T extends a ? 1 : 2) extends <
-  T,
->() => T extends b ? 1 : 2
-  ? true
-  : false;
+import {
+  RequestValidationErrorSchema,
+  TsRestException,
+  tsRestHandler,
+  TsRestHandler,
+} from "./ts-rest-nest-handler";
+import { TsRest } from "./ts-rest.decorator";
+import { TsRestModule } from "./ts-rest.module";
+
+import path = require("path");
+
+export type Equal<a, b> =
+  (<T>() => T extends a ? 1 : 2) extends <T>() => T extends b ? 1 : 2
+    ? true
+    : false;
 
 export type Expect<a extends true> = a;
 
 jest.setTimeout(10000);
 
-describe('ts-rest-nest-handler', () => {
-  describe('multi-handler api', () => {
-    it('should be able to implement a whole contract', async () => {
+describe("ts-rest-nest-handler", () => {
+  describe("multi-handler api", () => {
+    it("should be able to implement a whole contract", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -64,8 +65,8 @@ describe('ts-rest-nest-handler', () => {
           },
         },
         postRequest: {
-          path: '/test',
-          method: 'POST',
+          path: "/test",
+          method: "POST",
           body: z.object({
             message: z.string(),
           }),
@@ -84,7 +85,7 @@ describe('ts-rest-nest-handler', () => {
           return tsRestHandler(contract, {
             getRequest: async () => ({
               status: 200,
-              body: { message: 'hello' },
+              body: { message: "hello" },
             }),
             postRequest: async ({ body }) => ({
               status: 200,
@@ -102,28 +103,28 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       const responseGet = await supertest(app.getHttpServer())
-        .get('/test')
+        .get("/test")
         .send();
 
       expect(responseGet.status).toBe(200);
-      expect(responseGet.body).toEqual({ message: 'hello' });
+      expect(responseGet.body).toEqual({ message: "hello" });
 
       const responsePost = await supertest(app.getHttpServer())
-        .post('/test')
-        .send({ message: 'hello' });
+        .post("/test")
+        .send({ message: "hello" });
 
       expect(responsePost.status).toBe(200);
-      expect(responsePost.body).toEqual({ message: 'hello' });
+      expect(responsePost.body).toEqual({ message: "hello" });
     });
 
-    describe('body validation', () => {
-      it('should validate body', async () => {
+    describe("body validation", () => {
+      it("should validate body", async () => {
         const c = initContract();
 
         const contract = c.router({
           postRequest: {
-            path: '/test',
-            method: 'POST',
+            path: "/test",
+            method: "POST",
             body: z.object({
               message: z.string(),
             }),
@@ -156,14 +157,14 @@ describe('ts-rest-nest-handler', () => {
         await app.init();
 
         const response = await supertest(app.getHttpServer())
-          .post('/test')
-          .send({ message: 'hello' });
+          .post("/test")
+          .send({ message: "hello" });
 
         expect(response.status).toBe(200);
-        expect(response.body).toEqual({ message: 'hello' });
+        expect(response.body).toEqual({ message: "hello" });
 
         const responsePost = await supertest(app.getHttpServer())
-          .post('/test')
+          .post("/test")
           .send({ message: 123 });
 
         expect(responsePost.status).toBe(400);
@@ -171,14 +172,14 @@ describe('ts-rest-nest-handler', () => {
           bodyResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'string',
-                received: 'number',
-                path: ['message'],
-                message: 'Expected string, received number',
+                code: "invalid_type",
+                expected: "string",
+                received: "number",
+                path: ["message"],
+                message: "Expected string, received number",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
           headersResult: null,
           queryResult: null,
@@ -194,8 +195,8 @@ describe('ts-rest-nest-handler', () => {
 
         const contract = c.router({
           postRequest: {
-            path: '/test',
-            method: 'POST',
+            path: "/test",
+            method: "POST",
             body: z.object({
               message: z.string(),
             }),
@@ -230,14 +231,14 @@ describe('ts-rest-nest-handler', () => {
         await app.init();
 
         const response = await supertest(app.getHttpServer())
-          .post('/test')
-          .send({ message: 'hello' });
+          .post("/test")
+          .send({ message: "hello" });
 
         expect(response.status).toBe(200);
-        expect(response.body).toEqual({ message: 'hello' });
+        expect(response.body).toEqual({ message: "hello" });
 
         const responsePost = await supertest(app.getHttpServer())
-          .post('/test')
+          .post("/test")
           .send({ message: 123 });
 
         expect({
@@ -250,14 +251,14 @@ describe('ts-rest-nest-handler', () => {
       });
     });
 
-    describe('validate headers', () => {
-      it('should validate', async () => {
+    describe("validate headers", () => {
+      it("should validate", async () => {
         const c = initContract();
 
         const contract = c.router({
           getRequest: {
-            path: '/',
-            method: 'GET',
+            path: "/",
+            method: "GET",
             responses: {
               200: z.object({
                 message: z.string(),
@@ -276,7 +277,7 @@ describe('ts-rest-nest-handler', () => {
             return tsRestHandler(contract, {
               getRequest: async () => ({
                 status: 200,
-                body: { message: 'ok' },
+                body: { message: "ok" },
               }),
             });
           }
@@ -289,21 +290,21 @@ describe('ts-rest-nest-handler', () => {
         const app = moduleRef.createNestApplication();
         await app.init();
 
-        const response = await supertest(app.getHttpServer()).get('/').send();
+        const response = await supertest(app.getHttpServer()).get("/").send();
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
           headersResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'string',
-                message: 'Required',
-                path: ['some'],
-                received: 'undefined',
+                code: "invalid_type",
+                expected: "string",
+                message: "Required",
+                path: ["some"],
+                received: "undefined",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
           bodyResult: null,
           queryResult: null,
@@ -316,8 +317,8 @@ describe('ts-rest-nest-handler', () => {
 
         const contract = c.router({
           getRequest: {
-            path: '/',
-            method: 'GET',
+            path: "/",
+            method: "GET",
             responses: {
               200: z.object({
                 message: z.string(),
@@ -336,7 +337,7 @@ describe('ts-rest-nest-handler', () => {
             return tsRestHandler(contract, {
               getRequest: async () => ({
                 status: 200,
-                body: { message: 'ok' },
+                body: { message: "ok" },
               }),
             });
           }
@@ -349,23 +350,23 @@ describe('ts-rest-nest-handler', () => {
         const app = moduleRef.createNestApplication();
         await app.init();
 
-        const response = await supertest(app.getHttpServer()).get('/').send();
+        const response = await supertest(app.getHttpServer()).get("/").send();
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
-          message: 'ok',
+          message: "ok",
         });
       });
     });
 
-    describe('validate query', () => {
-      it('should validate', async () => {
+    describe("validate query", () => {
+      it("should validate", async () => {
         const c = initContract();
 
         const contract = c.router({
           getRequest: {
-            path: '/',
-            method: 'GET',
+            path: "/",
+            method: "GET",
             query: z.object({
               ids: z.array(z.string()),
             }),
@@ -384,7 +385,7 @@ describe('ts-rest-nest-handler', () => {
             return tsRestHandler(contract, {
               getRequest: async () => ({
                 status: 200,
-                body: { message: 'ok' },
+                body: { message: "ok" },
               }),
             });
           }
@@ -398,7 +399,7 @@ describe('ts-rest-nest-handler', () => {
         await app.init();
 
         const response = await supertest(app.getHttpServer())
-          .get('/?id=some-id')
+          .get("/?id=some-id")
           .send();
 
         expect(response.status).toBe(400);
@@ -408,14 +409,14 @@ describe('ts-rest-nest-handler', () => {
           queryResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'array',
-                message: 'Required',
-                path: ['ids'],
-                received: 'undefined',
+                code: "invalid_type",
+                expected: "array",
+                message: "Required",
+                path: ["ids"],
+                received: "undefined",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
           paramsResult: null,
         });
@@ -426,8 +427,8 @@ describe('ts-rest-nest-handler', () => {
 
         const contract = c.router({
           getRequest: {
-            path: '/',
-            method: 'GET',
+            path: "/",
+            method: "GET",
             query: z.object({
               ids: z.array(z.string()),
             }),
@@ -446,7 +447,7 @@ describe('ts-rest-nest-handler', () => {
             return tsRestHandler(contract, {
               getRequest: async () => ({
                 status: 200,
-                body: { message: 'ok' },
+                body: { message: "ok" },
               }),
             });
           }
@@ -460,21 +461,21 @@ describe('ts-rest-nest-handler', () => {
         await app.init();
 
         const response = await supertest(app.getHttpServer())
-          .get('/?id=some-id')
+          .get("/?id=some-id")
           .send();
 
         expect(response.status).toBe(200);
-        expect(response.body).toEqual({ message: 'ok' });
+        expect(response.body).toEqual({ message: "ok" });
       });
     });
 
-    it('should be able to intercept with multi handler', async () => {
+    it("should be able to intercept with multi handler", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/',
-          method: 'GET',
+          path: "/",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -491,7 +492,7 @@ describe('ts-rest-nest-handler', () => {
         ): Observable<any> {
           return next.handle().pipe(
             map((data) => ({
-              message: 'intercepted',
+              message: "intercepted",
               oldMessage: data.message,
             })),
           );
@@ -506,7 +507,7 @@ describe('ts-rest-nest-handler', () => {
           return tsRestHandler(contract, {
             getRequest: async () => ({
               status: 200,
-              body: { message: 'ok' },
+              body: { message: "ok" },
             }),
           });
         }
@@ -519,22 +520,22 @@ describe('ts-rest-nest-handler', () => {
       const app = moduleRef.createNestApplication();
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/').send();
+      const response = await supertest(app.getHttpServer()).get("/").send();
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        message: 'intercepted',
-        oldMessage: 'ok',
+        message: "intercepted",
+        oldMessage: "ok",
       });
     });
 
-    it('should be able to utilise nest parameter decorators', async () => {
+    it("should be able to utilise nest parameter decorators", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -546,11 +547,11 @@ describe('ts-rest-nest-handler', () => {
       @Controller()
       class TestController {
         @TsRestHandler(contract)
-        async handler(@Headers('x-api-key') apiKey: string | undefined) {
+        async handler(@Headers("x-api-key") apiKey: string | undefined) {
           return tsRestHandler(contract, {
             getRequest: async () => ({
               status: 200,
-              body: { message: apiKey || 'no header' },
+              body: { message: apiKey || "no header" },
             }),
           });
         }
@@ -564,30 +565,30 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/test')
+        .get("/test")
         .send()
         .expect(200)
         .expect((res) => {
-          expect(res.body).toEqual({ message: 'no header' });
+          expect(res.body).toEqual({ message: "no header" });
         });
 
       await supertest(app.getHttpServer())
-        .get('/test')
-        .set('x-api-key', 'foo')
+        .get("/test")
+        .set("x-api-key", "foo")
         .send()
         .expect(200)
         .expect((res) => {
-          expect(res.body).toEqual({ message: 'foo' });
+          expect(res.body).toEqual({ message: "foo" });
         });
     });
 
-    it('should be able to have logic outside the return tsRestHandler', async () => {
+    it("should be able to have logic outside the return tsRestHandler", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               number: z.number(),
@@ -599,7 +600,7 @@ describe('ts-rest-nest-handler', () => {
       @Controller()
       class TestController {
         @TsRestHandler(contract)
-        async handler(@Query('number') numberQuery: string) {
+        async handler(@Query("number") numberQuery: string) {
           const number = parseInt(numberQuery);
 
           return tsRestHandler(contract, {
@@ -619,7 +620,7 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/test?number=123')
+        .get("/test?number=123")
         .send()
         .expect(200)
         .expect((res) => {
@@ -627,13 +628,13 @@ describe('ts-rest-nest-handler', () => {
         });
     });
 
-    it('should be able to do custom nest things like a redirect', async () => {
+    it("should be able to do custom nest things like a redirect", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRedirect: {
-          path: '/redirect',
-          method: 'GET',
+          path: "/redirect",
+          method: "GET",
           responses: {
             302: c.noBody(),
           },
@@ -646,7 +647,7 @@ describe('ts-rest-nest-handler', () => {
         async handler(@Res() res: any) {
           return tsRestHandler(contract, {
             getRedirect: async () => {
-              res.status(302).redirect('/redirected');
+              res.status(302).redirect("/redirected");
 
               return {
                 status: 302,
@@ -665,26 +666,26 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/redirect')
+        .get("/redirect")
         .send()
         .expect(302)
         .expect((res) => {
-          expect(res.header.location).toBe('/redirected');
+          expect(res.header.location).toBe("/redirected");
         });
     });
 
-    it('should be able to upload files and other multipart/form-data', async () => {
+    it("should be able to upload files and other multipart/form-data", async () => {
       const c = initContract();
 
       const contract = c.router({
         multi: {
-          method: 'POST',
-          path: '/multi',
+          method: "POST",
+          path: "/multi",
           body: z.object({
             messageAsField: z.string(),
             file: z.custom<File>((v) => true),
           }),
-          contentType: 'multipart/form-data',
+          contentType: "multipart/form-data",
           responses: {
             200: z.object({
               messageAsField: z.string(),
@@ -697,7 +698,7 @@ describe('ts-rest-nest-handler', () => {
       @Controller()
       class SingleHandlerTestController {
         @TsRestHandler(contract)
-        @UseInterceptors(FileInterceptor('file'))
+        @UseInterceptors(FileInterceptor("file"))
         async postRequest(@UploadedFile() file: File) {
           return tsRestHandler(contract, {
             multi: async (args) => {
@@ -721,9 +722,9 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       const response = await supertest(app.getHttpServer())
-        .post('/multi')
-        .field('messageAsField', 'hello from ts-rest')
-        .attach('file', path.join(__dirname, './nest.png'));
+        .post("/multi")
+        .field("messageAsField", "hello from ts-rest")
+        .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
         status: response.status,
@@ -731,14 +732,14 @@ describe('ts-rest-nest-handler', () => {
       }).toEqual({
         status: 200,
         body: {
-          messageAsField: 'hello from ts-rest',
+          messageAsField: "hello from ts-rest",
           fileSize: 11338,
         },
       });
 
       const errorsForBadField = await supertest(app.getHttpServer())
-        .post('/multi')
-        .attach('file', path.join(__dirname, './nest.png'));
+        .post("/multi")
+        .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
         status: errorsForBadField.status,
@@ -749,15 +750,15 @@ describe('ts-rest-nest-handler', () => {
           bodyResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'string',
-                received: 'undefined',
+                code: "invalid_type",
+                expected: "string",
+                received: "undefined",
 
-                path: ['messageAsField'],
-                message: 'Required',
+                path: ["messageAsField"],
+                message: "Required",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
           headersResult: null,
           paramsResult: null,
@@ -766,13 +767,13 @@ describe('ts-rest-nest-handler', () => {
       });
     });
 
-    it('should route correctly for optional params', async () => {
+    it("should route correctly for optional params", async () => {
       const c = initContract();
 
       const contract = c.router({
         getPosts: {
-          path: '/posts/:year?/:month?',
-          method: 'GET',
+          path: "/posts/:year?/:month?",
+          method: "GET",
           responses: {
             200: z.object({
               rangeSearched: z.string(),
@@ -802,45 +803,45 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/posts')
+        .get("/posts")
         .send()
         .expect(200)
         .then((res) =>
           expect(res.body).toStrictEqual({
-            rangeSearched: 'undefined-undefined',
+            rangeSearched: "undefined-undefined",
           }),
         );
 
       await supertest(app.getHttpServer())
-        .get('/posts/yyyy')
+        .get("/posts/yyyy")
         .send()
         .expect(200)
         .then((res) =>
           expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-undefined',
+            rangeSearched: "yyyy-undefined",
           }),
         );
 
       await supertest(app.getHttpServer())
-        .get('/posts/yyyy/mm')
+        .get("/posts/yyyy/mm")
         .send()
         .expect(200)
         .then((res) =>
           expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-mm',
+            rangeSearched: "yyyy-mm",
           }),
         );
     });
   });
 
-  describe('single-handler api', () => {
-    it('should be able to implement a single `AppRoute`', async () => {
+  describe("single-handler api", () => {
+    it("should be able to implement a single `AppRoute`", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -848,8 +849,8 @@ describe('ts-rest-nest-handler', () => {
           },
         },
         postRequest: {
-          path: '/test',
-          method: 'POST',
+          path: "/test",
+          method: "POST",
           body: z.object({
             message: z.string(),
           }),
@@ -867,7 +868,7 @@ describe('ts-rest-nest-handler', () => {
         async getRequest() {
           return tsRestHandler(contract.getRequest, async () => ({
             status: 200,
-            body: { message: 'hello' },
+            body: { message: "hello" },
           }));
         }
 
@@ -875,7 +876,7 @@ describe('ts-rest-nest-handler', () => {
         async postRequest() {
           return tsRestHandler(contract.postRequest, async () => ({
             status: 200,
-            body: { message: 'hello' },
+            body: { message: "hello" },
           }));
         }
       }
@@ -887,26 +888,26 @@ describe('ts-rest-nest-handler', () => {
       const app = moduleRef.createNestApplication();
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/test').send();
+      const response = await supertest(app.getHttpServer()).get("/test").send();
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ message: 'hello' });
+      expect(response.body).toEqual({ message: "hello" });
 
       const responsePost = await supertest(app.getHttpServer())
-        .post('/test')
-        .send({ message: 'hello' });
+        .post("/test")
+        .send({ message: "hello" });
 
       expect(responsePost.status).toBe(200);
-      expect(responsePost.body).toEqual({ message: 'hello' });
+      expect(responsePost.body).toEqual({ message: "hello" });
     });
 
-    it('should validate body', async () => {
+    it("should validate body", async () => {
       const c = initContract();
 
       const contract = c.router({
         postRequest: {
-          path: '/test',
-          method: 'POST',
+          path: "/test",
+          method: "POST",
           body: z.object({
             message: z.string(),
           }),
@@ -937,14 +938,14 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       const response = await supertest(app.getHttpServer())
-        .post('/test')
-        .send({ message: 'hello' });
+        .post("/test")
+        .send({ message: "hello" });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ message: 'hello' });
+      expect(response.body).toEqual({ message: "hello" });
 
       const responsePost = await supertest(app.getHttpServer())
-        .post('/test')
+        .post("/test")
         .send({ message: 123 });
 
       expect(responsePost.status).toBe(400);
@@ -952,14 +953,14 @@ describe('ts-rest-nest-handler', () => {
         bodyResult: {
           issues: [
             {
-              code: 'invalid_type',
-              expected: 'string',
-              received: 'number',
-              path: ['message'],
-              message: 'Expected string, received number',
+              code: "invalid_type",
+              expected: "string",
+              received: "number",
+              path: ["message"],
+              message: "Expected string, received number",
             },
           ],
-          name: 'ZodError',
+          name: "ZodError",
         },
         headersResult: null,
         queryResult: null,
@@ -967,13 +968,13 @@ describe('ts-rest-nest-handler', () => {
       });
     });
 
-    it('should be able to enable response validation on the `TsRestHandler` decorator', async () => {
+    it("should be able to enable response validation on the `TsRestHandler` decorator", async () => {
       const c = initContract();
 
       const contract = c.router({
         test: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1003,23 +1004,23 @@ describe('ts-rest-nest-handler', () => {
       const app = moduleRef.createNestApplication();
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/test').send();
+      const response = await supertest(app.getHttpServer()).get("/test").send();
 
       expect(response.status).toBe(500);
     });
 
-    it('should be able to upload files and other multipart/form-data', async () => {
+    it("should be able to upload files and other multipart/form-data", async () => {
       const c = initContract();
 
       const contract = c.router({
         multi: {
-          method: 'POST',
-          path: '/multi',
+          method: "POST",
+          path: "/multi",
           body: z.object({
             messageAsField: z.string(),
             file: z.custom<File>((v) => true),
           }),
-          contentType: 'multipart/form-data',
+          contentType: "multipart/form-data",
           responses: {
             200: z.object({
               messageAsField: z.string(),
@@ -1031,8 +1032,8 @@ describe('ts-rest-nest-handler', () => {
 
       @Controller()
       class SingleHandlerTestController {
-        @Post('/nest-multi')
-        @UseInterceptors(FileInterceptor('file'))
+        @Post("/nest-multi")
+        @UseInterceptors(FileInterceptor("file"))
         nestMulti(
           @Body() body: { messageAsField: string },
           @UploadedFile() file: File,
@@ -1044,7 +1045,7 @@ describe('ts-rest-nest-handler', () => {
         }
 
         @TsRestHandler(contract.multi)
-        @UseInterceptors(FileInterceptor('file'))
+        @UseInterceptors(FileInterceptor("file"))
         async postRequest(@UploadedFile() file: File) {
           return tsRestHandler(contract.multi, async (args) => {
             return {
@@ -1066,9 +1067,9 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       const responseNested = await supertest(app.getHttpServer())
-        .post('/nest-multi')
-        .field('messageAsField', 'hello from nest')
-        .attach('file', path.join(__dirname, './nest.png'));
+        .post("/nest-multi")
+        .field("messageAsField", "hello from nest")
+        .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
         status: responseNested.status,
@@ -1076,15 +1077,15 @@ describe('ts-rest-nest-handler', () => {
       }).toEqual({
         status: 201,
         body: {
-          messageAsField: 'hello from nest',
+          messageAsField: "hello from nest",
           fileSize: 11338,
         },
       });
 
       const response = await supertest(app.getHttpServer())
-        .post('/multi')
-        .field('messageAsField', 'hello from ts-rest')
-        .attach('file', path.join(__dirname, './nest.png'));
+        .post("/multi")
+        .field("messageAsField", "hello from ts-rest")
+        .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
         status: response.status,
@@ -1092,14 +1093,14 @@ describe('ts-rest-nest-handler', () => {
       }).toEqual({
         status: 200,
         body: {
-          messageAsField: 'hello from ts-rest',
+          messageAsField: "hello from ts-rest",
           fileSize: 11338,
         },
       });
 
       const errorsForBadField = await supertest(app.getHttpServer())
-        .post('/multi')
-        .attach('file', path.join(__dirname, './nest.png'));
+        .post("/multi")
+        .attach("file", path.join(__dirname, "./nest.png"));
 
       expect({
         status: errorsForBadField.status,
@@ -1110,15 +1111,15 @@ describe('ts-rest-nest-handler', () => {
           bodyResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'string',
-                received: 'undefined',
+                code: "invalid_type",
+                expected: "string",
+                received: "undefined",
 
-                path: ['messageAsField'],
-                message: 'Required',
+                path: ["messageAsField"],
+                message: "Required",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
           headersResult: null,
           paramsResult: null,
@@ -1127,13 +1128,13 @@ describe('ts-rest-nest-handler', () => {
       });
     });
 
-    it('should remove extra body keys with response validation enabled on the `TsRestHandler` decorator', async () => {
+    it("should remove extra body keys with response validation enabled on the `TsRestHandler` decorator", async () => {
       const c = initContract();
 
       const contract = c.router({
         test: {
-          path: '/returns-too-much',
-          method: 'GET',
+          path: "/returns-too-much",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1144,8 +1145,8 @@ describe('ts-rest-nest-handler', () => {
           },
         },
         testArray: {
-          path: '/returns-too-much-array',
-          method: 'GET',
+          path: "/returns-too-much-array",
+          method: "GET",
           responses: {
             200: z.array(
               z.object({
@@ -1166,11 +1167,11 @@ describe('ts-rest-nest-handler', () => {
             test: async () => ({
               status: 200,
               body: {
-                message: 'valid string',
-                extra: 'SHOULD NOT BE IN RESPONSE',
+                message: "valid string",
+                extra: "SHOULD NOT BE IN RESPONSE",
                 nestedObject: {
-                  nestedString: 'valid string',
-                  nestedExtra: 'SHOULD NOT BE IN RESPONSE',
+                  nestedString: "valid string",
+                  nestedExtra: "SHOULD NOT BE IN RESPONSE",
                 },
               },
             }),
@@ -1178,8 +1179,8 @@ describe('ts-rest-nest-handler', () => {
               status: 200,
               body: [
                 {
-                  message: 'valid string',
-                  extra: 'SHOULD NOT BE IN RESPONSE',
+                  message: "valid string",
+                  extra: "SHOULD NOT BE IN RESPONSE",
                 },
               ],
             }),
@@ -1195,23 +1196,23 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       const response = await supertest(app.getHttpServer())
-        .get('/returns-too-much')
+        .get("/returns-too-much")
         .send();
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        message: 'valid string',
-        nestedObject: { nestedString: 'valid string' },
+        message: "valid string",
+        nestedObject: { nestedString: "valid string" },
       });
 
       const responseArray = await supertest(app.getHttpServer())
-        .get('/returns-too-much-array')
+        .get("/returns-too-much-array")
         .send();
 
       expect(responseArray.status).toBe(200);
       expect(responseArray.body).toEqual([
         {
-          message: 'valid string',
+          message: "valid string",
         },
       ]);
     });
@@ -1221,8 +1222,8 @@ describe('ts-rest-nest-handler', () => {
 
       const contract = c.router({
         test: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1255,19 +1256,19 @@ describe('ts-rest-nest-handler', () => {
       const app = moduleRef.createNestApplication();
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/test').send();
+      const response = await supertest(app.getHttpServer()).get("/test").send();
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ message: 123123 });
     });
 
-    it('should be able to throw a type-safe response', async () => {
+    it("should be able to throw a type-safe response", async () => {
       const c = initContract();
 
       const contract = c.router({
         test: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1288,9 +1289,9 @@ describe('ts-rest-nest-handler', () => {
               throw new TsRestException(contract.test, {
                 status: 400,
                 body: {
-                  myError: 'my error',
+                  myError: "my error",
                   // @ts-expect-error we want to make sure `validateResponses` is working
-                  extraProp: 'should not be in response',
+                  extraProp: "should not be in response",
                 },
               });
             },
@@ -1305,23 +1306,23 @@ describe('ts-rest-nest-handler', () => {
       const app = moduleRef.createNestApplication();
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/test').send();
+      const response = await supertest(app.getHttpServer()).get("/test").send();
 
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({ myError: 'my error' });
+      expect(response.body).toEqual({ myError: "my error" });
     });
 
-    it('should return a 500 if you throw an invalid response in a handler that has response validation enabled on the `TsRestHandler` decorator', async () => {
+    it("should return a 500 if you throw an invalid response in a handler that has response validation enabled on the `TsRestHandler` decorator", async () => {
       const c = initContract();
 
       const contract = c.router(
         {
           test: {
-            path: '/test/:id',
+            path: "/test/:id",
             pathParams: z.object({
               id: z.coerce.number(),
             }),
-            method: 'GET',
+            method: "GET",
             responses: {
               200: z.object({
                 message: z.string(),
@@ -1358,7 +1359,7 @@ describe('ts-rest-nest-handler', () => {
               return {
                 status: 200,
                 body: {
-                  message: 'All is OK',
+                  message: "All is OK",
                 },
               };
             },
@@ -1374,19 +1375,19 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       const response = await supertest(app.getHttpServer())
-        .get('/test/666')
+        .get("/test/666")
         .send();
 
       expect(response.status).toBe(500);
     });
 
-    it('types should work well', () => {
+    it("types should work well", () => {
       const c = initContract();
 
       const contract = c.router({
         test: {
-          path: '/test/:id',
-          method: 'POST',
+          path: "/test/:id",
+          method: "POST",
           body: c.body<any>(),
           responses: {
             200: z.object({
@@ -1407,7 +1408,7 @@ describe('ts-rest-nest-handler', () => {
               return {
                 status: 200,
                 body: {
-                  message: 'All is OK',
+                  message: "All is OK",
                 },
               };
             },
@@ -1416,13 +1417,13 @@ describe('ts-rest-nest-handler', () => {
       }
     });
 
-    it('should be able to throw a TsRestException to be handled by an exception filter', async () => {
+    it("should be able to throw a TsRestException to be handled by an exception filter", async () => {
       const c = initContract();
 
       const contract = c.router({
         test: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1450,7 +1451,7 @@ describe('ts-rest-nest-handler', () => {
               .status(exception.getStatus())
               .send(exception.getResponse());
           } else {
-            response.status(500).send('something went wrong');
+            response.status(500).send("something went wrong");
           }
         }
       }
@@ -1464,7 +1465,7 @@ describe('ts-rest-nest-handler', () => {
               throw new TsRestException(contract.test, {
                 status: 400,
                 body: {
-                  myError: 'my error',
+                  myError: "my error",
                 },
               });
             },
@@ -1481,29 +1482,29 @@ describe('ts-rest-nest-handler', () => {
 
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/test').send();
+      const response = await supertest(app.getHttpServer()).get("/test").send();
 
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({ myError: 'my error' });
+      expect(response.body).toEqual({ myError: "my error" });
 
       // verify exception filter received error from ts-rest handler
       expect(httpExceptionObserver).toHaveBeenCalledTimes(1);
       expect(httpExceptionObserver.mock.calls[0][0]).toMatchObject({
         status: 400,
-        response: { myError: 'my error' },
+        response: { myError: "my error" },
         options: {
           cause: expect.any(TsRestException),
         },
       });
     });
 
-    it('should be able to have custom nest interceptors', async () => {
+    it("should be able to have custom nest interceptors", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/',
-          method: 'GET',
+          path: "/",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1520,7 +1521,7 @@ describe('ts-rest-nest-handler', () => {
         ): Observable<any> {
           return next.handle().pipe(
             map((data) => ({
-              message: 'intercepted',
+              message: "intercepted",
               oldMessage: data.message,
             })),
           );
@@ -1534,7 +1535,7 @@ describe('ts-rest-nest-handler', () => {
         async postRequest() {
           return tsRestHandler(contract.getRequest, async () => ({
             status: 200,
-            body: { message: 'ok' },
+            body: { message: "ok" },
           }));
         }
       }
@@ -1546,22 +1547,22 @@ describe('ts-rest-nest-handler', () => {
       const app = moduleRef.createNestApplication();
       await app.init();
 
-      const response = await supertest(app.getHttpServer()).get('/').send();
+      const response = await supertest(app.getHttpServer()).get("/").send();
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        message: 'intercepted',
-        oldMessage: 'ok',
+        message: "intercepted",
+        oldMessage: "ok",
       });
     });
 
-    it('should be able to utilise nest parameter decorators', async () => {
+    it("should be able to utilise nest parameter decorators", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRequest: {
-          path: '/test',
-          method: 'GET',
+          path: "/test",
+          method: "GET",
           responses: {
             200: z.object({
               message: z.string(),
@@ -1573,11 +1574,11 @@ describe('ts-rest-nest-handler', () => {
       @Controller()
       class TestController {
         @TsRestHandler(contract.getRequest)
-        async handler(@Headers('x-api-key') apiKey: string | undefined) {
+        async handler(@Headers("x-api-key") apiKey: string | undefined) {
           console.log(apiKey);
           return tsRestHandler(contract.getRequest, async () => ({
             status: 200,
-            body: { message: apiKey || 'no header' },
+            body: { message: apiKey || "no header" },
           }));
         }
       }
@@ -1590,30 +1591,30 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/test')
+        .get("/test")
         .send()
         .expect(200)
         .expect((res) => {
-          expect(res.body).toEqual({ message: 'no header' });
+          expect(res.body).toEqual({ message: "no header" });
         });
 
       await supertest(app.getHttpServer())
-        .get('/test')
-        .set('x-api-key', 'foo')
+        .get("/test")
+        .set("x-api-key", "foo")
         .send()
         .expect(200)
         .expect((res) => {
-          expect(res.body).toEqual({ message: 'foo' });
+          expect(res.body).toEqual({ message: "foo" });
         });
     });
 
-    it('should be able to do custom nest things like a redirect', async () => {
+    it("should be able to do custom nest things like a redirect", async () => {
       const c = initContract();
 
       const contract = c.router({
         getRedirect: {
-          path: '/redirect',
-          method: 'GET',
+          path: "/redirect",
+          method: "GET",
           responses: {
             302: c.noBody(),
           },
@@ -1625,7 +1626,7 @@ describe('ts-rest-nest-handler', () => {
         @TsRestHandler(contract.getRedirect)
         async handler(@Res() res: any) {
           return tsRestHandler(contract.getRedirect, async () => {
-            res.status(302).redirect('/redirected');
+            res.status(302).redirect("/redirected");
 
             return {
               status: 302,
@@ -1643,21 +1644,21 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/redirect')
+        .get("/redirect")
         .send()
         .expect(302)
         .expect((res) => {
-          expect(res.header.location).toBe('/redirected');
+          expect(res.header.location).toBe("/redirected");
         });
     });
 
-    it('should route correctly for optional params', async () => {
+    it("should route correctly for optional params", async () => {
       const c = initContract();
 
       const contract = c.router({
         getPosts: {
-          path: '/posts/:year?/:month?',
-          method: 'GET',
+          path: "/posts/:year?/:month?",
+          method: "GET",
           responses: {
             200: z.object({
               rangeSearched: z.string(),
@@ -1685,44 +1686,44 @@ describe('ts-rest-nest-handler', () => {
       await app.init();
 
       await supertest(app.getHttpServer())
-        .get('/posts')
+        .get("/posts")
         .send()
         .expect(200)
         .then((res) =>
           expect(res.body).toStrictEqual({
-            rangeSearched: 'undefined-undefined',
+            rangeSearched: "undefined-undefined",
           }),
         );
 
       await supertest(app.getHttpServer())
-        .get('/posts/yyyy')
+        .get("/posts/yyyy")
         .send()
         .expect(200)
         .then((res) =>
           expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-undefined',
+            rangeSearched: "yyyy-undefined",
           }),
         );
 
       await supertest(app.getHttpServer())
-        .get('/posts/yyyy/mm')
+        .get("/posts/yyyy/mm")
         .send()
         .expect(200)
         .then((res) =>
           expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-mm',
+            rangeSearched: "yyyy-mm",
           }),
         );
     });
   });
 
-  it('should be able to combine single-handler, multi-handler and vanilla nest controllers', async () => {
+  it("should be able to combine single-handler, multi-handler and vanilla nest controllers", async () => {
     const c = initContract();
 
     const contract = c.router({
       getRequest: {
-        path: '/test',
-        method: 'GET',
+        path: "/test",
+        method: "GET",
         responses: {
           200: z.object({
             message: z.string(),
@@ -1730,8 +1731,8 @@ describe('ts-rest-nest-handler', () => {
         },
       },
       postRequest: {
-        path: '/test',
-        method: 'POST',
+        path: "/test",
+        method: "POST",
         body: z.object({
           message: z.string(),
         }),
@@ -1753,9 +1754,9 @@ describe('ts-rest-nest-handler', () => {
         }));
       }
 
-      @Get('/basic-nest-endpoint')
+      @Get("/basic-nest-endpoint")
       async basicNestEndpoint() {
-        return { message: 'hello' };
+        return { message: "hello" };
       }
 
       @TsRestHandler({ getRequest: contract.getRequest })
@@ -1765,7 +1766,7 @@ describe('ts-rest-nest-handler', () => {
           {
             getRequest: async () => ({
               status: 200,
-              body: { message: 'hello' },
+              body: { message: "hello" },
             }),
           },
         );
@@ -1780,33 +1781,33 @@ describe('ts-rest-nest-handler', () => {
 
     await app.init();
 
-    const response = await supertest(app.getHttpServer()).get('/test').send();
+    const response = await supertest(app.getHttpServer()).get("/test").send();
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: 'hello' });
+    expect(response.body).toEqual({ message: "hello" });
 
     const responsePost = await supertest(app.getHttpServer())
-      .post('/test')
-      .send({ message: 'hello' });
+      .post("/test")
+      .send({ message: "hello" });
 
     expect(responsePost.status).toBe(200);
-    expect(responsePost.body).toEqual({ message: 'hello' });
+    expect(responsePost.body).toEqual({ message: "hello" });
 
     const responseBasicNestEndpoint = await supertest(app.getHttpServer())
-      .get('/basic-nest-endpoint')
+      .get("/basic-nest-endpoint")
       .send();
 
     expect(responseBasicNestEndpoint.status).toBe(200);
-    expect(responseBasicNestEndpoint.body).toEqual({ message: 'hello' });
+    expect(responseBasicNestEndpoint.body).toEqual({ message: "hello" });
   });
 
-  it('should work with fastify', async () => {
+  it("should work with fastify", async () => {
     const c = initContract();
 
     const contract = c.router({
       getPosts: {
-        path: '/posts',
-        method: 'GET',
+        path: "/posts",
+        method: "GET",
         query: z.object({
           limit: z.string(),
         }),
@@ -1819,8 +1820,8 @@ describe('ts-rest-nest-handler', () => {
         },
       },
       getPost: {
-        path: '/posts/:id',
-        method: 'GET',
+        path: "/posts/:id",
+        method: "GET",
         pathParams: z.object({
           id: z.coerce.number(),
         }),
@@ -1831,8 +1832,8 @@ describe('ts-rest-nest-handler', () => {
         },
       },
       deletePost: {
-        path: '/posts/:id',
-        method: 'DELETE',
+        path: "/posts/:id",
+        method: "DELETE",
         body: null,
         pathParams: z.object({
           id: z.coerce.number(),
@@ -1844,8 +1845,8 @@ describe('ts-rest-nest-handler', () => {
         },
       },
       createPost: {
-        path: '/posts',
-        method: 'POST',
+        path: "/posts",
+        method: "POST",
         body: z.object({
           title: z.string(),
           content: z.string(),
@@ -1859,11 +1860,11 @@ describe('ts-rest-nest-handler', () => {
         },
       },
       getHtml: {
-        path: '/html',
-        method: 'GET',
+        path: "/html",
+        method: "GET",
         responses: {
           200: c.otherResponse({
-            contentType: 'text/html',
+            contentType: "text/html",
             body: z.string(),
           }),
         },
@@ -1901,7 +1902,7 @@ describe('ts-rest-nest-handler', () => {
           }),
           getHtml: async () => ({
             status: 200,
-            body: '<h1>hello world</h1>',
+            body: "<h1>hello world</h1>",
           }),
         });
       }
@@ -1917,14 +1918,14 @@ describe('ts-rest-nest-handler', () => {
     await app.getHttpAdapter().getInstance().ready();
 
     const response = await supertest(app.getHttpServer())
-      .get('/posts?limit=10')
+      .get("/posts?limit=10")
       .send();
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual([{ id: 1 }, { id: 2 }]);
 
     const responsePost = await supertest(app.getHttpServer())
-      .get('/posts/1')
+      .get("/posts/1")
       .send();
 
     expect({ status: responsePost.status, body: responsePost.body }).toEqual({
@@ -1933,7 +1934,7 @@ describe('ts-rest-nest-handler', () => {
     });
 
     const responseDelete = await supertest(app.getHttpServer())
-      .delete('/posts/1')
+      .delete("/posts/1")
       .send();
 
     expect({
@@ -1945,7 +1946,7 @@ describe('ts-rest-nest-handler', () => {
     });
 
     const responseDeleteBad = await supertest(app.getHttpServer())
-      .delete('/posts/jeff')
+      .delete("/posts/jeff")
       .send({ id: 1 });
 
     expect({
@@ -1959,22 +1960,22 @@ describe('ts-rest-nest-handler', () => {
         paramsResult: {
           issues: [
             {
-              code: 'invalid_type',
-              expected: 'number',
-              received: 'nan',
-              path: ['id'],
-              message: 'Expected number, received nan',
+              code: "invalid_type",
+              expected: "number",
+              received: "nan",
+              path: ["id"],
+              message: "Expected number, received nan",
             },
           ],
-          name: 'ZodError',
+          name: "ZodError",
         },
         queryResult: null,
       },
     });
 
     const responseCreate = await supertest(app.getHttpServer())
-      .post('/posts')
-      .send({ title: 'hello', content: 'world' });
+      .post("/posts")
+      .send({ title: "hello", content: "world" });
 
     expect({
       status: responseCreate.status,
@@ -1983,13 +1984,13 @@ describe('ts-rest-nest-handler', () => {
       status: 201,
       body: {
         id: 1,
-        title: 'hello',
-        content: 'world',
+        title: "hello",
+        content: "world",
       },
     });
 
     const nonJsonResponse = await supertest(app.getHttpServer())
-      .get('/html')
+      .get("/html")
       .send();
 
     expect({
@@ -1998,21 +1999,21 @@ describe('ts-rest-nest-handler', () => {
       headers: nonJsonResponse.headers,
     }).toEqual({
       status: 200,
-      text: '<h1>hello world</h1>',
+      text: "<h1>hello world</h1>",
       headers: expect.objectContaining({
-        'content-type': 'text/html',
-        'content-length': '20',
+        "content-type": "text/html",
+        "content-length": "20",
       }),
     });
   });
 
-  it('should support including a nested error as the cause', async () => {
+  it("should support including a nested error as the cause", async () => {
     const c = initContract();
 
     const contract = c.router({
       getPosts: {
-        path: '/posts',
-        method: 'GET',
+        path: "/posts",
+        method: "GET",
         query: z.object({
           limit: z.string(),
         }),
@@ -2026,14 +2027,14 @@ describe('ts-rest-nest-handler', () => {
       },
     });
 
-    const cause = new Error('the root cause');
+    const cause = new Error("the root cause");
 
     const error = new TsRestException(
       contract.getPosts,
       {
         status: 400,
         body: {
-          message: 'Something went wrong',
+          message: "Something went wrong",
         },
       },
       {
@@ -2044,12 +2045,12 @@ describe('ts-rest-nest-handler', () => {
     expect(error.cause).toEqual(cause);
   });
 
-  describe('should handle global configuration', () => {
+  describe("should handle global configuration", () => {
     const c = initContract();
     const contract = c.router({
       getIndex: {
-        method: 'GET',
-        path: '/',
+        method: "GET",
+        path: "/",
         query: z.object({
           foo: z.boolean(),
         }),
@@ -2074,7 +2075,7 @@ describe('ts-rest-nest-handler', () => {
       }
     }
 
-    it('express', async () => {
+    it("express", async () => {
       const moduleRef = await Test.createTestingModule({
         controllers: [TestController],
         imports: [
@@ -2087,12 +2088,12 @@ describe('ts-rest-nest-handler', () => {
 
       const server = app.getHttpServer();
 
-      const response = await supertest(server).get('/?foo=true');
+      const response = await supertest(server).get("/?foo=true");
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ foo: true });
     });
 
-    it('fastify', async () => {
+    it("fastify", async () => {
       const moduleRef = await Test.createTestingModule({
         controllers: [TestController],
         imports: [
@@ -2108,13 +2109,13 @@ describe('ts-rest-nest-handler', () => {
 
       const server = app.getHttpServer();
 
-      const response = await supertest(server).get('/?foo=true');
+      const response = await supertest(server).get("/?foo=true");
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ foo: true });
     });
 
-    describe('should handle overrides', () => {
-      it('method override', async () => {
+    describe("should handle overrides", () => {
+      it("method override", async () => {
         @Controller()
         class TestController {
           @TsRestHandler(contract, { jsonQuery: false })
@@ -2140,7 +2141,7 @@ describe('ts-rest-nest-handler', () => {
 
         const server = app.getHttpServer();
 
-        const response = await supertest(server).get('/?foo=true');
+        const response = await supertest(server).get("/?foo=true");
         expect(response.status).toEqual(400);
         expect(response.body).toEqual({
           bodyResult: null,
@@ -2149,19 +2150,19 @@ describe('ts-rest-nest-handler', () => {
           queryResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'boolean',
-                message: 'Expected boolean, received string',
-                path: ['foo'],
-                received: 'string',
+                code: "invalid_type",
+                expected: "boolean",
+                message: "Expected boolean, received string",
+                path: ["foo"],
+                received: "string",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
         });
       });
 
-      it('class override', async () => {
+      it("class override", async () => {
         @Controller()
         @TsRest({ jsonQuery: false })
         class TestController {
@@ -2188,7 +2189,7 @@ describe('ts-rest-nest-handler', () => {
 
         const server = app.getHttpServer();
 
-        const response = await supertest(server).get('/?foo=true');
+        const response = await supertest(server).get("/?foo=true");
         expect(response.status).toEqual(400);
         expect(response.body).toEqual({
           bodyResult: null,
@@ -2197,19 +2198,19 @@ describe('ts-rest-nest-handler', () => {
           queryResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'boolean',
-                message: 'Expected boolean, received string',
-                path: ['foo'],
-                received: 'string',
+                code: "invalid_type",
+                expected: "boolean",
+                message: "Expected boolean, received string",
+                path: ["foo"],
+                received: "string",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
         });
       });
 
-      it('method overriding class', async () => {
+      it("method overriding class", async () => {
         @Controller()
         @TsRest({ jsonQuery: false })
         class TestController {
@@ -2236,19 +2237,19 @@ describe('ts-rest-nest-handler', () => {
 
         const server = app.getHttpServer();
 
-        const response = await supertest(server).get('/?foo=true');
+        const response = await supertest(server).get("/?foo=true");
         expect(response.status).toEqual(200);
         expect(response.body).toEqual({ foo: true });
       });
     });
   });
 
-  describe('should handle no body', () => {
+  describe("should handle no body", () => {
     const c = initContract();
     const contract = c.router({
       getIndex: {
-        method: 'POST',
-        path: '/',
+        method: "POST",
+        path: "/",
         body: c.noBody(),
         responses: {
           204: c.noBody(),
@@ -2269,7 +2270,7 @@ describe('ts-rest-nest-handler', () => {
       }
     }
 
-    it('express', async () => {
+    it("express", async () => {
       const moduleRef = await Test.createTestingModule({
         controllers: [TestController],
       }).compile();
@@ -2279,14 +2280,14 @@ describe('ts-rest-nest-handler', () => {
 
       const server = app.getHttpServer();
 
-      const response = await supertest(server).post('/');
+      const response = await supertest(server).post("/");
       expect(response.status).toEqual(204);
-      expect(response.text).toEqual('');
-      expect(response.headers['content-length']).toBeUndefined();
-      expect(response.headers['content-type']).toBeUndefined();
+      expect(response.text).toEqual("");
+      expect(response.headers["content-length"]).toBeUndefined();
+      expect(response.headers["content-type"]).toBeUndefined();
     });
 
-    it('fastify', async () => {
+    it("fastify", async () => {
       const moduleRef = await Test.createTestingModule({
         controllers: [TestController],
       }).compile();
@@ -2299,11 +2300,11 @@ describe('ts-rest-nest-handler', () => {
 
       const server = app.getHttpServer();
 
-      const response = await supertest(server).post('/');
+      const response = await supertest(server).post("/");
       expect(response.status).toEqual(204);
-      expect(response.text).toEqual('');
-      expect(response.headers['content-length']).toBeUndefined();
-      expect(response.headers['content-type']).toBeUndefined();
+      expect(response.text).toEqual("");
+      expect(response.headers["content-length"]).toBeUndefined();
+      expect(response.headers["content-type"]).toBeUndefined();
     });
   });
 });

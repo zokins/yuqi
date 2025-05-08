@@ -2,17 +2,17 @@ import {
   AppRoute,
   ClientInferResponses,
   ErrorHttpStatusCode,
-  InferResponseUndefinedStatusCodes,
   exhaustiveGuard,
+  InferResponseUndefinedStatusCodes,
   isUnknownErrorResponse,
-} from '@ts-rest/core';
+} from "@ts-rest/core";
 
 type FetchError = Error;
 
 type UnknownResponseError<T extends AppRoute> = ClientInferResponses<
   T,
   InferResponseUndefinedStatusCodes<T, ErrorHttpStatusCode>,
-  'ignore'
+  "ignore"
 >;
 
 type NotKnownResponseError<T extends AppRoute> =

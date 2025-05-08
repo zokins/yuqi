@@ -1,4 +1,4 @@
-import { AppRoute } from '@ts-rest/core';
+import { AppRoute } from "@ts-rest/core";
 
 /**
  * Get path params from array of url segments
@@ -10,7 +10,7 @@ export const getPathParamsFromArray = (
   urlChunks: string[],
   appRoute: AppRoute,
 ): Record<string, string> => {
-  const pathAsArr = appRoute.path.split('/').slice(1);
+  const pathAsArr = appRoute.path.split("/").slice(1);
 
   const pathParams: Record<string, string> = {};
 
@@ -21,7 +21,7 @@ export const getPathParamsFromArray = (
   // remove pathParams where key doesn't start with :
   return Object.entries(pathParams).reduce(
     (acc, [key, value]) => {
-      if (key.startsWith(':')) {
+      if (key.startsWith(":")) {
         const keyWithoutColon = key.slice(1);
         acc[keyWithoutColon] = value;
       }

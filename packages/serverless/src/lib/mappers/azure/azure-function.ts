@@ -1,7 +1,8 @@
-import { HttpRequest, HttpResponse } from '@azure/functions';
-import { TsRestRequest } from '../../request';
-import { TsRestResponse } from '../../response';
-import { arrayBufferToBase64, arrayBufferToString } from '../../utils';
+import { HttpRequest, HttpResponse } from "@azure/functions";
+
+import { TsRestRequest } from "../../request";
+import { TsRestResponse } from "../../response";
+import { arrayBufferToBase64, arrayBufferToString } from "../../utils";
 
 export async function requestFromHttpRequest(httpRequest: HttpRequest) {
   let body;
@@ -28,12 +29,12 @@ export async function responseToHttpResponse(
 
   let body: string | undefined;
 
-  if (typeof response.rawBody === 'string' || response.rawBody === null) {
+  if (typeof response.rawBody === "string" || response.rawBody === null) {
     body = response.rawBody ?? undefined;
   } else if (
-    headers['content-type']?.startsWith('text/') ||
+    headers["content-type"]?.startsWith("text/") ||
     (response.rawBody instanceof Blob &&
-      response.rawBody.type.startsWith('text/'))
+      response.rawBody.type.startsWith("text/"))
   ) {
     body = await arrayBufferToString(response.rawBody);
   } else {

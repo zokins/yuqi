@@ -8,13 +8,14 @@ import {
   getRouteQuery,
   isAppRoute,
   Without,
-} from '@ts-rest/core';
-import { DataReturnQuery, getRouteUseQuery } from './use-query';
+} from "@ts-rest/core";
+
 import {
   DataReturnInfiniteQuery,
   getRouteUseInfiniteQuery,
-} from './use-infinite-query';
-import { DataReturnMutation, getRouteUseMutation } from './use-mutation';
+} from "./use-infinite-query";
+import { DataReturnMutation, getRouteUseMutation } from "./use-mutation";
+import { DataReturnQuery, getRouteUseQuery } from "./use-query";
 
 type UseQueryArgs<
   TAppRoute extends AppRoute,
@@ -41,8 +42,8 @@ type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<UseQueryArgs<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? RecursiveProxyObj<T[TKey], TClientArgs>
-    : never;
+      ? RecursiveProxyObj<T[TKey], TClientArgs>
+      : never;
 };
 
 /** @deprecated Use `TsRestVueQueryClient` instead */

@@ -1,12 +1,13 @@
-import { initContract } from '@ts-rest/core';
-import { getPathParamsFromArray } from './path-utils';
+import { initContract } from "@ts-rest/core";
+
+import { getPathParamsFromArray } from "./path-utils";
 
 const c = initContract();
 
-describe('getPathParamsFromArray', () => {
-  it('should extract params from array', () => {
+describe("getPathParamsFromArray", () => {
+  it("should extract params from array", () => {
     const appRoute = c.query({
-      method: 'GET',
+      method: "GET",
       path: `/posts/:id`,
       query: null,
       responses: {
@@ -14,14 +15,14 @@ describe('getPathParamsFromArray', () => {
       },
     });
 
-    const pathParams = getPathParamsFromArray(['posts', '1'], appRoute);
+    const pathParams = getPathParamsFromArray(["posts", "1"], appRoute);
 
-    expect(pathParams).toStrictEqual({ id: '1' });
+    expect(pathParams).toStrictEqual({ id: "1" });
   });
 
-  it('should extract params from array with many path params', () => {
+  it("should extract params from array with many path params", () => {
     const appRoute = c.query({
-      method: 'GET',
+      method: "GET",
       path: `/posts/:id/comments/:commentId`,
       query: null,
       responses: {
@@ -30,15 +31,15 @@ describe('getPathParamsFromArray', () => {
     });
 
     const pathParams = getPathParamsFromArray(
-      ['posts', '1', 'comments', '2'],
+      ["posts", "1", "comments", "2"],
       appRoute,
     );
 
-    expect(pathParams).toStrictEqual({ id: '1', commentId: '2' });
+    expect(pathParams).toStrictEqual({ id: "1", commentId: "2" });
   });
-  it('should ignore any query params', () => {
+  it("should ignore any query params", () => {
     const appRoute = c.query({
-      method: 'GET',
+      method: "GET",
       path: `/posts/:id`,
       query: null,
       responses: {
@@ -46,8 +47,8 @@ describe('getPathParamsFromArray', () => {
       },
     });
 
-    const pathParams = getPathParamsFromArray(['posts', '1'], appRoute);
+    const pathParams = getPathParamsFromArray(["posts", "1"], appRoute);
 
-    expect(pathParams).toStrictEqual({ id: '1' });
+    expect(pathParams).toStrictEqual({ id: "1" });
   });
 });

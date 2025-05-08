@@ -1,8 +1,8 @@
 {
-  "name": "@ts-rest/solid-query",
-  "version": "3.52.1",
+  "name": "@yuqijs/solid-query",
+  "version": "0.0.1",
   "private": false,
-  "description": "solid-query client integration for @ts-rest",
+  "description": "solid-query client integration for @yuqijs",
   "keywords": [
     "rpc",
     "rest",
@@ -16,10 +16,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
-    "directory": "libs/ts-rest/solid-query"
+    "url": "https://github.com/zokins/yuqi.git",
+    "directory": "packages/solid-query"
   },
   "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
   "peerDependencies": {
     "@tanstack/solid-query": "^4.0.0",
     "zod": "^3.22.3"
@@ -28,5 +34,14 @@
     "zod": {
       "optional": true
     }
-  }
+  },
+  "devDependencies": {
+    "@yuqijs/eslint-config": "workspace:*",
+    "@yuqijs/prettier-config": "workspace:*",
+    "@yuqijs/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@yuqijs/prettier-config"
 }

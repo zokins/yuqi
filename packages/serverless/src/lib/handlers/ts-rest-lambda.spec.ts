@@ -2,33 +2,34 @@
  * @vitest-environment node
  */
 
-import { initContract } from '@ts-rest/core';
 import type {
   APIGatewayProxyEvent,
   APIGatewayProxyEventV2,
   Context,
-} from 'aws-lambda';
-import { parse as parseMultipart, getBoundary } from 'parse-multipart-data';
-import merge from 'ts-deepmerge';
-import { PartialDeep } from 'type-fest';
-import { createLambdaHandler, tsr } from './ts-rest-lambda';
-import { z } from 'zod';
-import * as apiGatewayEventV1 from '../mappers/aws/test-data/api-gateway-event-v1.json';
-import * as apiGatewayEventV2 from '../mappers/aws/test-data/api-gateway-event-v2.json';
-import { TsRestResponse } from '../response';
-import { TsRestResponseError } from '../http-error';
-import { ApiGatewayEvent } from '../mappers/aws/api-gateway';
+} from "aws-lambda";
+import { initContract } from "@ts-rest/core";
+import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
+import merge from "ts-deepmerge";
+import { PartialDeep } from "type-fest";
+import { z } from "zod";
+
+import { TsRestResponseError } from "../http-error";
+import { ApiGatewayEvent } from "../mappers/aws/api-gateway";
+import * as apiGatewayEventV1 from "../mappers/aws/test-data/api-gateway-event-v1.json";
+import * as apiGatewayEventV2 from "../mappers/aws/test-data/api-gateway-event-v2.json";
+import { TsRestResponse } from "../response";
+import { createLambdaHandler, tsr } from "./ts-rest-lambda";
 
 const c = initContract();
 
 const contract = c.router({
   test: {
-    method: 'GET',
-    path: '/test',
+    method: "GET",
+    path: "/test",
     query: z.object({
       foo: z.string(),
       throwError: z
-        .union([z.literal('custom-json'), z.literal('custom-text')])
+        .union([z.literal("custom-json"), z.literal("custom-text")])
         .optional(),
       throwDefinedError: z.boolean().default(false),
       setCookies: z.boolean().default(false),
@@ -37,12 +38,12 @@ const contract = c.router({
       200: z.object({
         foo: z.string(),
       }),
-      402: z.literal('Unauthorized'),
+      402: z.literal("Unauthorized"),
     },
   },
   ping: {
-    method: 'POST',
-    path: '/ping/:id',
+    method: "POST",
+    path: "/ping/:id",
     pathParams: z.object({
       id: z.string(),
     }),
@@ -57,16 +58,16 @@ const contract = c.router({
     },
   },
   noContent: {
-    method: 'POST',
-    path: '/no-content',
+    method: "POST",
+    path: "/no-content",
     body: c.noBody(),
     responses: {
       204: c.noBody(),
     },
   },
   returnsTheWrongData: {
-    method: 'GET',
-    path: '/wrong',
+    method: "GET",
+    path: "/wrong",
     responses: {
       200: z.object({
         foo: z.string(),
@@ -74,36 +75,36 @@ const contract = c.router({
     },
   },
   styles: {
-    method: 'GET',
-    path: '/styles.css',
+    method: "GET",
+    path: "/styles.css",
     responses: {
       200: c.otherResponse({
-        contentType: 'text/css',
+        contentType: "text/css",
         body: z.string(),
       }),
     },
   },
   image: {
-    method: 'GET',
-    path: '/image',
+    method: "GET",
+    path: "/image",
     query: z.object({
-      type: z.union([z.literal('gif'), z.literal('jpeg')]),
+      type: z.union([z.literal("gif"), z.literal("jpeg")]),
     }),
     responses: {
       200: c.otherResponse({
-        contentType: 'application/octet-stream',
+        contentType: "application/octet-stream",
         body: c.type<Blob>(),
       }),
     },
   },
   upload: {
-    method: 'POST',
-    path: '/upload',
-    contentType: 'multipart/form-data',
+    method: "POST",
+    path: "/upload",
+    contentType: "multipart/form-data",
     body: c.type<{ file: File }>(),
     responses: {
       200: c.otherResponse({
-        contentType: 'application/octet-stream',
+        contentType: "application/octet-stream",
         body: c.type<Blob | string>(),
       }),
     },
@@ -120,7 +121,7 @@ const createV2LambdaRequest = (
   return merge(apiGatewayEventV2, request);
 };
 
-describe('tsRestLambda', () => {
+describe("tsRestLambda", () => {
   type GlobalRequestExtension = {
     context: {
       rawEvent: ApiGatewayEvent;
@@ -139,19 +140,19 @@ describe('tsRestLambda', () => {
         if (query.throwDefinedError) {
           throw new TsRestResponseError(appRoute, {
             status: 402,
-            body: 'Unauthorized',
+            body: "Unauthorized",
           });
         }
 
         if (query.setCookies) {
           responseHeaders.append(
-            'set-cookie',
-            'foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
+            "set-cookie",
+            "foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
           );
 
           responseHeaders.append(
-            'set-cookie',
-            'bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
+            "set-cookie",
+            "bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
           );
         }
 
@@ -163,8 +164,8 @@ describe('tsRestLambda', () => {
         };
       },
       ping: async ({ body, params }, { responseHeaders }) => {
-        responseHeaders.append('Cache-Control', 'no-cache');
-        responseHeaders.append('Cache-Control', 'no-store');
+        responseHeaders.append("Cache-Control", "no-cache");
+        responseHeaders.append("Cache-Control", "no-store");
 
         return {
           status: 200,
@@ -184,26 +185,26 @@ describe('tsRestLambda', () => {
         return {
           status: 200,
           body: {
-            foo: 'bar',
-            bar: 'foo', // this is extra
+            foo: "bar",
+            bar: "foo", // this is extra
           },
         };
       },
       styles: async (_, { responseHeaders }) => {
-        responseHeaders.set('cache-control', 'max-age=31536000');
+        responseHeaders.set("cache-control", "max-age=31536000");
 
         return {
           status: 200,
-          body: 'body { color: red; }',
+          body: "body { color: red; }",
         };
       },
       image: async ({ query: { type } }) => {
         return {
           status: 200,
           body:
-            type === 'jpeg'
+            type === "jpeg"
               ? new Blob([new Uint8Array([0, 1, 2, 3])])
-              : new Blob([new Uint8Array([4, 5, 6, 7])], { type: 'image/gif' }),
+              : new Blob([new Uint8Array([4, 5, 6, 7])], { type: "image/gif" }),
         };
       },
       upload: tsr.routeWithMiddleware(contract.upload)<
@@ -212,12 +213,12 @@ describe('tsRestLambda', () => {
       >({
         middleware: [
           async (request, args) => {
-            request.contentType = request.headers.get('content-type')!;
+            request.contentType = request.headers.get("content-type")!;
           },
         ],
         handler: async (_, { request, responseHeaders }) => {
           const boundary = getBoundary(
-            request.headers.get('content-type') as string,
+            request.headers.get("content-type") as string,
           );
 
           const bodyBuffer = await request.arrayBuffer();
@@ -225,12 +226,12 @@ describe('tsRestLambda', () => {
           const blob = new Blob([parts[0].data], { type: parts[0].type });
 
           responseHeaders.set(
-            'x-content-type-echo',
+            "x-content-type-echo",
             request.contentType.toString(),
           );
 
           responseHeaders.set(
-            'x-is-base64-encoded-echo',
+            "x-is-base64-encoded-echo",
             request.context.rawEvent.isBase64Encoded.toString(),
           );
 
@@ -245,7 +246,7 @@ describe('tsRestLambda', () => {
       jsonQuery: true,
       responseValidation: true,
       cors: {
-        origin: ['http://localhost'],
+        origin: ["http://localhost"],
         credentials: true,
       },
       requestMiddleware: [
@@ -255,13 +256,13 @@ describe('tsRestLambda', () => {
       ],
       errorHandler: (error) => {
         if (error instanceof Error) {
-          if (error.message === 'custom-json') {
+          if (error.message === "custom-json") {
             return TsRestResponse.fromJson(
-              { message: 'Custom Error Handler' },
+              { message: "Custom Error Handler" },
               { status: 422 },
             );
-          } else if (error.message === 'custom-text') {
-            return TsRestResponse.fromText('Custom Error Handler', {
+          } else if (error.message === "custom-text") {
+            return TsRestResponse.fromText("Custom Error Handler", {
               status: 422,
             });
           }
@@ -273,12 +274,12 @@ describe('tsRestLambda', () => {
     },
   );
 
-  it('v1 should handle GET with query', async () => {
+  it("v1 should handle GET with query", async () => {
     const event = createV1LambdaRequest({
-      httpMethod: 'GET',
-      path: '/test',
+      httpMethod: "GET",
+      path: "/test",
       queryStringParameters: {
-        foo: 'bar',
+        foo: "bar",
       },
     });
 
@@ -286,54 +287,54 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       multiValueHeaders: {
-        'access-control-allow-credentials': ['true'],
-        'access-control-allow-origin': ['http://localhost'],
-        'content-type': ['application/json'],
-        vary: ['Origin'],
+        "access-control-allow-credentials": ["true"],
+        "access-control-allow-origin": ["http://localhost"],
+        "content-type": ["application/json"],
+        vary: ["Origin"],
       },
       body: '{"foo":"bar"}',
       isBase64Encoded: false,
     });
   });
 
-  it('v2 should handle GET with query', async () => {
+  it("v2 should handle GET with query", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/test',
-      rawQueryString: 'foo=bar',
+      rawPath: "/test",
+      rawQueryString: "foo=bar",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '{"foo":"bar"}',
       isBase64Encoded: false,
     });
   });
 
-  it('v1 should handle POST', async () => {
+  it("v1 should handle POST", async () => {
     const event = createV1LambdaRequest({
-      httpMethod: 'POST',
-      path: '/ping/222',
+      httpMethod: "POST",
+      path: "/ping/222",
       body: '{"ping":"foo"}',
       headers: {
-        'content-type': 'application/json',
+        "content-type": "application/json",
       },
     });
 
@@ -341,35 +342,35 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'cache-control': 'no-cache, no-store',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "cache-control": "no-cache, no-store",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       multiValueHeaders: {
-        'access-control-allow-credentials': ['true'],
-        'access-control-allow-origin': ['http://localhost'],
-        'cache-control': ['no-cache', 'no-store'],
-        'content-type': ['application/json'],
-        vary: ['Origin'],
+        "access-control-allow-credentials": ["true"],
+        "access-control-allow-origin": ["http://localhost"],
+        "cache-control": ["no-cache", "no-store"],
+        "content-type": ["application/json"],
+        vary: ["Origin"],
       },
       body: '{"id":"222","pong":"foo"}',
       isBase64Encoded: false,
     });
   });
 
-  it('v2 should handle POST', async () => {
+  it("v2 should handle POST", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'POST',
+          method: "POST",
         },
       },
-      rawPath: '/ping/123',
+      rawPath: "/ping/123",
       body: '{"ping":"foo"}',
       headers: {
-        'content-type': 'application/json',
+        "content-type": "application/json",
       },
     });
 
@@ -377,50 +378,50 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'cache-control': 'no-cache, no-store',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "cache-control": "no-cache, no-store",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '{"id":"123","pong":"foo"}',
       isBase64Encoded: false,
     });
   });
 
-  it('v1 should handle no content', async () => {
+  it("v1 should handle no content", async () => {
     const event = createV1LambdaRequest({
-      httpMethod: 'POST',
-      path: '/no-content',
+      httpMethod: "POST",
+      path: "/no-content",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 204,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        vary: "Origin",
       },
       multiValueHeaders: {
-        'access-control-allow-credentials': ['true'],
-        'access-control-allow-origin': ['http://localhost'],
-        vary: ['Origin'],
+        "access-control-allow-credentials": ["true"],
+        "access-control-allow-origin": ["http://localhost"],
+        vary: ["Origin"],
       },
-      body: '',
+      body: "",
       isBase64Encoded: false,
     });
   });
 
-  it('v2 should handle no content', async () => {
+  it("v2 should handle no content", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'POST',
+          method: "POST",
         },
       },
-      rawPath: '/no-content',
-      body: '',
+      rawPath: "/no-content",
+      body: "",
       isBase64Encoded: true,
     });
 
@@ -428,49 +429,49 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 204,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        vary: "Origin",
       },
-      body: '',
+      body: "",
       isBase64Encoded: false,
     });
   });
 
-  it('OPTIONS request should return all CORS headers', async () => {
+  it("OPTIONS request should return all CORS headers", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'OPTIONS',
+          method: "OPTIONS",
         },
       },
-      rawPath: '/test',
+      rawPath: "/test",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 204,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': 'http://localhost',
-        vary: 'Access-Control-Request-Headers, Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-methods": "*",
+        "access-control-allow-origin": "http://localhost",
+        vary: "Access-Control-Request-Headers, Origin",
       },
-      body: '',
+      body: "",
       isBase64Encoded: false,
     });
   });
 
-  it('OPTIONS request should return not return origin header with mismatched origin', async () => {
+  it("OPTIONS request should return not return origin header with mismatched origin", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'OPTIONS',
+          method: "OPTIONS",
         },
       },
-      rawPath: '/test',
+      rawPath: "/test",
       headers: {
-        origin: 'https://example.com',
+        origin: "https://example.com",
       },
     });
 
@@ -478,233 +479,233 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 204,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-methods': '*',
-        vary: 'Access-Control-Request-Headers, Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-methods": "*",
+        vary: "Access-Control-Request-Headers, Origin",
       },
-      body: '',
+      body: "",
       isBase64Encoded: false,
     });
   });
 
-  it('should handle failed request validation', async () => {
+  it("should handle failed request validation", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/test',
-      rawQueryString: '',
+      rawPath: "/test",
+      rawQueryString: "",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 400,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '{"message":"Request validation failed","pathParameterErrors":null,"headerErrors":null,"queryParameterErrors":{"issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["foo"],"message":"Required"}],"name":"ZodError"},"bodyErrors":null}',
       isBase64Encoded: false,
     });
   });
 
-  it('should handle error handled by custom handler returning json', async () => {
+  it("should handle error handled by custom handler returning json", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/test',
-      rawQueryString: 'foo=bar&throwError=custom-json',
+      rawPath: "/test",
+      rawQueryString: "foo=bar&throwError=custom-json",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 422,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '{"message":"Custom Error Handler"}',
       isBase64Encoded: false,
     });
   });
 
-  it('should handle error handled by custom handler returning text', async () => {
+  it("should handle error handled by custom handler returning text", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/test',
-      rawQueryString: 'foo=bar&throwError=custom-text',
+      rawPath: "/test",
+      rawQueryString: "foo=bar&throwError=custom-text",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 422,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'text/plain',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "text/plain",
+        vary: "Origin",
       },
-      body: 'Custom Error Handler',
+      body: "Custom Error Handler",
       isBase64Encoded: false,
     });
   });
 
-  it('should handle error defined in contract', async () => {
+  it("should handle error defined in contract", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/test',
-      rawQueryString: 'foo=bar&throwDefinedError=true',
+      rawPath: "/test",
+      rawQueryString: "foo=bar&throwDefinedError=true",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 402,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '"Unauthorized"',
       isBase64Encoded: false,
     });
   });
 
-  it('options.responseValidation true should remove extra properties', async () => {
+  it("options.responseValidation true should remove extra properties", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/wrong',
+      rawPath: "/wrong",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '{"foo":"bar"}',
       isBase64Encoded: false,
     });
   });
 
-  it('should handle non-json response', async () => {
+  it("should handle non-json response", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/styles.css',
+      rawPath: "/styles.css",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'cache-control': 'max-age=31536000',
-        'content-type': 'text/css',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "cache-control": "max-age=31536000",
+        "content-type": "text/css",
+        vary: "Origin",
       },
-      body: 'body { color: red; }',
+      body: "body { color: red; }",
       isBase64Encoded: false,
     });
   });
 
-  it('should handle blob body without type defined', async () => {
+  it("should handle blob body without type defined", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/image',
-      rawQueryString: 'type=jpeg',
+      rawPath: "/image",
+      rawQueryString: "type=jpeg",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/octet-stream',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/octet-stream",
+        vary: "Origin",
       },
-      body: 'AAECAw==',
+      body: "AAECAw==",
       isBase64Encoded: true,
     });
   });
 
-  it('should handle blob body with type defined', async () => {
+  it("should handle blob body with type defined", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/image',
-      rawQueryString: 'type=gif',
+      rawPath: "/image",
+      rawQueryString: "type=gif",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'image/gif',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "image/gif",
+        vary: "Origin",
       },
-      body: 'BAUGBw==',
+      body: "BAUGBw==",
       isBase64Encoded: true,
     });
   });
 
-  it('should handle file uploads', async () => {
+  it("should handle file uploads", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'POST',
+          method: "POST",
         },
       },
-      rawPath: '/upload',
+      rawPath: "/upload",
       body: Buffer.from(
-        '-----WebKitFormBoundary7MA4YWxkTrZu0gW\r\n' +
+        "-----WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
           'Content-Disposition: form-data; name="file"; filename="a.html"\r\n' +
-          'Content-Type: text/html\r\n' +
-          '\r\n' +
-          '<html><body><h1>Hello ts-rest!</h1></body></html>\r\n' +
-          '-----WebKitFormBoundary7MA4YWxkTrZu0gW--',
-      ).toString('base64'),
+          "Content-Type: text/html\r\n" +
+          "\r\n" +
+          "<html><body><h1>Hello ts-rest!</h1></body></html>\r\n" +
+          "-----WebKitFormBoundary7MA4YWxkTrZu0gW--",
+      ).toString("base64"),
       headers: {
-        'content-type':
-          'multipart/form-data; boundary=---WebKitFormBoundary7MA4YWxkTrZu0gW',
+        "content-type":
+          "multipart/form-data; boundary=---WebKitFormBoundary7MA4YWxkTrZu0gW",
       },
       isBase64Encoded: true,
     });
@@ -713,26 +714,26 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'text/html',
-        vary: 'Origin',
-        'x-content-type-echo':
-          'multipart/form-data; boundary=---WebKitFormBoundary7MA4YWxkTrZu0gW',
-        'x-is-base64-encoded-echo': 'true',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "text/html",
+        vary: "Origin",
+        "x-content-type-echo":
+          "multipart/form-data; boundary=---WebKitFormBoundary7MA4YWxkTrZu0gW",
+        "x-is-base64-encoded-echo": "true",
       },
-      body: '<html><body><h1>Hello ts-rest!</h1></body></html>',
+      body: "<html><body><h1>Hello ts-rest!</h1></body></html>",
       isBase64Encoded: false,
     });
   });
 
-  it('V1 should handle cookies returned in response', async () => {
+  it("V1 should handle cookies returned in response", async () => {
     const event = createV1LambdaRequest({
-      httpMethod: 'GET',
-      path: '/test',
+      httpMethod: "GET",
+      path: "/test",
       queryStringParameters: {
-        foo: 'baz',
-        setCookies: 'true',
+        foo: "baz",
+        setCookies: "true",
       },
     });
 
@@ -740,77 +741,77 @@ describe('tsRestLambda', () => {
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        'set-cookie':
-          'foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict, bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        "set-cookie":
+          "foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict, bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
+        vary: "Origin",
       },
       multiValueHeaders: {
-        'access-control-allow-credentials': ['true'],
-        'access-control-allow-origin': ['http://localhost'],
-        'content-type': ['application/json'],
-        'set-cookie': [
-          'foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
-          'bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
+        "access-control-allow-credentials": ["true"],
+        "access-control-allow-origin": ["http://localhost"],
+        "content-type": ["application/json"],
+        "set-cookie": [
+          "foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
+          "bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
         ],
-        vary: ['Origin'],
+        vary: ["Origin"],
       },
       body: '{"foo":"baz"}',
       isBase64Encoded: false,
     });
   });
 
-  it('V2 should handle cookies returned in response', async () => {
+  it("V2 should handle cookies returned in response", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/test',
-      rawQueryString: 'foo=baz&setCookies=true',
+      rawPath: "/test",
+      rawQueryString: "foo=baz&setCookies=true",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 200,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        'set-cookie':
-          'foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict, bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        "set-cookie":
+          "foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict, bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
+        vary: "Origin",
       },
       cookies: [
-        'foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
-        'bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict',
+        "foo=bar; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
+        "bar=foo; path=/; expires=Thu, 21 Oct 2021 07:28:00 GMT; secure; httponly; samesite=strict",
       ],
       body: '{"foo":"baz"}',
       isBase64Encoded: false,
     });
   });
 
-  it('should handle non-existent route', async () => {
+  it("should handle non-existent route", async () => {
     const event = createV2LambdaRequest({
       requestContext: {
         http: {
-          method: 'GET',
+          method: "GET",
         },
       },
-      rawPath: '/foo',
+      rawPath: "/foo",
     });
 
     const response = await lambdaHandler(event as any, {} as any);
     expect(response).toEqual({
       statusCode: 404,
       headers: {
-        'access-control-allow-credentials': 'true',
-        'access-control-allow-origin': 'http://localhost',
-        'content-type': 'application/json',
-        vary: 'Origin',
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost",
+        "content-type": "application/json",
+        vary: "Origin",
       },
       body: '{"message":"Not Found"}',
       isBase64Encoded: false,

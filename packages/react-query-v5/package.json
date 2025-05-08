@@ -1,11 +1,26 @@
 {
-  "name": "@ts-rest/react-query-v5",
-  "version": "3.52.1",
+  "name": "@yuqijs/react-query-v5",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "zod": "^3.22.3"
-  }
+  },
+  "devDependencies": {
+    "@yuqijs/eslint-config": "workspace:*",
+    "@yuqijs/prettier-config": "workspace:*",
+    "@yuqijs/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@yuqijs/prettier-config"
 }

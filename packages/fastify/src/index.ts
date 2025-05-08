@@ -1,1 +1,1 @@
-export * from './lib/ts-rest-fastify';
+export * from "./lib/ts-rest-fastify";

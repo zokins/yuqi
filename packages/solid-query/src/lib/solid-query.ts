@@ -11,7 +11,7 @@ import {
   QueryFunction,
   QueryFunctionContext,
   QueryKey,
-} from '@tanstack/solid-query';
+} from "@tanstack/solid-query";
 import {
   AppRoute,
   AppRouteFunction,
@@ -31,14 +31,14 @@ import {
   SuccessfulHttpStatusCode,
   Without,
   ZodInferOrType,
-} from '@ts-rest/core';
+} from "@ts-rest/core";
 
 type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<UseQueryArgs<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? RecursiveProxyObj<T[TKey], TClientArgs>
-    : never;
+      ? RecursiveProxyObj<T[TKey], TClientArgs>
+      : never;
 };
 
 type UseQueryArgs<
@@ -66,14 +66,14 @@ type UseQueryArgs<
 type DataResponse<TAppRoute extends AppRoute> = ClientInferResponses<
   TAppRoute,
   SuccessfulHttpStatusCode,
-  'force'
+  "force"
 >;
 
 // Error response if it's not a 2XX
 type ErrorResponse<TAppRoute extends AppRoute> = ClientInferResponses<
   TAppRoute,
   ErrorHttpStatusCode,
-  'ignore'
+  "ignore"
 >;
 
 // Used on X.createQuery
@@ -134,9 +134,9 @@ const getRouteUseQuery = <
   return (
     queryKey: () => QueryKey,
     args: ClientInferRequest<AppRouteMutation, ClientArgs>,
-    options?: CreateQueryOptions<TAppRoute['responses']>,
+    options?: CreateQueryOptions<TAppRoute["responses"]>,
   ) => {
-    const dataFn: QueryFunction<TAppRoute['responses']> = async ({
+    const dataFn: QueryFunction<TAppRoute["responses"]> = async ({
       signal,
     }) => {
       const fetchApiArgs = evaluateFetchApiArgs(route, clientArgs, args);
@@ -172,9 +172,9 @@ const getRouteUseInfiniteQuery = <
     args: (
       context: QueryFunctionContext,
     ) => ClientInferRequest<AppRouteMutation, ClientArgs>,
-    options?: CreateInfiniteQueryOptions<TAppRoute['responses']>,
+    options?: CreateInfiniteQueryOptions<TAppRoute["responses"]>,
   ) => {
-    const dataFn: QueryFunction<TAppRoute['responses']> = async (
+    const dataFn: QueryFunction<TAppRoute["responses"]> = async (
       infiniteQueryParams,
     ) => {
       const resultingQueryArgs = args(infiniteQueryParams);
@@ -213,7 +213,7 @@ const getRouteUseMutation = <
   route: TAppRoute,
   clientArgs: TClientArgs,
 ) => {
-  return (options?: CreateMutationOptions<TAppRoute['responses']>) => {
+  return (options?: CreateMutationOptions<TAppRoute["responses"]>) => {
     const mutationFunction = async (
       args: ClientInferRequest<AppRouteMutation, ClientArgs>,
     ) => {
@@ -229,7 +229,7 @@ const getRouteUseMutation = <
     };
 
     return createMutation(
-      mutationFunction as () => Promise<ZodInferOrType<TAppRoute['responses']>>,
+      mutationFunction as () => Promise<ZodInferOrType<TAppRoute["responses"]>>,
       options,
     );
   };

@@ -1,17 +1,18 @@
-import { AppRoute, ClientArgs } from '@ts-rest/core';
 import {
   InfiniteData,
-  UseQueryResult as TanStackUseQueryResult,
-  DefinedUseQueryResult as TanstackDefinedUseQueryResult,
-  UseSuspenseQueryResult as TanStackUseSuspenseQueryResult,
-  UseInfiniteQueryResult as TanStackUseInfiniteQueryResult,
   DefinedUseInfiniteQueryResult as TanstackDefinedUseInfiniteQueryResult,
-  UseSuspenseInfiniteQueryResult as TanStackUseSuspenseInfiniteQueryResult,
+  DefinedUseQueryResult as TanstackDefinedUseQueryResult,
+  UseInfiniteQueryResult as TanStackUseInfiniteQueryResult,
   UseMutationResult as TanStackUseMutationResult,
-} from '@tanstack/react-query';
-import { QueriesResults } from '../internal/queries-options';
-import { SuspenseQueriesResults } from '../internal/suspense-queries-options';
-import { DataResponse, ErrorResponse, RequestData } from './common';
+  UseQueryResult as TanStackUseQueryResult,
+  UseSuspenseInfiniteQueryResult as TanStackUseSuspenseInfiniteQueryResult,
+  UseSuspenseQueryResult as TanStackUseSuspenseQueryResult,
+} from "@tanstack/react-query";
+import { AppRoute, ClientArgs } from "@ts-rest/core";
+
+import { QueriesResults } from "../internal/queries-options";
+import { SuspenseQueriesResults } from "../internal/suspense-queries-options";
+import { DataResponse, ErrorResponse, RequestData } from "./common";
 
 export type TsRestResult<TAppRoute extends AppRoute> = {
   contractEndpoint: TAppRoute;

@@ -1,4 +1,3 @@
-import { AppRoute, ClientArgs } from '@ts-rest/core';
 import {
   EnsureQueryDataOptions,
   FetchInfiniteQueryOptions,
@@ -8,9 +7,11 @@ import {
   QueryKey,
   QueryState,
   SetDataOptions,
-} from '@tanstack/react-query';
-import { DataResponse, ErrorResponse } from './common';
-import { TsRestQueryOptions } from './hooks-options';
+} from "@tanstack/react-query";
+import { AppRoute, ClientArgs } from "@ts-rest/core";
+
+import { DataResponse, ErrorResponse } from "./common";
+import { TsRestQueryOptions } from "./hooks-options";
 
 type Updater<TInput, TOutput> = TOutput | ((input: TInput) => TOutput);
 

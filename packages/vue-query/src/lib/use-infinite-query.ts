@@ -1,19 +1,20 @@
-import { useInfiniteQuery } from '@tanstack/vue-query';
 import type {
   QueryFunction,
   QueryFunctionContext,
   QueryKey,
   UseInfiniteQueryOptions,
   UseInfiniteQueryReturnType,
-} from '@tanstack/vue-query';
+} from "@tanstack/vue-query";
+import { useInfiniteQuery } from "@tanstack/vue-query";
 import {
   AppRoute,
   AppRouteMutation,
   ClientArgs,
   ClientInferRequest,
   PartialClientInferRequest,
-} from '@ts-rest/core';
-import { DataResponse, ErrorResponse, queryFn } from './common';
+} from "@ts-rest/core";
+
+import { DataResponse, ErrorResponse, queryFn } from "./common";
 
 // Used on X.useInfiniteQuery
 export type DataReturnInfiniteQuery<

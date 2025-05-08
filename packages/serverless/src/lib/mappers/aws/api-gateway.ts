@@ -3,14 +3,15 @@ import type {
   APIGatewayProxyEventV2,
   APIGatewayProxyResult,
   APIGatewayProxyResultV2,
-} from 'aws-lambda';
-import { TsRestRequest } from '../../request';
-import { TsRestResponse } from '../../response';
+} from "aws-lambda";
+
+import { TsRestRequest } from "../../request";
+import { TsRestResponse } from "../../response";
 import {
   arrayBufferToBase64,
   arrayBufferToString,
   splitCookiesString,
-} from '../../utils';
+} from "../../utils";
 
 type EventV1 = APIGatewayProxyEvent;
 type EventV2 = APIGatewayProxyEventV2;
@@ -20,7 +21,7 @@ export type ApiGatewayResponse =
   | APIGatewayProxyResultV2;
 
 export function isV2(event: ApiGatewayEvent): event is EventV2 {
-  return 'version' in event && event.version === '2.0';
+  return "version" in event && event.version === "2.0";
 }
 
 export function requestMethod(event: ApiGatewayEvent) {
@@ -41,10 +42,10 @@ export function requestHeaders(event: ApiGatewayEvent) {
   const headers = new Headers();
 
   if (isV2(event) && event.cookies?.length) {
-    headers.set('cookie', event.cookies.join('; '));
+    headers.set("cookie", event.cookies.join("; "));
   }
 
-  if ('multiValueHeaders' in event && event.multiValueHeaders) {
+  if ("multiValueHeaders" in event && event.multiValueHeaders) {
     Object.entries(event.multiValueHeaders).forEach(([key, values]) => {
       values?.forEach((value) => {
         headers.append(key, value);
@@ -52,7 +53,7 @@ export function requestHeaders(event: ApiGatewayEvent) {
     });
   }
 
-  if ('headers' in event && event.headers) {
+  if ("headers" in event && event.headers) {
     Object.entries(event.headers).forEach(([key, value]) => {
       if (value) {
         headers.set(key, value);
@@ -73,7 +74,7 @@ export function requestBody(
   }
 
   if (event.isBase64Encoded) {
-    return Buffer.from(event.body, 'base64');
+    return Buffer.from(event.body, "base64");
   }
 
   return event.body;
@@ -81,13 +82,13 @@ export function requestBody(
 
 export function requestUrl(event: ApiGatewayEvent) {
   if (isV2(event)) {
-    const url = new URL(event.rawPath, 'http://localhost');
+    const url = new URL(event.rawPath, "http://localhost");
     url.search = event.rawQueryString;
 
     return url.href;
   }
 
-  const url = new URL(event.path, 'http://localhost');
+  const url = new URL(event.path, "http://localhost");
 
   if (event.multiValueQueryStringParameters) {
     Object.entries(event.multiValueQueryStringParameters).forEach(
@@ -131,9 +132,9 @@ export async function responseToResult(
     headers[key] = headers[key] ? `${headers[key]}, ${value}` : value;
 
     const multiValueHeaderValue =
-      key === 'set-cookie'
+      key === "set-cookie"
         ? splitCookiesString(value)
-        : value.split(',').map((v) => v.trim());
+        : value.split(",").map((v) => v.trim());
 
     multiValueHeaders[key] = multiValueHeaders[key]
       ? [...multiValueHeaders[key], ...multiValueHeaderValue]
@@ -142,19 +143,19 @@ export async function responseToResult(
 
   let cookies = [] as string[];
 
-  if (multiValueHeaders['set-cookie']) {
-    cookies = multiValueHeaders['set-cookie'];
+  if (multiValueHeaders["set-cookie"]) {
+    cookies = multiValueHeaders["set-cookie"];
   }
 
   let isBase64Encoded = false;
   let body: string;
 
-  if (typeof response.rawBody === 'string' || response.rawBody === null) {
-    body = response.rawBody ?? '';
+  if (typeof response.rawBody === "string" || response.rawBody === null) {
+    body = response.rawBody ?? "";
   } else if (
-    headers['content-type']?.startsWith('text/') ||
+    headers["content-type"]?.startsWith("text/") ||
     (response.rawBody instanceof Blob &&
-      response.rawBody.type.startsWith('text/'))
+      response.rawBody.type.startsWith("text/"))
   ) {
     body = await arrayBufferToString(response.rawBody);
   } else {

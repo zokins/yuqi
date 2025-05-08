@@ -1,7 +1,7 @@
-import { AppRoute, AppRouter, AppRouteResponse } from './dsl';
-import { ResolveResponseType, ServerInferResponses } from './infer-types';
-import { HTTPStatusCode } from './status-codes';
-import { CommonAndEqual, ZodInputOrType } from './type-utils';
+import { AppRoute, AppRouter, AppRouteResponse } from "./dsl";
+import { ResolveResponseType, ServerInferResponses } from "./infer-types";
+import { HTTPStatusCode } from "./status-codes";
+import { CommonAndEqual, ZodInputOrType } from "./type-utils";
 
 export class TsRestResponseError<T extends AppRoute | AppRouter> extends Error {
   public statusCode: HTTPStatusCode;
@@ -19,17 +19,17 @@ export class TsRestResponseError<T extends AppRoute | AppRouter> extends Error {
     this.body = response.body;
     this.name = this.constructor.name;
 
-    if (typeof response.body === 'string') {
+    if (typeof response.body === "string") {
       this.message = response.body;
     } else if (
-      typeof response.body === 'object' &&
+      typeof response.body === "object" &&
       response.body !== null &&
-      'message' in response.body &&
-      typeof response.body.message === 'string'
+      "message" in response.body &&
+      typeof response.body.message === "string"
     ) {
-      this.message = response.body['message'];
+      this.message = response.body["message"];
     } else {
-      this.message = 'Error';
+      this.message = "Error";
     }
   }
 }
@@ -40,12 +40,12 @@ type FlattenAppRouter<T extends AppRouter | AppRoute> = T extends AppRoute
       [TKey in keyof T]: T[TKey] extends AppRoute
         ? T[TKey]
         : T[TKey] extends AppRouter
-        ? FlattenAppRouter<T[TKey]>
-        : never;
+          ? FlattenAppRouter<T[TKey]>
+          : never;
     }[keyof T];
 
 type AppRouterCommonResponses<T extends AppRouter> = CommonAndEqual<
-  FlattenAppRouter<T>['responses']
+  FlattenAppRouter<T>["responses"]
 >;
 
 type ServerCommonResponses<

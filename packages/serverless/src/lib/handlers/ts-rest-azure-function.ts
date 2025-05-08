@@ -2,18 +2,19 @@ import type {
   HttpRequest,
   HttpResponse,
   InvocationContext,
-} from '@azure/functions';
-import { AppRouter } from '@ts-rest/core';
+} from "@azure/functions";
+import { AppRouter } from "@ts-rest/core";
+
 import {
   requestFromHttpRequest,
   responseToHttpResponse,
-} from '../mappers/azure/azure-function';
-import { createServerlessRouter } from '../router';
+} from "../mappers/azure/azure-function";
+import { createServerlessRouter } from "../router";
 import {
   createTsr,
   RouterImplementationOrFluentRouter,
   ServerlessHandlerOptions,
-} from '../types';
+} from "../types";
 
 type AzureFunctionPlatformArgs = {
   rawHttpRequest: HttpRequest;

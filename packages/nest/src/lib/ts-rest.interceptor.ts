@@ -1,3 +1,4 @@
+import type { Response } from "express-serve-static-core";
 import {
   CallHandler,
   ExecutionContext,
@@ -5,21 +6,21 @@ import {
   Injectable,
   NestInterceptor,
   Optional,
-} from '@nestjs/common';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import {
   AppRoute,
   isAppRouteOtherResponse,
   isAppRouteResponse,
   TsRestResponseError,
   validateResponse,
-} from '@ts-rest/core';
-import { Reflector } from '@nestjs/core';
-import { TsRestAppRouteMetadataKey } from './constants';
-import type { Response } from 'express-serve-static-core';
-import { evaluateTsRestOptions, MaybeTsRestOptions } from './ts-rest-options';
-import { TS_REST_MODULE_OPTIONS_TOKEN } from './ts-rest.module';
-import { FastifyReply } from 'fastify';
+} from "@ts-rest/core";
+import { FastifyReply } from "fastify";
+import { catchError, map, Observable, of, throwError } from "rxjs";
+
+import { TsRestAppRouteMetadataKey } from "./constants";
+import { evaluateTsRestOptions, MaybeTsRestOptions } from "./ts-rest-options";
+import { TS_REST_MODULE_OPTIONS_TOKEN } from "./ts-rest.module";
 
 @Injectable()
 export class TsRestInterceptor implements NestInterceptor {
@@ -40,7 +41,7 @@ export class TsRestInterceptor implements NestInterceptor {
 
     if (!appRoute) {
       // this will respond with a 500 error without revealing this error message in the response body
-      throw new Error('Make sure your route is decorated with @TsRest()');
+      throw new Error("Make sure your route is decorated with @TsRest()");
     }
 
     const options = evaluateTsRestOptions(this.globalOptions, context);
@@ -69,10 +70,10 @@ export class TsRestInterceptor implements NestInterceptor {
 
           const responseType = appRoute.responses[statusCode];
           if (isAppRouteOtherResponse(responseType)) {
-            if ('setHeader' in res) {
-              res.setHeader('content-type', responseType.contentType);
+            if ("setHeader" in res) {
+              res.setHeader("content-type", responseType.contentType);
             } else {
-              res.header('content-type', responseType.contentType);
+              res.header("content-type", responseType.contentType);
             }
           }
 

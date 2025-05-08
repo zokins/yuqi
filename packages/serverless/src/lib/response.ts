@@ -15,7 +15,7 @@ export class TsRestResponse extends Response {
         ? init.headers
         : new Headers(init?.headers);
 
-    headers.set('content-type', 'application/json');
+    headers.set("content-type", "application/json");
     return new TsRestResponse(JSON.stringify(json), {
       ...init,
       headers,
@@ -28,7 +28,7 @@ export class TsRestResponse extends Response {
         ? init.headers
         : new Headers(init?.headers);
 
-    headers.set('content-type', 'text/plain');
+    headers.set("content-type", "text/plain");
     return new TsRestResponse(text, {
       ...init,
       headers,

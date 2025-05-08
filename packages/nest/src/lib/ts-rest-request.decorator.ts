@@ -1,3 +1,5 @@
+import type { Request } from "express-serve-static-core";
+import type { FastifyRequest } from "fastify";
 import {
   BadRequestException,
   createParamDecorator,
@@ -6,7 +8,7 @@ import {
   Injectable,
   Optional,
   PipeTransform,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   AppRoute,
   AppRouteMutation,
@@ -14,16 +16,15 @@ import {
   parseJsonQueryObject,
   ServerInferRequest,
   zodErrorResponse,
-} from '@ts-rest/core';
-import type { Request } from 'express-serve-static-core';
-import type { FastifyRequest } from 'fastify';
-import { TsRestAppRouteMetadataKey } from './constants';
-import { evaluateTsRestOptions, MaybeTsRestOptions } from './ts-rest-options';
-import { TS_REST_MODULE_OPTIONS_TOKEN } from './ts-rest.module';
+} from "@ts-rest/core";
+
+import { TsRestAppRouteMetadataKey } from "./constants";
+import { evaluateTsRestOptions, MaybeTsRestOptions } from "./ts-rest-options";
+import { TS_REST_MODULE_OPTIONS_TOKEN } from "./ts-rest.module";
 
 export type TsRestRequestShape<TRoute extends AppRoute> = ServerInferRequest<
   TRoute,
-  Request['headers']
+  Request["headers"]
 >;
 
 @Injectable()
@@ -42,7 +43,7 @@ class TsRestValidatorPipe implements PipeTransform {
 
     if (!appRoute) {
       // this will respond with a 500 error without revealing this error message in the response body
-      throw new Error('Make sure your route is decorated with @TsRest()');
+      throw new Error("Make sure your route is decorated with @TsRest()");
     }
 
     const req: Request | FastifyRequest = ctx.switchToHttp().getRequest();
@@ -75,7 +76,7 @@ class TsRestValidatorPipe implements PipeTransform {
 
     const bodyResult = checkZodSchema(
       req.body,
-      (appRoute as AppRoute).method === 'GET' ? null : appRoute.body,
+      (appRoute as AppRoute).method === "GET" ? null : appRoute.body,
     );
 
     if (!bodyResult.success && options.validateRequestBody) {
@@ -87,7 +88,7 @@ class TsRestValidatorPipe implements PipeTransform {
       params: pathParamsResult.data as any,
       body: bodyResult.success ? bodyResult.data : req.body,
       headers: headersResult.success
-        ? (headersResult.data as TsRestRequestShape<typeof appRoute>['headers'])
+        ? (headersResult.data as TsRestRequestShape<typeof appRoute>["headers"])
         : req.headers,
     };
   }

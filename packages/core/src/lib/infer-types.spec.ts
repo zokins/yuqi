@@ -1,30 +1,31 @@
-import { z } from 'zod';
-import { initContract } from './dsl';
-import { Equal, Expect } from './test-helpers';
+import { z } from "zod";
+
+import { FetchOptions, OverrideableClientArgs } from "./client";
+import { initContract } from "./dsl";
 import {
   ClientInferRequest,
-  ServerInferRequest,
   ClientInferResponseBody,
-  ServerInferResponseBody,
   ClientInferResponses,
-  ServerInferResponses,
   InferResponseDefinedStatusCodes,
   InferResponseUndefinedStatusCodes,
-} from './infer-types';
+  ServerInferRequest,
+  ServerInferResponseBody,
+  ServerInferResponses,
+} from "./infer-types";
 import {
   ErrorHttpStatusCode,
   HTTPStatusCode,
   SuccessfulHttpStatusCode,
-} from './status-codes';
-import { FetchOptions, OverrideableClientArgs } from './client';
+} from "./status-codes";
+import { Equal, Expect } from "./test-helpers";
 
 const c = initContract();
 
 const contract = c.router(
   {
     getPost: {
-      method: 'GET',
-      path: '/posts/:id',
+      method: "GET",
+      path: "/posts/:id",
       pathParams: z.object({
         id: z.string().transform((id) => Number(id)),
       }),
@@ -34,7 +35,7 @@ const contract = c.router(
       responses: {
         200: z.object({
           id: z.number(),
-          title: z.string().default('Untitled'),
+          title: z.string().default("Untitled"),
           content: z.string(),
         }),
         404: z.object({
@@ -43,8 +44,8 @@ const contract = c.router(
       },
     },
     createPost: {
-      method: 'POST',
-      path: '/posts',
+      method: "POST",
+      path: "/posts",
       body: z.object({
         title: z.string(),
         content: z.string(),
@@ -58,30 +59,30 @@ const contract = c.router(
       },
     },
     uploadImage: {
-      method: 'POST',
-      path: '/images',
-      contentType: 'multipart/form-data',
+      method: "POST",
+      path: "/images",
+      contentType: "multipart/form-data",
       body: c.type<{ image: File; images: File[] }>(),
       responses: {
         201: c.otherResponse({
-          contentType: 'text/plain',
-          body: c.type<'Image uploaded successfully'>(),
+          contentType: "text/plain",
+          body: c.type<"Image uploaded successfully">(),
         }),
         500: c.otherResponse({
-          contentType: 'text/plain',
-          body: z.literal('Image upload failed'),
+          contentType: "text/plain",
+          body: z.literal("Image upload failed"),
         }),
       },
     },
     nested: {
       getComments: {
-        method: 'GET',
-        path: '/posts/:id/comments',
+        method: "GET",
+        path: "/posts/:id/comments",
         pathParams: z.object({
           id: z.string().transform((id) => Number(id)),
         }),
         headers: z.object({
-          'pagination-page': z.string().transform(Number),
+          "pagination-page": z.string().transform(Number),
         }),
         responses: {
           200: z.object({
@@ -111,8 +112,8 @@ const contractStrict = c.router(contract, {
 
 const headerlessContract = c.router({
   getPost: {
-    method: 'GET',
-    path: '/posts/:id',
+    method: "GET",
+    path: "/posts/:id",
     pathParams: z.object({
       id: z.string().transform((id) => Number(id)),
     }),
@@ -122,7 +123,7 @@ const headerlessContract = c.router({
     responses: {
       200: z.object({
         id: z.number(),
-        title: z.string().default('Untitled'),
+        title: z.string().default("Untitled"),
         content: z.string(),
       }),
       404: z.object({
@@ -132,7 +133,7 @@ const headerlessContract = c.router({
   },
 });
 
-it('type inference helpers', () => {
+it("type inference helpers", () => {
   type ServerInferResponsesTest = Expect<
     Equal<
       ServerInferResponses<typeof contract>,
@@ -153,11 +154,11 @@ it('type inference helpers', () => {
         uploadImage:
           | {
               status: 201;
-              body: 'Image uploaded successfully';
+              body: "Image uploaded successfully";
             }
           | {
               status: 500;
-              body: 'Image upload failed';
+              body: "Image upload failed";
             }
           | { status: Exclude<HTTPStatusCode, 201 | 500>; body: unknown };
         nested: {
@@ -190,11 +191,11 @@ it('type inference helpers', () => {
         uploadImage:
           | {
               status: 201;
-              body: 'Image uploaded successfully';
+              body: "Image uploaded successfully";
             }
           | {
               status: 500;
-              body: 'Image upload failed';
+              body: "Image upload failed";
             };
         nested: {
           getComments:
@@ -210,7 +211,7 @@ it('type inference helpers', () => {
 
   type ServerInferResponsesIgnoreStrictTest = Expect<
     Equal<
-      ServerInferResponses<typeof contractStrict, HTTPStatusCode, 'ignore'>,
+      ServerInferResponses<typeof contractStrict, HTTPStatusCode, "ignore">,
       {
         getPost:
           | {
@@ -228,11 +229,11 @@ it('type inference helpers', () => {
         uploadImage:
           | {
               status: 201;
-              body: 'Image uploaded successfully';
+              body: "Image uploaded successfully";
             }
           | {
               status: 500;
-              body: 'Image upload failed';
+              body: "Image upload failed";
             }
           | { status: Exclude<HTTPStatusCode, 201 | 500>; body: unknown };
         nested: {
@@ -305,7 +306,7 @@ it('type inference helpers', () => {
       ServerInferResponses<
         typeof contractStrict,
         ErrorHttpStatusCode,
-        'ignore'
+        "ignore"
       >,
       {
         getPost:
@@ -315,7 +316,7 @@ it('type inference helpers', () => {
         uploadImage:
           | {
               status: 500;
-              body: 'Image upload failed';
+              body: "Image upload failed";
             }
           | { status: Exclude<ErrorHttpStatusCode, 500>; body: unknown };
         nested: {
@@ -329,7 +330,7 @@ it('type inference helpers', () => {
 
   type ServerInferResponsesSuccessForceTest = Expect<
     Equal<
-      ServerInferResponses<typeof contract, SuccessfulHttpStatusCode, 'force'>,
+      ServerInferResponses<typeof contract, SuccessfulHttpStatusCode, "force">,
       {
         getPost: {
           status: 200;
@@ -341,7 +342,7 @@ it('type inference helpers', () => {
         };
         uploadImage: {
           status: 201;
-          body: 'Image uploaded successfully';
+          body: "Image uploaded successfully";
         };
         nested: {
           getComments: {
@@ -387,12 +388,12 @@ it('type inference helpers', () => {
         uploadImage:
           | {
               status: 201;
-              body: 'Image uploaded successfully';
+              body: "Image uploaded successfully";
               headers: Headers;
             }
           | {
               status: 500;
-              body: 'Image upload failed';
+              body: "Image upload failed";
               headers: Headers;
             }
           | {
@@ -442,8 +443,8 @@ it('type inference helpers', () => {
 
   const contractWithCommonErrors = c.router({
     get: {
-      method: 'GET',
-      path: '/',
+      method: "GET",
+      path: "/",
       responses: {
         ...commonErrors,
       },
@@ -479,7 +480,7 @@ it('type inference helpers', () => {
             params: { id: number };
             headers: {
               authorization: string;
-              'pagination-page': number;
+              "pagination-page": number;
               age?: number;
             };
           };
@@ -495,7 +496,7 @@ it('type inference helpers', () => {
         {
           authorization: string | undefined;
           age: string | undefined;
-          'content-type': string | undefined;
+          "content-type": string | undefined;
         }
       >,
       {
@@ -505,7 +506,7 @@ it('type inference helpers', () => {
           headers: {
             authorization: string;
             age?: number;
-            'content-type': string | undefined;
+            "content-type": string | undefined;
           };
         };
         createPost: {
@@ -513,7 +514,7 @@ it('type inference helpers', () => {
           headers: {
             authorization: string;
             age?: number;
-            'content-type': string | undefined;
+            "content-type": string | undefined;
           };
         };
         uploadImage: {
@@ -521,7 +522,7 @@ it('type inference helpers', () => {
           headers: {
             authorization: string;
             age?: number;
-            'content-type': string | undefined;
+            "content-type": string | undefined;
           };
         };
         nested: {
@@ -529,9 +530,9 @@ it('type inference helpers', () => {
             params: { id: number };
             headers: {
               authorization: string;
-              'pagination-page': number;
+              "pagination-page": number;
               age?: number;
-              'content-type': string | undefined;
+              "content-type": string | undefined;
             };
           };
         };
@@ -553,7 +554,7 @@ it('type inference helpers', () => {
           } & Record<string, string | undefined>;
           fetchOptions?: FetchOptions;
           overrideClientOptions?: Partial<OverrideableClientArgs>;
-          cache?: FetchOptions['cache'];
+          cache?: FetchOptions["cache"];
         };
         createPost: {
           body: { title: string; content: string };
@@ -564,7 +565,7 @@ it('type inference helpers', () => {
           } & Record<string, string | undefined>;
           fetchOptions?: FetchOptions;
           overrideClientOptions?: Partial<OverrideableClientArgs>;
-          cache?: FetchOptions['cache'];
+          cache?: FetchOptions["cache"];
         };
         uploadImage: {
           body:
@@ -580,24 +581,24 @@ it('type inference helpers', () => {
           } & Record<string, string | undefined>;
           fetchOptions?: FetchOptions;
           overrideClientOptions?: Partial<OverrideableClientArgs>;
-          cache?: FetchOptions['cache'];
+          cache?: FetchOptions["cache"];
         };
         nested: {
           getComments: {
             params: { id: string };
             headers: {
               authorization: string;
-              'pagination-page': string;
+              "pagination-page": string;
               age?: number;
             };
             extraHeaders?: {
               authorization?: undefined;
-              'pagination-page'?: undefined;
+              "pagination-page"?: undefined;
               age?: undefined;
             } & Record<string, string | undefined>;
             fetchOptions?: FetchOptions;
             overrideClientOptions?: Partial<OverrideableClientArgs>;
-            cache?: FetchOptions['cache'];
+            cache?: FetchOptions["cache"];
           };
         };
       }
@@ -614,7 +615,7 @@ it('type inference helpers', () => {
           extraHeaders?: Record<string, string | undefined>;
           fetchOptions?: FetchOptions;
           overrideClientOptions?: Partial<OverrideableClientArgs>;
-          cache?: FetchOptions['cache'];
+          cache?: FetchOptions["cache"];
         };
       }
     >

@@ -1,8 +1,8 @@
 {
-  "name": "@ts-rest/react-query",
-  "version": "3.52.1",
+  "name": "@yuqijs/react-query",
+  "version": "0.0.1",
   "private": false,
-  "description": "react-query client integration for @ts-rest",
+  "description": "react-query client integration for @yuqijs",
   "keywords": [
     "rpc",
     "rest",
@@ -16,10 +16,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
-    "directory": "libs/ts-rest/react-query"
+    "url": "https://github.com/zokins/yuqi.git",
+    "directory": "packages/react-query"
   },
   "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
   "peerDependencies": {
     "@tanstack/react-query": "^4.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
@@ -29,5 +35,14 @@
     "zod": {
       "optional": true
     }
-  }
+  },
+  "devDependencies": {
+    "@yuqijs/eslint-config": "workspace:*",
+    "@yuqijs/prettier-config": "workspace:*",
+    "@yuqijs/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@yuqijs/prettier-config"
 }

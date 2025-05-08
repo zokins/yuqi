@@ -2,7 +2,7 @@ import {
   QueryFunction,
   QueryFunctionContext,
   QueryKey,
-} from '@tanstack/vue-query';
+} from "@tanstack/vue-query";
 import {
   AppRoute,
   AppRouteMutation,
@@ -10,24 +10,24 @@ import {
   ClientInferRequest,
   ClientInferResponses,
   ErrorHttpStatusCode,
-  SuccessfulHttpStatusCode,
-  fetchApi,
   evaluateFetchApiArgs,
+  fetchApi,
   isErrorResponse,
-} from '@ts-rest/core';
+  SuccessfulHttpStatusCode,
+} from "@ts-rest/core";
 
 // Data response if it's a 2XX
 export type DataResponse<TAppRoute extends AppRoute> = ClientInferResponses<
   TAppRoute,
   SuccessfulHttpStatusCode,
-  'force'
+  "force"
 >;
 
 // Error response if it's not a 2XX
 export type ErrorResponse<TAppRoute extends AppRoute> = ClientInferResponses<
   TAppRoute,
   ErrorHttpStatusCode,
-  'ignore'
+  "ignore"
 >;
 
 export const queryFn = <
@@ -44,7 +44,7 @@ export const queryFn = <
 ): QueryFunction<DataResponse<TAppRoute>> => {
   return async (queryFnContext: QueryFunctionContext) => {
     const args =
-      typeof argsMapper === 'function'
+      typeof argsMapper === "function"
         ? argsMapper(queryFnContext)
         : argsMapper;
 

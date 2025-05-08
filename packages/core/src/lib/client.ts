@@ -1,22 +1,22 @@
-import { AppRoute, AppRouteMutation, AppRouter, isAppRoute } from './dsl';
-import { insertParamsIntoPath } from './paths';
-import { convertQueryParamsToUrlString } from './query';
-import { AreAllPropertiesOptional, Prettify } from './type-utils';
-import { UnknownStatusError } from './unknown-status-error';
+import { AppRoute, AppRouteMutation, AppRouter, isAppRoute } from "./dsl";
 import {
   ClientInferRequest,
   ClientInferResponses,
   PartialClientInferRequest,
-} from './infer-types';
-import { isZodType } from './zod-utils';
-import { Equal, Expect } from './test-helpers';
+} from "./infer-types";
+import { insertParamsIntoPath } from "./paths";
+import { convertQueryParamsToUrlString } from "./query";
+import { Equal, Expect } from "./test-helpers";
+import { AreAllPropertiesOptional, Prettify } from "./type-utils";
+import { UnknownStatusError } from "./unknown-status-error";
+import { isZodType } from "./zod-utils";
 
 type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? AppRouteFunction<T[TKey], TClientArgs>
     : T[TKey] extends AppRouter
-    ? RecursiveProxyObj<T[TKey], TClientArgs>
-    : never;
+      ? RecursiveProxyObj<T[TKey], TClientArgs>
+      : never;
 };
 
 /**
@@ -38,22 +38,27 @@ export type AppRouteFunction<
   TRoute extends AppRoute,
   TClientArgs extends ClientArgs,
   TArgs = PartialClientInferRequest<TRoute, TClientArgs>,
-> = AreAllPropertiesOptional<TArgs> extends true
-  ? (args?: Prettify<TArgs>) => Promise<Prettify<ClientInferResponses<TRoute>>>
-  : (args: Prettify<TArgs>) => Promise<Prettify<ClientInferResponses<TRoute>>>;
+> =
+  AreAllPropertiesOptional<TArgs> extends true
+    ? (
+        args?: Prettify<TArgs>,
+      ) => Promise<Prettify<ClientInferResponses<TRoute>>>
+    : (
+        args: Prettify<TArgs>,
+      ) => Promise<Prettify<ClientInferResponses<TRoute>>>;
 
 export type FetchOptions = typeof globalThis extends {
   Request: infer T extends typeof Request;
 }
   ? Omit<
       NonNullable<ConstructorParameters<T>[1]>,
-      'method' | 'headers' | 'body'
+      "method" | "headers" | "body"
     >
   : never;
 
 export interface OverrideableClientArgs {
   baseUrl: string;
-  credentials?: FetchOptions['credentials'];
+  credentials?: FetchOptions["credentials"];
   jsonQuery?: boolean;
   validateResponse?: boolean;
 }
@@ -72,28 +77,28 @@ export type ApiFetcherArgs<TFetchOptions extends FetchOptions = FetchOptions> =
     body: FormData | URLSearchParams | string | null | undefined;
     rawBody: unknown;
     rawQuery: unknown;
-    contentType: AppRouteMutation['contentType'];
+    contentType: AppRouteMutation["contentType"];
     fetchOptions?: FetchOptions;
     validateResponse?: boolean;
 
     /**
      * @deprecated Use `fetchOptions.credentials` instead
      */
-    credentials?: TFetchOptions['credentials'];
+    credentials?: TFetchOptions["credentials"];
     /**
      * @deprecated Use `fetchOptions.signal` instead
      */
-    signal?: TFetchOptions['signal'];
+    signal?: TFetchOptions["signal"];
     /**
      * @deprecated Use `fetchOptions.cache` instead
      */
-    cache?: 'cache' extends keyof TFetchOptions
-      ? TFetchOptions['cache']
+    cache?: "cache" extends keyof TFetchOptions
+      ? TFetchOptions["cache"]
       : never;
     /**
      * @deprecated Use `fetchOptions.next` instead
      */
-    next?: 'next' extends keyof TFetchOptions ? TFetchOptions['next'] : never;
+    next?: "next" extends keyof TFetchOptions ? TFetchOptions["next"] : never;
   };
 
 export type ApiFetcher = (args: ApiFetcherArgs) => Promise<{
@@ -125,9 +130,9 @@ export const tsRestFetchApi: ApiFetcher = async ({
     body,
   });
 
-  const contentType = result.headers.get('content-type');
+  const contentType = result.headers.get("content-type");
 
-  if (contentType?.includes('application/') && contentType?.includes('json')) {
+  if (contentType?.includes("application/") && contentType?.includes("json")) {
     const response = {
       status: result.status,
       body: await result.json(),
@@ -148,7 +153,7 @@ export const tsRestFetchApi: ApiFetcher = async ({
     return response;
   }
 
-  if (contentType?.includes('text/')) {
+  if (contentType?.includes("text/")) {
     return {
       status: result.status,
       body: await result.text(),
@@ -221,7 +226,7 @@ export const fetchApi = (options: FetchApiOptions) => {
     clientArgs.baseHeaders &&
     Object.fromEntries(
       Object.entries(clientArgs.baseHeaders).map(([name, valueOrFunction]) => {
-        if (typeof valueOrFunction === 'function') {
+        if (typeof valueOrFunction === "function") {
           return [name, valueOrFunction(options)];
         } else {
           return [name, valueOrFunction];
@@ -258,30 +263,30 @@ export const fetchApi = (options: FetchApiOptions) => {
     ...(fetchOptions?.signal && { signal: fetchOptions.signal }),
     ...(fetchOptions?.cache && { cache: fetchOptions.cache }),
     ...(fetchOptions &&
-      'next' in fetchOptions &&
+      "next" in fetchOptions &&
       !!fetchOptions?.next && { next: fetchOptions.next as any }),
   };
 
-  if (route.method !== 'GET') {
-    if ('contentType' in route && route.contentType === 'multipart/form-data') {
+  if (route.method !== "GET") {
+    if ("contentType" in route && route.contentType === "multipart/form-data") {
       fetcherArgs = {
         ...fetcherArgs,
-        contentType: 'multipart/form-data',
+        contentType: "multipart/form-data",
         body: body instanceof FormData ? body : createFormData(body),
       };
     } else if (
-      'contentType' in route &&
-      route.contentType === 'application/x-www-form-urlencoded'
+      "contentType" in route &&
+      route.contentType === "application/x-www-form-urlencoded"
     ) {
       fetcherArgs = {
         ...fetcherArgs,
-        contentType: 'application/x-www-form-urlencoded',
+        contentType: "application/x-www-form-urlencoded",
         headers: {
-          'content-type': 'application/x-www-form-urlencoded',
+          "content-type": "application/x-www-form-urlencoded",
           ...fetcherArgs.headers,
         },
         body:
-          typeof body === 'string'
+          typeof body === "string"
             ? body
             : new URLSearchParams(
                 body as Record<string, string> | URLSearchParams,
@@ -290,9 +295,9 @@ export const fetchApi = (options: FetchApiOptions) => {
     } else if (body !== null && body !== undefined) {
       fetcherArgs = {
         ...fetcherArgs,
-        contentType: 'application/json',
+        contentType: "application/json",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
           ...fetcherArgs.headers,
         },
         body: JSON.stringify(body),

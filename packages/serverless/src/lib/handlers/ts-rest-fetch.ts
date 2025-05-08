@@ -1,11 +1,12 @@
-import { AppRouter } from '@ts-rest/core';
-import { createServerlessRouter } from '../router';
+import { AppRouter } from "@ts-rest/core";
+
+import { TsRestRequest } from "../request";
+import { createServerlessRouter } from "../router";
 import {
   createTsr,
   RouterImplementationOrFluentRouter,
   ServerlessHandlerOptions,
-} from '../types';
-import { TsRestRequest } from '../request';
+} from "../types";
 
 export const tsr = {
   ...createTsr(),

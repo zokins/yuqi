@@ -1,8 +1,8 @@
 {
-  "name": "@ts-rest/nest",
-  "version": "3.52.1",
+  "name": "@yuqijs/nest",
+  "version": "0.0.1",
   "private": false,
-  "description": "Nest server integration for @ts-rest",
+  "description": "Nest server integration for @yuqijs",
   "keywords": [
     "rpc",
     "rest",
@@ -15,14 +15,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
-    "directory": "libs/ts-rest/nest"
+    "url": "https://github.com/zokins/yuqi.git",
+    "directory": "packages/nest"
   },
   "license": "MIT",
-  "devDependencies": {
-    "@nestjs/platform-express": "^9.0.0 || ^10.0.0 || ^11.0.0",
-    "@nestjs/platform-fastify": "^9.0.0 || ^10.0.0 || ^11.0.0",
-    "fastify": "^4.0.0"
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
@@ -34,5 +35,17 @@
     "zod": {
       "optional": true
     }
-  }
+  },
+  "devDependencies": {
+    "@nestjs/platform-express": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@nestjs/platform-fastify": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@yuqijs/eslint-config": "workspace:*",
+    "@yuqijs/prettier-config": "workspace:*",
+    "@yuqijs/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "fastify": "^4.0.0",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@yuqijs/prettier-config"
 }

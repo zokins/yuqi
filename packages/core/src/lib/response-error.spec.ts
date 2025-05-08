@@ -1,8 +1,9 @@
-import type { Equal, Expect } from './test-helpers';
-import { initContract } from './dsl';
-import { z } from 'zod';
-import { TsRestResponseError } from './response-error';
-import { HTTPStatusCode } from './status-codes';
+import { z } from "zod";
+
+import type { Equal, Expect } from "./test-helpers";
+import { initContract } from "./dsl";
+import { TsRestResponseError } from "./response-error";
+import { HTTPStatusCode } from "./status-codes";
 
 const c = initContract();
 
@@ -10,8 +11,8 @@ const contract = c.router(
   {
     posts: {
       getPost: {
-        method: 'GET',
-        path: '/posts/:id',
+        method: "GET",
+        path: "/posts/:id",
         responses: {
           200: z.object({
             id: z.number(),
@@ -22,8 +23,8 @@ const contract = c.router(
     },
     users: {
       getUser: {
-        method: 'GET',
-        path: '/users/:id',
+        method: "GET",
+        path: "/users/:id",
         responses: {
           200: z.object({
             id: z.number(),
@@ -42,8 +43,8 @@ const contract = c.router(
   },
 );
 
-describe('TsRestResponseError', () => {
-  it('correctly sets response type for single endpoint', () => {
+describe("TsRestResponseError", () => {
+  it("correctly sets response type for single endpoint", () => {
     type ResponseType = Expect<
       Equal<
         ConstructorParameters<
@@ -56,7 +57,7 @@ describe('TsRestResponseError', () => {
     >;
   });
 
-  it('correctly sets response type for entire contract', () => {
+  it("correctly sets response type for entire contract", () => {
     type ResponseType = Expect<
       Equal<
         ConstructorParameters<typeof TsRestResponseError<typeof contract>>[1],

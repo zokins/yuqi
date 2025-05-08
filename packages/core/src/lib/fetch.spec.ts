@@ -1,30 +1,31 @@
-import * as clientModule from './client';
-import { initContract } from './dsl';
+import * as clientModule from "./client";
+import { initContract } from "./dsl";
+
 const c = initContract();
-describe('fetchApi', () => {
+describe("fetchApi", () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
-  it('should not include content-type application/json if body is undefined', async () => {
+  it("should not include content-type application/json if body is undefined", async () => {
     const tsRestApiStub = jest
-      .spyOn(clientModule, 'tsRestFetchApi')
+      .spyOn(clientModule, "tsRestFetchApi")
       .mockResolvedValue({
         status: 200,
-        body: { message: 'never gonna give you up, never gonna let you down' },
+        body: { message: "never gonna give you up, never gonna let you down" },
         headers: new Headers(),
       });
     await clientModule.fetchApi({
       body: undefined,
       headers: {},
-      path: '/rick-astley',
+      path: "/rick-astley",
       clientArgs: {
-        baseUrl: 'https://api.com',
+        baseUrl: "https://api.com",
         baseHeaders: {},
       },
       route: {
-        method: 'POST',
+        method: "POST",
         body: null,
-        path: '/rick-astley',
+        path: "/rick-astley",
         responses: {
           200: c.type<{ message: string }>(),
         },
@@ -36,44 +37,44 @@ describe('fetchApi', () => {
       body: undefined,
       contentType: undefined,
       headers: {},
-      method: 'POST',
-      path: '/rick-astley',
+      method: "POST",
+      path: "/rick-astley",
       rawBody: undefined,
       rawQuery: {},
       route: {
         body: null,
-        method: 'POST',
-        path: '/rick-astley',
+        method: "POST",
+        path: "/rick-astley",
         responses: {
-          '200': expect.anything(),
+          "200": expect.anything(),
         },
       },
       fetchOptions: {},
     });
   });
 
-  it('should include content-type application/json if body is defined', async () => {
+  it("should include content-type application/json if body is defined", async () => {
     const tsRestApiStub = jest
-      .spyOn(clientModule, 'tsRestFetchApi')
+      .spyOn(clientModule, "tsRestFetchApi")
       .mockResolvedValue({
         status: 200,
-        body: { message: 'never gonna give you up, never gonna let you down' },
+        body: { message: "never gonna give you up, never gonna let you down" },
         headers: new Headers(),
       });
     await clientModule.fetchApi({
       body: {
-        message: 'never gonna say goodbye, never gonna tell a lie and hurt you',
+        message: "never gonna say goodbye, never gonna tell a lie and hurt you",
       },
       headers: {},
-      path: '/rick-astley',
+      path: "/rick-astley",
       clientArgs: {
-        baseUrl: 'https://api.com',
+        baseUrl: "https://api.com",
         baseHeaders: {},
       },
       route: {
-        method: 'POST',
+        method: "POST",
         body: null,
-        path: '/rick-astley',
+        path: "/rick-astley",
         responses: {
           200: c.type<{ message: string }>(),
         },
@@ -84,15 +85,15 @@ describe('fetchApi', () => {
     expect(tsRestApiStub).toHaveBeenCalledWith(
       expect.objectContaining({
         body: '{"message":"never gonna say goodbye, never gonna tell a lie and hurt you"}',
-        contentType: 'application/json',
+        contentType: "application/json",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
-        method: 'POST',
-        path: '/rick-astley',
+        method: "POST",
+        path: "/rick-astley",
         rawBody: {
           message:
-            'never gonna say goodbye, never gonna tell a lie and hurt you',
+            "never gonna say goodbye, never gonna tell a lie and hurt you",
         },
         rawQuery: {},
         fetchOptions: {},

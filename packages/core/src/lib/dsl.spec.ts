@@ -1,23 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { z } from 'zod';
+import { z } from "zod";
+
+import type { Equal, Expect } from "./test-helpers";
 import {
-  initContract,
+  ContractNoBodyType,
   ContractOtherResponse,
   ContractPlainType,
   ContractPlainTypeRuntimeSymbol,
-  ContractNoBodyType,
-} from './dsl';
-import type { Equal, Expect } from './test-helpers';
-import { Prettify } from './type-utils';
+  initContract,
+} from "./dsl";
+import { Prettify } from "./type-utils";
 
 const c = initContract();
 
-describe('contract', () => {
-  it('should be typed correctly', () => {
+describe("contract", () => {
+  it("should be typed correctly", () => {
     const contract = c.router({
       getPost: {
-        method: 'GET',
-        path: '/posts/:id',
+        method: "GET",
+        path: "/posts/:id",
         responses: {
           200: z.object({
             id: z.number(),
@@ -31,14 +32,14 @@ describe('contract', () => {
         typeof contract,
         {
           getPost: {
-            method: 'GET';
-            path: '/posts/:id';
+            method: "GET";
+            path: "/posts/:id";
             responses: {
               200: z.ZodObject<
                 {
                   id: z.ZodNumber;
                 },
-                'strip',
+                "strip",
                 z.ZodTypeAny,
                 {
                   id: number;
@@ -54,12 +55,12 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with nested routers', () => {
+  it("should be typed correctly with nested routers", () => {
     const contract = c.router({
       posts: {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: z.object({
               id: z.number(),
@@ -75,14 +76,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -99,19 +100,19 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with headers', () => {
+  it("should be typed correctly with headers", () => {
     const contract = c.router({
       posts: {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: z.object({
               id: z.number(),
             }),
           },
           headers: z.object({
-            'x-foo': z.string(),
+            "x-foo": z.string(),
           }),
         },
       },
@@ -123,14 +124,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -141,11 +142,11 @@ describe('contract', () => {
                 >;
               };
               headers: z.ZodObject<
-                { 'x-foo': z.ZodString },
-                'strip',
+                { "x-foo": z.ZodString },
+                "strip",
                 z.ZodTypeAny,
-                { 'x-foo': string },
-                { 'x-foo': string }
+                { "x-foo": string },
+                { "x-foo": string }
               >;
             };
           };
@@ -154,13 +155,13 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with base headers', () => {
+  it("should be typed correctly with base headers", () => {
     const contract = c.router(
       {
         posts: {
           getPost: {
-            method: 'GET',
-            path: '/posts/:id',
+            method: "GET",
+            path: "/posts/:id",
             responses: {
               200: z.object({
                 id: z.number(),
@@ -171,7 +172,7 @@ describe('contract', () => {
       },
       {
         baseHeaders: z.object({
-          'x-foo': z.string(),
+          "x-foo": z.string(),
         }),
       },
     );
@@ -182,14 +183,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -200,11 +201,11 @@ describe('contract', () => {
                 >;
               };
               headers: z.ZodObject<
-                { 'x-foo': z.ZodString },
-                'strip',
+                { "x-foo": z.ZodString },
+                "strip",
                 z.ZodTypeAny,
-                { 'x-foo': string },
-                { 'x-foo': string }
+                { "x-foo": string },
+                { "x-foo": string }
               >;
             };
           };
@@ -213,27 +214,27 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with merged headers', () => {
+  it("should be typed correctly with merged headers", () => {
     const contract = c.router(
       {
         posts: {
           getPost: {
-            method: 'GET',
-            path: '/posts/:id',
+            method: "GET",
+            path: "/posts/:id",
             responses: {
               200: z.object({
                 id: z.number(),
               }),
             },
             headers: z.object({
-              'x-bar': z.string(),
+              "x-bar": z.string(),
             }),
           },
         },
       },
       {
         baseHeaders: z.object({
-          'x-foo': z.string(),
+          "x-foo": z.string(),
         }),
       },
     );
@@ -244,14 +245,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -263,13 +264,13 @@ describe('contract', () => {
               };
               headers: z.ZodObject<
                 z.objectUtil.MergeShapes<
-                  { 'x-foo': z.ZodString },
-                  { 'x-bar': z.ZodString }
+                  { "x-foo": z.ZodString },
+                  { "x-bar": z.ZodString }
                 >,
-                'strip',
+                "strip",
                 z.ZodTypeAny,
-                { 'x-foo': string; 'x-bar': string },
-                { 'x-foo': string; 'x-bar': string }
+                { "x-foo": string; "x-bar": string },
+                { "x-foo": string; "x-bar": string }
               >;
             };
           };
@@ -278,24 +279,24 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with merged plain type headers', () => {
+  it("should be typed correctly with merged plain type headers", () => {
     const contract = c.router(
       {
         posts: {
           getPost: {
-            method: 'GET',
-            path: '/posts/:id',
+            method: "GET",
+            path: "/posts/:id",
             responses: {
               200: z.object({
                 id: z.number(),
               }),
             },
-            headers: c.type<{ 'x-bar': string }>(),
+            headers: c.type<{ "x-bar": string }>(),
           },
         },
       },
       {
-        baseHeaders: c.type<{ 'x-foo': string }>(),
+        baseHeaders: c.type<{ "x-foo": string }>(),
       },
     );
 
@@ -305,14 +306,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -323,8 +324,8 @@ describe('contract', () => {
                 >;
               };
               headers: {
-                'x-foo': string;
-                'x-bar': string;
+                "x-foo": string;
+                "x-bar": string;
               };
             };
           };
@@ -333,27 +334,27 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with overridden headers', () => {
+  it("should be typed correctly with overridden headers", () => {
     const contract = c.router(
       {
         posts: {
           getPost: {
-            method: 'GET',
-            path: '/posts/:id',
+            method: "GET",
+            path: "/posts/:id",
             responses: {
               200: z.object({
                 id: z.number(),
               }),
             },
             headers: z.object({
-              'x-foo': z.string().optional(),
+              "x-foo": z.string().optional(),
             }),
           },
         },
       },
       {
         baseHeaders: z.object({
-          'x-foo': z.string(),
+          "x-foo": z.string(),
         }),
       },
     );
@@ -364,14 +365,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -383,13 +384,13 @@ describe('contract', () => {
               };
               headers: z.ZodObject<
                 z.objectUtil.MergeShapes<
-                  { 'x-foo': z.ZodString },
-                  { 'x-foo': z.ZodOptional<z.ZodString> }
+                  { "x-foo": z.ZodString },
+                  { "x-foo": z.ZodOptional<z.ZodString> }
                 >,
-                'strip',
+                "strip",
                 z.ZodTypeAny,
-                { 'x-foo'?: string },
-                { 'x-foo'?: string }
+                { "x-foo"?: string },
+                { "x-foo"?: string }
               >;
             };
           };
@@ -398,11 +399,11 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed without zod', () => {
+  it("should be typed without zod", () => {
     const contract = c.router({
       getPost: {
-        method: 'GET',
-        path: '/posts/:id',
+        method: "GET",
+        path: "/posts/:id",
         responses: {
           200: c.type<{ id: number }>(),
         },
@@ -414,8 +415,8 @@ describe('contract', () => {
         typeof contract,
         {
           getPost: {
-            method: 'GET';
-            path: '/posts/:id';
+            method: "GET";
+            path: "/posts/:id";
             responses: {
               200: ContractPlainType<{
                 id: number;
@@ -427,10 +428,10 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with separate query route', () => {
+  it("should be typed correctly with separate query route", () => {
     const getPost = c.query({
-      method: 'GET',
-      path: '/posts/:id',
+      method: "GET",
+      path: "/posts/:id",
       responses: {
         200: c.type<{ id: number }>(),
       },
@@ -445,8 +446,8 @@ describe('contract', () => {
         typeof contract,
         {
           getPost: {
-            method: 'GET';
-            path: '/posts/:id';
+            method: "GET";
+            path: "/posts/:id";
             responses: {
               200: ContractPlainType<{
                 id: number;
@@ -458,10 +459,10 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with separate mutation route', () => {
+  it("should be typed correctly with separate mutation route", () => {
     const createPost = c.mutation({
-      method: 'POST',
-      path: '/posts',
+      method: "POST",
+      path: "/posts",
       responses: {
         200: c.type<{ id: number }>(),
       },
@@ -477,8 +478,8 @@ describe('contract', () => {
         typeof contract,
         {
           createPost: {
-            method: 'POST';
-            path: '/posts';
+            method: "POST";
+            path: "/posts";
             responses: {
               200: ContractPlainType<{
                 id: number;
@@ -493,15 +494,15 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with separate responses', () => {
+  it("should be typed correctly with separate responses", () => {
     const responses = c.responses({
       200: c.type<{ id: number }>(),
     });
 
     const contract = c.router({
       getPost: {
-        method: 'GET',
-        path: '/posts/:id',
+        method: "GET",
+        path: "/posts/:id",
         responses,
       },
     });
@@ -511,8 +512,8 @@ describe('contract', () => {
         typeof contract,
         {
           getPost: {
-            method: 'GET';
-            path: '/posts/:id';
+            method: "GET";
+            path: "/posts/:id";
             responses: {
               200: ContractPlainType<{
                 id: number;
@@ -524,15 +525,15 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with separate responses with spread', () => {
+  it("should be typed correctly with separate responses with spread", () => {
     const responses = c.responses({
       200: c.type<{ id: number }>(),
     });
 
     const contract = c.router({
       getPost: {
-        method: 'GET',
-        path: '/posts/:id',
+        method: "GET",
+        path: "/posts/:id",
         responses: {
           ...responses,
         },
@@ -544,8 +545,8 @@ describe('contract', () => {
         typeof contract,
         {
           getPost: {
-            method: 'GET';
-            path: '/posts/:id';
+            method: "GET";
+            path: "/posts/:id";
             responses: {
               200: ContractPlainType<{
                 id: number;
@@ -557,12 +558,12 @@ describe('contract', () => {
     >;
   });
 
-  it('should add strictStatusCodes=true option to routes', () => {
+  it("should add strictStatusCodes=true option to routes", () => {
     const contract = c.router(
       {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: c.type<{ id: number }>(),
           },
@@ -577,7 +578,7 @@ describe('contract', () => {
 
     type ContractShape = Expect<
       Equal<
-        Pick<typeof contract.getPost, 'strictStatusCodes'>,
+        Pick<typeof contract.getPost, "strictStatusCodes">,
         {
           strictStatusCodes: true;
         }
@@ -585,12 +586,12 @@ describe('contract', () => {
     >;
   });
 
-  it('should add strictStatusCodes=false option to routes', () => {
+  it("should add strictStatusCodes=false option to routes", () => {
     const contract = c.router(
       {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: c.type<{ id: number }>(),
           },
@@ -605,7 +606,7 @@ describe('contract', () => {
 
     type ContractShape = Expect<
       Equal<
-        Pick<typeof contract.getPost, 'strictStatusCodes'>,
+        Pick<typeof contract.getPost, "strictStatusCodes">,
         {
           strictStatusCodes: false;
         }
@@ -613,12 +614,12 @@ describe('contract', () => {
     >;
   });
 
-  it('should merge strictStatusCodes options correctly is route is true', () => {
+  it("should merge strictStatusCodes options correctly is route is true", () => {
     const contract = c.router(
       {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: c.type<{ id: number }>(),
           },
@@ -634,7 +635,7 @@ describe('contract', () => {
 
     type ContractShape = Expect<
       Equal<
-        Pick<typeof contract.getPost, 'strictStatusCodes'>,
+        Pick<typeof contract.getPost, "strictStatusCodes">,
         {
           strictStatusCodes: true;
         }
@@ -642,12 +643,12 @@ describe('contract', () => {
     >;
   });
 
-  it('should merge strictStatusCodes options correctly if route is false', () => {
+  it("should merge strictStatusCodes options correctly if route is false", () => {
     const contract = c.router(
       {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: c.type<{ id: number }>(),
           },
@@ -663,7 +664,7 @@ describe('contract', () => {
 
     type ContractShape = Expect<
       Equal<
-        Pick<typeof contract.getPost, 'strictStatusCodes'>,
+        Pick<typeof contract.getPost, "strictStatusCodes">,
         {
           strictStatusCodes: false;
         }
@@ -671,23 +672,23 @@ describe('contract', () => {
     >;
   });
 
-  it('should merge metadata options from router to its routes', () => {
+  it("should merge metadata options from router to its routes", () => {
     const contract = c.router(
       {
         getPost: {
-          method: 'GET',
-          path: '/posts/:id',
+          method: "GET",
+          path: "/posts/:id",
           responses: {
             200: c.type<{ id: number }>(),
           },
         },
         deletePost: {
-          method: 'DELETE',
-          path: '/posts/:id',
+          method: "DELETE",
+          path: "/posts/:id",
           body: c.type<undefined>(),
           metadata: {
             requireAuth: false,
-            headerName: 'x-authorization',
+            headerName: "x-authorization",
           },
           responses: {
             200: c.type<{ id: number }>(),
@@ -707,7 +708,7 @@ describe('contract', () => {
 
     expect(contract.deletePost.metadata).toStrictEqual({
       requireAuth: false,
-      headerName: 'x-authorization',
+      headerName: "x-authorization",
     });
 
     type MetadataShape = Expect<
@@ -730,34 +731,34 @@ describe('contract', () => {
     >;
   });
 
-  describe('pathPrefix', () => {
-    it('Should recursively apply pathPrefix to path', () => {
+  describe("pathPrefix", () => {
+    it("Should recursively apply pathPrefix to path", () => {
       const postsContractNested = c.router(
         {
           getPost: {
-            path: '/:id',
-            method: 'GET',
+            path: "/:id",
+            method: "GET",
             responses: { 200: c.type<{ id: string }>() },
           },
         },
-        { pathPrefix: '/posts' },
+        { pathPrefix: "/posts" },
       );
       const postsContract = c.router(
         {
           posts: postsContractNested,
         },
-        { pathPrefix: '/v1' },
+        { pathPrefix: "/v1" },
       );
-      expect(postsContractNested.getPost.path).toStrictEqual('/posts/:id');
-      expect(postsContract.posts.getPost.path).toStrictEqual('/v1/posts/:id');
+      expect(postsContractNested.getPost.path).toStrictEqual("/posts/:id");
+      expect(postsContract.posts.getPost.path).toStrictEqual("/v1/posts/:id");
 
       type PostsContractNestedShape = Expect<
         Equal<
           typeof postsContractNested,
           {
             getPost: {
-              path: '/posts/:id';
-              method: 'GET';
+              path: "/posts/:id";
+              method: "GET";
               responses: { 200: ContractPlainType<{ id: string }> };
             };
           }
@@ -770,8 +771,8 @@ describe('contract', () => {
           {
             posts: {
               getPost: {
-                path: '/v1/posts/:id';
-                method: 'GET';
+                path: "/v1/posts/:id";
+                method: "GET";
                 responses: { 200: ContractPlainType<{ id: string }> };
               };
             };
@@ -781,12 +782,12 @@ describe('contract', () => {
     });
   });
 
-  describe('validateResponseOnClient', () => {
-    it('Should recursively apply validateResponseOnClient to routes', () => {
+  describe("validateResponseOnClient", () => {
+    it("Should recursively apply validateResponseOnClient to routes", () => {
       const postsContractNested = c.router({
         getPost: {
-          path: '/:id',
-          method: 'GET',
+          path: "/:id",
+          method: "GET",
           responses: { 200: c.type<{ id: string }>() },
         },
       });
@@ -797,21 +798,21 @@ describe('contract', () => {
         { validateResponseOnClient: true },
       );
       expect(postsContractNested.getPost).toHaveProperty(
-        'validateResponseOnClient',
+        "validateResponseOnClient",
         undefined,
       );
       expect(postsContract.posts.getPost).toHaveProperty(
-        'validateResponseOnClient',
+        "validateResponseOnClient",
         true,
       );
     });
 
-    it('Should not override validateResponseOnClient if set on nested router', () => {
+    it("Should not override validateResponseOnClient if set on nested router", () => {
       const postsContractNested = c.router(
         {
           getPost: {
-            path: '/:id',
-            method: 'GET',
+            path: "/:id",
+            method: "GET",
             responses: { 200: c.type<{ id: string }>() },
           },
         },
@@ -824,26 +825,26 @@ describe('contract', () => {
         { validateResponseOnClient: true },
       );
       expect(postsContractNested.getPost).toHaveProperty(
-        'validateResponseOnClient',
+        "validateResponseOnClient",
         false,
       );
       expect(postsContract.posts.getPost).toHaveProperty(
-        'validateResponseOnClient',
+        "validateResponseOnClient",
         false,
       );
     });
 
-    it('Should not override validateResponseOnClient when set directly on route', () => {
+    it("Should not override validateResponseOnClient when set directly on route", () => {
       const postsContract = c.router(
         {
           getPost: {
-            path: '/:id',
-            method: 'GET',
+            path: "/:id",
+            method: "GET",
             responses: { 200: c.type<{ id: string }>() },
           },
           getPostDangerously: {
-            path: '/:id/dangerous',
-            method: 'GET',
+            path: "/:id/dangerous",
+            method: "GET",
             responses: { 200: c.type<{ id: string }>() },
             validateResponseOnClient: false,
           },
@@ -852,48 +853,48 @@ describe('contract', () => {
       );
 
       expect(postsContract.getPost).toHaveProperty(
-        'validateResponseOnClient',
+        "validateResponseOnClient",
         true,
       );
       expect(postsContract.getPostDangerously).toHaveProperty(
-        'validateResponseOnClient',
+        "validateResponseOnClient",
         false,
       );
     });
   });
 
-  it('should set type correctly for non-json response', () => {
+  it("should set type correctly for non-json response", () => {
     const contract = c.router({
       getCss: {
-        method: 'GET',
-        path: '/style.css',
+        method: "GET",
+        path: "/style.css",
         responses: {
           200: c.otherResponse({
-            contentType: 'text/css',
+            contentType: "text/css",
             body: c.type<string>(),
           }),
         },
       },
     });
 
-    expect(contract.getCss.responses['200']).toEqual({
-      contentType: 'text/css',
+    expect(contract.getCss.responses["200"]).toEqual({
+      contentType: "text/css",
       body: ContractPlainTypeRuntimeSymbol,
     });
 
     type ResponseType = Expect<
       Equal<
-        (typeof contract.getCss.responses)['200'],
+        (typeof contract.getCss.responses)["200"],
         ContractOtherResponse<ContractPlainType<string>>
       >
     >;
   });
 
-  it('should set type correctly for no body', () => {
+  it("should set type correctly for no body", () => {
     const contract = c.router({
       get: {
-        method: 'GET',
-        path: '/',
+        method: "GET",
+        path: "/",
         responses: {
           204: c.noBody(),
         },
@@ -901,17 +902,17 @@ describe('contract', () => {
     });
 
     type ResponseType = Expect<
-      Equal<(typeof contract.get.responses)['204'], ContractNoBodyType>
+      Equal<(typeof contract.get.responses)["204"], ContractNoBodyType>
     >;
   });
 
-  it('should be typed correctly with merged common responses', () => {
+  it("should be typed correctly with merged common responses", () => {
     const contract = c.router(
       {
         posts: {
           getPost: {
-            method: 'GET',
-            path: '/posts/:id',
+            method: "GET",
+            path: "/posts/:id",
             responses: {
               200: z.object({
                 id: z.number(),
@@ -935,14 +936,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -955,7 +956,7 @@ describe('contract', () => {
                   {
                     message: z.ZodString;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     message: string;
@@ -972,13 +973,13 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with merged common responses and overriding common response', () => {
+  it("should be typed correctly with merged common responses and overriding common response", () => {
     const contract = c.router(
       {
         posts: {
           getPost: {
-            method: 'GET',
-            path: '/posts/:id',
+            method: "GET",
+            path: "/posts/:id",
             responses: {
               200: z.object({
                 id: z.number(),
@@ -1008,14 +1009,14 @@ describe('contract', () => {
         {
           posts: {
             getPost: {
-              method: 'GET';
-              path: '/posts/:id';
+              method: "GET";
+              path: "/posts/:id";
               responses: {
                 200: z.ZodObject<
                   {
                     id: z.ZodNumber;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     id: number;
@@ -1028,7 +1029,7 @@ describe('contract', () => {
                   {
                     overrideReason: z.ZodString;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     overrideReason: string;
@@ -1041,7 +1042,7 @@ describe('contract', () => {
                   {
                     message: z.ZodString;
                   },
-                  'strip',
+                  "strip",
                   z.ZodTypeAny,
                   {
                     message: string;

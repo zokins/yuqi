@@ -1,34 +1,35 @@
-import { z } from 'zod';
-import { initContract } from '@ts-rest/core';
-import { tsr } from '../handlers/ts-rest-fetch';
-import { ContractSubContractPaths } from './types';
-import { getBoundary, parse as parseMultipart } from 'parse-multipart-data';
-import { CompleteRouter, RouterBuilder } from './index';
+import { initContract } from "@ts-rest/core";
+import { getBoundary, parse as parseMultipart } from "parse-multipart-data";
+import { z } from "zod";
+
+import { tsr } from "../handlers/ts-rest-fetch";
+import { CompleteRouter, RouterBuilder } from "./index";
+import { ContractSubContractPaths } from "./types";
 
 const c = initContract();
 
 const nestedContract = c.router({
   health: {
-    method: 'GET',
-    path: '/health',
+    method: "GET",
+    path: "/health",
     responses: {
-      200: c.otherResponse({ contentType: 'text/plain', body: c.type<'ok'>() }),
+      200: c.otherResponse({ contentType: "text/plain", body: c.type<"ok">() }),
     },
   },
   doubleNested: {
     healthQuick: {
-      method: 'GET',
-      path: '/health-quick',
+      method: "GET",
+      path: "/health-quick",
       responses: {
         200: c.otherResponse({
-          contentType: 'text/plain',
-          body: c.type<'ok'>(),
+          contentType: "text/plain",
+          body: c.type<"ok">(),
         }),
       },
     },
     age: {
-      method: 'GET',
-      path: '/age',
+      method: "GET",
+      path: "/age",
       responses: {
         200: c.type<{
           userAge: number;
@@ -40,10 +41,10 @@ const nestedContract = c.router({
 
 const secondNestedContract = c.router({
   healthSlow: {
-    method: 'GET',
-    path: '/health-slow',
+    method: "GET",
+    path: "/health-slow",
     responses: {
-      200: c.otherResponse({ contentType: 'text/plain', body: c.type<'ok'>() }),
+      200: c.otherResponse({ contentType: "text/plain", body: c.type<"ok">() }),
     },
   },
 });
@@ -52,8 +53,8 @@ const contract = c.router({
   nested: nestedContract,
   secondNested: secondNestedContract,
   authenticated: {
-    method: 'GET',
-    path: '/profile',
+    method: "GET",
+    path: "/profile",
     responses: {
       200: c.type<{ userId: string }>(),
     },
@@ -61,22 +62,22 @@ const contract = c.router({
 });
 
 type GlobalExtension = {
-  globalContext: { health: 'ok' };
+  globalContext: { health: "ok" };
   user: { id: string };
 };
 
 const routerBuilderBase = tsr
   .routerBuilder(contract)
-  .requestMiddleware<Pick<GlobalExtension, 'globalContext'>>(
+  .requestMiddleware<Pick<GlobalExtension, "globalContext">>(
     async (request) => {
-      request.globalContext = { health: 'ok' };
+      request.globalContext = { health: "ok" };
     },
   )
-  .requestMiddleware<Pick<GlobalExtension, 'user'>>(async (request) => {
-    request.user = { id: '123' };
+  .requestMiddleware<Pick<GlobalExtension, "user">>(async (request) => {
+    request.user = { id: "123" };
   });
 
-describe('RouterBuilder', () => {
+describe("RouterBuilder", () => {
   let routerBuilder: RouterBuilder<typeof contract, {}, GlobalExtension>;
   let completeRouter: CompleteRouter<typeof contract, {}, GlobalExtension>;
 
@@ -87,7 +88,7 @@ describe('RouterBuilder', () => {
   const healthHandler = async () => {
     return {
       status: 200,
-      body: 'ok',
+      body: "ok",
     } as const;
   };
 
@@ -109,7 +110,7 @@ describe('RouterBuilder', () => {
     },
   });
 
-  describe('success', () => {
+  describe("success", () => {
     afterEach(() => {
       expect(completeRouter.build()).toEqual({
         nested: {
@@ -129,7 +130,7 @@ describe('RouterBuilder', () => {
       });
     });
 
-    it('full router should work', () => {
+    it("full router should work", () => {
       completeRouter = routerBuilder.fullRouter({
         nested: {
           doubleNested: {
@@ -152,7 +153,7 @@ describe('RouterBuilder', () => {
       });
     });
 
-    it('partial router should work with full router', () => {
+    it("partial router should work with full router", () => {
       completeRouter = routerBuilder.partialRouter({
         nested: {
           doubleNested: {
@@ -175,7 +176,7 @@ describe('RouterBuilder', () => {
       });
     });
 
-    it('partial router should work with routeWithMiddleware', () => {
+    it("partial router should work with routeWithMiddleware", () => {
       completeRouter = routerBuilder
         .partialRouter({
           nested: {
@@ -196,7 +197,7 @@ describe('RouterBuilder', () => {
             };
           },
         })
-        .routeWithMiddleware('nested.doubleNested.age', (routeBuilder) =>
+        .routeWithMiddleware("nested.doubleNested.age", (routeBuilder) =>
           routeBuilder
             .middleware<{ user: { age: number } }>(async (request) => {
               request.user.age = Math.round(Math.random() * 100);
@@ -212,7 +213,7 @@ describe('RouterBuilder', () => {
         );
     });
 
-    it('partial router should work with routeWithMiddleware and route', () => {
+    it("partial router should work with routeWithMiddleware and route", () => {
       completeRouter = routerBuilder
         .partialRouter({
           nested: {
@@ -232,7 +233,7 @@ describe('RouterBuilder', () => {
             };
           },
         })
-        .routeWithMiddleware('nested.doubleNested.age', (routeBuilder) =>
+        .routeWithMiddleware("nested.doubleNested.age", (routeBuilder) =>
           routeBuilder
             .middleware<{ user: { age: number } }>(async (request) => {
               request.user.age = Math.round(Math.random() * 100);
@@ -246,10 +247,10 @@ describe('RouterBuilder', () => {
               };
             }),
         )
-        .route('nested.health', healthHandler);
+        .route("nested.health", healthHandler);
     });
 
-    it('partial router should work with another partial router with old-style middleware', () => {
+    it("partial router should work with another partial router with old-style middleware", () => {
       completeRouter = routerBuilder
         .partialRouter({
           nested: {
@@ -279,10 +280,10 @@ describe('RouterBuilder', () => {
         });
     });
 
-    it('sub router should work with CompleteRouter of sub-contract', () => {
+    it("sub router should work with CompleteRouter of sub-contract", () => {
       completeRouter = routerBuilder
         .subRouter(
-          'secondNested',
+          "secondNested",
           tsr.routerBuilder(contract.secondNested).fullRouter({
             healthSlow: healthHandler,
           }),
@@ -306,9 +307,9 @@ describe('RouterBuilder', () => {
         });
     });
 
-    it('sub router should work with full sub-contract', () => {
+    it("sub router should work with full sub-contract", () => {
       completeRouter = routerBuilder
-        .subRouter('secondNested', {
+        .subRouter("secondNested", {
           healthSlow: healthHandler,
         })
         .partialRouter({
@@ -331,8 +332,8 @@ describe('RouterBuilder', () => {
     });
   });
 
-  describe('fail', () => {
-    it('partial router should fail if missing routes', () => {
+  describe("fail", () => {
+    it("partial router should fail if missing routes", () => {
       const incompleteRouter = routerBuilder.partialRouter({
         nested: {
           doubleNested: {
@@ -355,11 +356,11 @@ describe('RouterBuilder', () => {
 
       // @ts-expect-error - .build() should not exist on RouterBuilder since we are missing a route
       expect(() => incompleteRouter.build()).toThrowError(
-        'completeRouter.build is not a function',
+        "completeRouter.build is not a function",
       );
     });
 
-    it('route should fail if missing routes', () => {
+    it("route should fail if missing routes", () => {
       const incompleteRouter = routerBuilder
         .partialRouter({
           nested: {
@@ -379,15 +380,15 @@ describe('RouterBuilder', () => {
             };
           },
         })
-        .route('nested.health', healthHandler);
+        .route("nested.health", healthHandler);
 
       // @ts-expect-error - .build() should not exist on RouterBuilder since we are missing a route
       expect(() => incompleteRouter.build()).toThrowError(
-        'completeRouter.build is not a function',
+        "completeRouter.build is not a function",
       );
     });
 
-    it('sub-router should fail if missing routes', () => {
+    it("sub-router should fail if missing routes", () => {
       const incompleteRouter = routerBuilder
         .partialRouter({
           nested: {
@@ -405,13 +406,13 @@ describe('RouterBuilder', () => {
             };
           },
         })
-        .subRouter('secondNested', {
+        .subRouter("secondNested", {
           healthSlow: healthHandler,
         });
 
       // @ts-expect-error - .build() should not exist on RouterBuilder since we are missing a route
       expect(() => incompleteRouter.build()).toThrowError(
-        'completeRouter.build is not a function',
+        "completeRouter.build is not a function",
       );
     });
   });

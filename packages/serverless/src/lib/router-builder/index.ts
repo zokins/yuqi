@@ -1,11 +1,13 @@
-import { AppRoute, AppRouter } from '@ts-rest/core';
-import { RequestHandler } from 'itty-router';
-import { TsRestRequest } from '../request';
+import { AppRoute, AppRouter } from "@ts-rest/core";
+import { RequestHandler } from "itty-router";
+
+import { TsRestRequest } from "../request";
+import { TsRestResponse } from "../response";
 import {
   AppRouteImplementation,
   AppRouteImplementationOrOptions,
   RouterImplementation,
-} from '../types';
+} from "../types";
 import {
   ChooseContractRoute,
   ChooseContractSubContract,
@@ -13,8 +15,7 @@ import {
   EndpointPathsToSubcontractPaths,
   PartialRouter,
   PartialRouterPaths,
-} from './types';
-import { TsRestResponse } from '../response';
+} from "./types";
 
 export class RouterBuilder<
   TContract extends AppRouter,
@@ -100,8 +101,8 @@ export class RouterBuilder<
     TRequestExtensionCumulative
   > {
     return (
-      typeof obj === 'function' ||
-      ('handler' in obj && typeof obj.handler === 'function')
+      typeof obj === "function" ||
+      ("handler" in obj && typeof obj.handler === "function")
     );
   }
 
@@ -122,7 +123,7 @@ export class RouterBuilder<
         TRequestExtensionCumulative
       > {
     return (
-      ('method' in obj && 'path' in obj) ||
+      ("method" in obj && "path" in obj) ||
       this.isRouteImplementationOrOptions(obj)
     );
   }
@@ -131,9 +132,9 @@ export class RouterBuilder<
     contractOrRouter:
       | AppRouter
       | PartialRouter<TContract, TPlatformContext, TRequestExtensionCumulative>,
-    parentPath = '',
+    parentPath = "",
   ) {
-    const keyPrefix = parentPath === '' ? '' : `${parentPath}.`;
+    const keyPrefix = parentPath === "" ? "" : `${parentPath}.`;
 
     return Object.entries(contractOrRouter).reduce((acc, [key, value]) => {
       if (this.isContractEndpointOrRouteImplementationOrOptions(value)) {
@@ -204,7 +205,7 @@ export class RouterBuilder<
         TRequestExtensionCumulative,
         TNewRemainingRoutes
       > {
-    const paths = routeName.split('.');
+    const paths = routeName.split(".");
     let routeParent: any = this._router;
 
     while (paths.length > 1) {
@@ -291,9 +292,9 @@ export class RouterBuilder<
     const mergePartialRouter = (
       targetRouter: any,
       subRouter: any,
-      parentPath = '',
+      parentPath = "",
     ) => {
-      const keyPrefix = parentPath === '' ? '' : `${parentPath}.`;
+      const keyPrefix = parentPath === "" ? "" : `${parentPath}.`;
 
       return Object.entries(subRouter).forEach(([key, value]) => {
         if (this.isRouteImplementationOrOptions(value as any)) {
@@ -360,7 +361,7 @@ export class RouterBuilder<
         TRequestExtensionCumulative,
         TNewRemainingRoutes
       > {
-    const pathParts = subRouterPath.split('.');
+    const pathParts = subRouterPath.split(".");
     const partialRouter: PartialRouter<
       TContract,
       TPlatformContext,

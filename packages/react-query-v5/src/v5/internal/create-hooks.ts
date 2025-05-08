@@ -1,19 +1,19 @@
 import {
+  QueryClient,
   QueryFunctionContext,
   QueryKey,
-  useInfiniteQuery,
-  useQueries,
-  useQuery,
-  QueryClient,
-  useSuspenseQuery,
-  useSuspenseQueries,
-  useSuspenseInfiniteQuery,
-  useMutation,
-  usePrefetchQuery,
-  usePrefetchInfiniteQuery,
   QueryOptions,
   skipToken,
-} from '@tanstack/react-query';
+  useInfiniteQuery,
+  useMutation,
+  usePrefetchInfiniteQuery,
+  usePrefetchQuery,
+  useQueries,
+  useQuery,
+  useSuspenseInfiniteQuery,
+  useSuspenseQueries,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
   AppRoute,
   AppRouter,
@@ -24,19 +24,20 @@ import {
   isAppRoute,
   isAppRouteQuery,
   isErrorResponse,
-} from '@ts-rest/core';
+} from "@ts-rest/core";
+
 import {
+  DataResponse,
   MutationHooks,
   QueryHooks,
-  TsRestReactQueryHooksContainer,
-  TsRestInfiniteQueryOptions,
-  TsRestQueryOptions,
-  TsRestQueryClientFunctions,
-  TsRestReactQueryClientFunctionsContainer,
-  TsRestReactQueryClient,
   RequestData,
-  DataResponse,
-} from '../types';
+  TsRestInfiniteQueryOptions,
+  TsRestQueryClientFunctions,
+  TsRestQueryOptions,
+  TsRestReactQueryClient,
+  TsRestReactQueryClientFunctionsContainer,
+  TsRestReactQueryHooksContainer,
+} from "../types";
 
 const apiFetcher = <TAppRoute extends AppRoute, TClientArgs extends ClientArgs>(
   route: TAppRoute,
@@ -84,7 +85,7 @@ function createBaseQueryOptions<
         ? skipToken
         : (context?: QueryFunctionContext<QueryKey, unknown>) => {
             const requestData =
-              typeof queryDataOrFunction === 'function'
+              typeof queryDataOrFunction === "function"
                 ? queryDataOrFunction(context!)
                 : queryDataOrFunction;
 

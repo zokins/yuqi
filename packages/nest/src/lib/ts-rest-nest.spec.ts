@@ -1,32 +1,33 @@
-import { initContract, TsRestResponseError } from '@ts-rest/core';
-import {
-  nestControllerContract,
-  NestControllerInterface,
-  NestRequestShapes,
-  NestResponseShapes,
-} from './ts-rest-nest';
-import { TsRest } from './ts-rest.decorator';
-import { TsRestRequest } from './ts-rest-request.decorator';
 import {
   Controller,
   INestApplication,
   ModuleMetadata,
   Type,
-} from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import * as supertest from 'supertest';
-import { z } from 'zod';
-import { TsRestModule } from './ts-rest.module';
+} from "@nestjs/common";
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { tsRestHandler, TsRestHandler } from './ts-rest-nest-handler';
+} from "@nestjs/platform-fastify";
+import { Test } from "@nestjs/testing";
+import { initContract, TsRestResponseError } from "@ts-rest/core";
+import * as supertest from "supertest";
+import { z } from "zod";
+
+import {
+  nestControllerContract,
+  NestControllerInterface,
+  NestRequestShapes,
+  NestResponseShapes,
+} from "./ts-rest-nest";
+import { tsRestHandler, TsRestHandler } from "./ts-rest-nest-handler";
+import { TsRestRequest } from "./ts-rest-request.decorator";
+import { TsRest } from "./ts-rest.decorator";
+import { TsRestModule } from "./ts-rest.module";
 
 const c = initContract();
 const postsRouter = c.router({
   getPost: {
-    method: 'GET',
+    method: "GET",
     path: `/posts/:id`,
     responses: {
       200: null,
@@ -34,52 +35,52 @@ const postsRouter = c.router({
   },
 });
 
-it('allows unknown statuses when not in strict mode', () => {
+it("allows unknown statuses when not in strict mode", () => {
   const cLoose = c.router({ posts: postsRouter });
   const nestContract = nestControllerContract(cLoose.posts);
   type RequestShapes = NestRequestShapes<typeof nestContract>;
   type ResponseShapes = NestResponseShapes<typeof nestContract>;
 
-  const responseTypeCheck: Awaited<ResponseShapes['getPost']> = {
+  const responseTypeCheck: Awaited<ResponseShapes["getPost"]> = {
     status: 419,
-    body: 'invalid status and response',
+    body: "invalid status and response",
   };
   class PostController implements NestControllerInterface<typeof nestContract> {
     @TsRest(nestContract.getPost)
     async getPost(
-      @TsRestRequest() { params: { id } }: RequestShapes['getPost'],
+      @TsRestRequest() { params: { id } }: RequestShapes["getPost"],
     ) {
       return { status: 201 as const, body: null };
     }
   }
 });
 
-it('does not allow unknown statuses when in strict mode', () => {
+it("does not allow unknown statuses when in strict mode", () => {
   const cStrict = c.router({ posts: postsRouter }, { strictStatusCodes: true });
   const nestContract = nestControllerContract(cStrict.posts);
   type contractType = typeof nestContract;
   type RequestShapes = NestRequestShapes<contractType>;
   type ResponseShapes = NestResponseShapes<typeof nestContract>;
 
-  const responseTypeCheck: Awaited<ResponseShapes['getPost']> = {
+  const responseTypeCheck: Awaited<ResponseShapes["getPost"]> = {
     // @ts-expect-error 419 is not defined as a known response
     status: 419,
     // @ts-expect-error 419 is not defined as a known response
-    body: 'invalid status and response',
+    body: "invalid status and response",
   };
 
   class PostController implements NestControllerInterface<typeof nestContract> {
     @TsRest(nestContract.getPost)
     // @ts-expect-error 201 is not defined as a known response
     async getPost(
-      @TsRestRequest() { params: { id } }: RequestShapes['getPost'],
+      @TsRestRequest() { params: { id } }: RequestShapes["getPost"],
     ) {
       return { status: 201 as const, body: null };
     }
   }
 });
 
-it('allows responseShapes types to be used in controller logic', () => {
+it("allows responseShapes types to be used in controller logic", () => {
   const cStrict = c.router({ posts: postsRouter }, { strictStatusCodes: true });
   const nestContract = nestControllerContract(cStrict.posts);
   type contractType = typeof nestContract;
@@ -89,9 +90,9 @@ it('allows responseShapes types to be used in controller logic', () => {
   class PostController implements NestControllerInterface<typeof nestContract> {
     @TsRest(nestContract.getPost)
     async getPost(
-      @TsRestRequest() { params: { id } }: RequestShapes['getPost'],
+      @TsRestRequest() { params: { id } }: RequestShapes["getPost"],
     ) {
-      const result: ResponseShapes['getPost'] = {
+      const result: ResponseShapes["getPost"] = {
         status: 200 as const,
         body: null,
       };
@@ -100,7 +101,7 @@ it('allows responseShapes types to be used in controller logic', () => {
   }
 });
 
-describe('request validation', () => {
+describe("request validation", () => {
   let app: INestApplication;
 
   afterEach(async () => {
@@ -120,7 +121,7 @@ describe('request validation', () => {
 
   const contract = initContract().router({
     withBody: {
-      method: 'POST',
+      method: "POST",
       path: `/`,
       body: z.object({
         title: z.string(),
@@ -132,8 +133,8 @@ describe('request validation', () => {
       },
     },
     withQuery: {
-      method: 'GET',
-      path: '/',
+      method: "GET",
+      path: "/",
       query: z.object({
         id: z.string(),
       }),
@@ -144,8 +145,8 @@ describe('request validation', () => {
       },
     },
     withHeaders: {
-      method: 'GET',
-      path: '/admin',
+      method: "GET",
+      path: "/admin",
       headers: z.object({
         token: z.string(),
       }),
@@ -162,13 +163,13 @@ describe('request validation', () => {
   type RequestShapes = NestRequestShapes<contractType>;
   type ResponseShapes = NestResponseShapes<typeof nestContract>;
 
-  it('should validate body without validateRequestBody param', async () => {
+  it("should validate body without validateRequestBody param", async () => {
     @Controller()
     @TsRest({})
     class MyController {
       @TsRest(contract.withBody)
-      async create(@TsRestRequest() { body }: RequestShapes['withBody']) {
-        const response: ResponseShapes['withBody'] = {
+      async create(@TsRestRequest() { body }: RequestShapes["withBody"]) {
+        const response: ResponseShapes["withBody"] = {
           status: 200,
           body: { title: body.title },
         };
@@ -184,18 +185,18 @@ describe('request validation', () => {
 
     expect(serverResponse.status).toEqual(400);
     expect(serverResponse.body.issues.length > 0).toBeTruthy();
-    expect(serverResponse.body.issues[0].code).toBe('invalid_type');
+    expect(serverResponse.body.issues[0].code).toBe("invalid_type");
   });
 
-  it('should validate body with validateRequestBody: true', async () => {
+  it("should validate body with validateRequestBody: true", async () => {
     @Controller()
     @TsRest({
       validateRequestBody: true,
     })
     class MyController {
       @TsRest(contract.withBody)
-      async create(@TsRestRequest() { body }: RequestShapes['withBody']) {
-        const response: ResponseShapes['withBody'] = {
+      async create(@TsRestRequest() { body }: RequestShapes["withBody"]) {
+        const response: ResponseShapes["withBody"] = {
           status: 200,
           body: { title: body.title },
         };
@@ -211,10 +212,10 @@ describe('request validation', () => {
 
     expect(serverResponse.status).toEqual(400);
     expect(serverResponse.body.issues.length > 0).toBeTruthy();
-    expect(serverResponse.body.issues[0].code).toBe('invalid_type');
+    expect(serverResponse.body.issues[0].code).toBe("invalid_type");
   });
 
-  it('route param should override class param', async () => {
+  it("route param should override class param", async () => {
     @Controller()
     @TsRest({
       validateRequestBody: true,
@@ -223,10 +224,10 @@ describe('request validation', () => {
       @TsRest(contract.withBody, {
         validateRequestBody: false,
       })
-      async create(@TsRestRequest() { body }: RequestShapes['withBody']) {
-        const response: ResponseShapes['withBody'] = {
+      async create(@TsRestRequest() { body }: RequestShapes["withBody"]) {
+        const response: ResponseShapes["withBody"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -239,7 +240,7 @@ describe('request validation', () => {
       .send({ title: 432213 });
 
     expect(serverResponse.status).toEqual(200);
-    expect(serverResponse.body.title).toBe('ok');
+    expect(serverResponse.body.title).toBe("ok");
   });
 
   it("only method param - shouldn't validate body", async () => {
@@ -248,10 +249,10 @@ describe('request validation', () => {
       @TsRest(contract.withBody, {
         validateRequestBody: false,
       })
-      async create(@TsRestRequest() { body }: RequestShapes['withBody']) {
-        const response: ResponseShapes['withBody'] = {
+      async create(@TsRestRequest() { body }: RequestShapes["withBody"]) {
+        const response: ResponseShapes["withBody"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -264,7 +265,7 @@ describe('request validation', () => {
       .send({ title: 432213 });
 
     expect(serverResponse.status).toEqual(200);
-    expect(serverResponse.body.title).toBe('ok');
+    expect(serverResponse.body.title).toBe("ok");
   });
 
   it("shouldn't validate body", async () => {
@@ -274,10 +275,10 @@ describe('request validation', () => {
     })
     class TestController {
       @TsRest(contract.withBody)
-      async create(@TsRestRequest() { body }: RequestShapes['withBody']) {
-        const response: ResponseShapes['withBody'] = {
+      async create(@TsRestRequest() { body }: RequestShapes["withBody"]) {
+        const response: ResponseShapes["withBody"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -290,20 +291,20 @@ describe('request validation', () => {
       .send({ title: 432213 });
 
     expect(serverResponse.status).toEqual(200);
-    expect(serverResponse.body.title).toBe('ok');
+    expect(serverResponse.body.title).toBe("ok");
   });
 
-  it('should validate headers', async () => {
+  it("should validate headers", async () => {
     @Controller()
     @TsRest({
       validateRequestHeaders: true,
     })
     class TestController {
       @TsRest(contract.withHeaders)
-      async create(@TsRestRequest() { headers }: RequestShapes['withHeaders']) {
-        const response: ResponseShapes['withHeaders'] = {
+      async create(@TsRestRequest() { headers }: RequestShapes["withHeaders"]) {
+        const response: ResponseShapes["withHeaders"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -317,8 +318,8 @@ describe('request validation', () => {
 
     expect(serverResponse.status).toEqual(400);
     expect(serverResponse.body.issues.length > 0).toBeTruthy();
-    expect(serverResponse.body.issues[0].code).toBe('invalid_type');
-    expect(serverResponse.body.issues[0].path[0]).toBe('token');
+    expect(serverResponse.body.issues[0].code).toBe("invalid_type");
+    expect(serverResponse.body.issues[0].path[0]).toBe("token");
   });
 
   it("shouldn't validate headers", async () => {
@@ -328,10 +329,10 @@ describe('request validation', () => {
     })
     class TestController {
       @TsRest(contract.withHeaders)
-      async create(@TsRestRequest() { headers }: RequestShapes['withHeaders']) {
-        const response: ResponseShapes['withHeaders'] = {
+      async create(@TsRestRequest() { headers }: RequestShapes["withHeaders"]) {
+        const response: ResponseShapes["withHeaders"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -344,20 +345,20 @@ describe('request validation', () => {
       .send();
 
     expect(serverResponse.status).toEqual(200);
-    expect(serverResponse.body.title).toBe('ok');
+    expect(serverResponse.body.title).toBe("ok");
   });
 
-  it('should validate query', async () => {
+  it("should validate query", async () => {
     @Controller()
     @TsRest({
       validateRequestQuery: true,
     })
     class TestController {
       @TsRest(contract.withQuery)
-      async create(@TsRestRequest() { headers }: RequestShapes['withQuery']) {
-        const response: ResponseShapes['withQuery'] = {
+      async create(@TsRestRequest() { headers }: RequestShapes["withQuery"]) {
+        const response: ResponseShapes["withQuery"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -371,8 +372,8 @@ describe('request validation', () => {
 
     expect(serverResponse.status).toEqual(400);
     expect(serverResponse.body.issues.length > 0).toBeTruthy();
-    expect(serverResponse.body.issues[0].code).toBe('invalid_type');
-    expect(serverResponse.body.issues[0].path[0]).toBe('id');
+    expect(serverResponse.body.issues[0].code).toBe("invalid_type");
+    expect(serverResponse.body.issues[0].path[0]).toBe("id");
   });
 
   it("shouldn't validate query", async () => {
@@ -382,10 +383,10 @@ describe('request validation', () => {
     })
     class TestController {
       @TsRest(contract.withQuery)
-      async create(@TsRestRequest() { headers }: RequestShapes['withQuery']) {
-        const response: ResponseShapes['withQuery'] = {
+      async create(@TsRestRequest() { headers }: RequestShapes["withQuery"]) {
+        const response: ResponseShapes["withQuery"] = {
           status: 200,
-          body: { title: 'ok' },
+          body: { title: "ok" },
         };
 
         return response;
@@ -398,11 +399,11 @@ describe('request validation', () => {
       .send();
 
     expect(serverResponse.status).toEqual(200);
-    expect(serverResponse.body.title).toBe('ok');
+    expect(serverResponse.body.title).toBe("ok");
   });
 });
 
-describe('ts-rest-nest', () => {
+describe("ts-rest-nest", () => {
   let app: INestApplication;
 
   afterEach(async () => {
@@ -411,12 +412,12 @@ describe('ts-rest-nest', () => {
 
   const initializeApp = async (
     moduleMetadata: ModuleMetadata = {},
-    adapter: 'express' | 'fastify' = 'express',
+    adapter: "express" | "fastify" = "express",
   ) => {
     const moduleRef = await Test.createTestingModule(moduleMetadata).compile();
 
     app =
-      adapter === 'express'
+      adapter === "express"
         ? moduleRef.createNestApplication()
         : moduleRef.createNestApplication<NestFastifyApplication>(
             new FastifyAdapter(),
@@ -424,45 +425,45 @@ describe('ts-rest-nest', () => {
 
     await app.init();
 
-    if (adapter === 'fastify') {
+    if (adapter === "fastify") {
       await app.getHttpAdapter().getInstance().ready();
     }
 
     return app.getHttpServer();
   };
 
-  describe('should handle non-json response types from contract', () => {
+  describe("should handle non-json response types from contract", () => {
     const c = initContract();
     const nonJsonContract = c.router({
       postIndex: {
-        method: 'POST',
+        method: "POST",
         path: `/index.html`,
         body: z.object({
           echoHtml: z.string(),
         }),
         responses: {
           200: c.otherResponse({
-            contentType: 'text/html',
+            contentType: "text/html",
             body: z.string().regex(/^<([a-z][a-z0-9]*)\b[^>]*>(.*?)<\/\1>$/im),
           }),
         },
       },
       getRobots: {
-        method: 'GET',
+        method: "GET",
         path: `/robots.txt`,
         responses: {
           200: c.otherResponse({
-            contentType: 'text/plain',
+            contentType: "text/plain",
             body: c.type<string>(),
           }),
         },
       },
       getCss: {
-        method: 'GET',
-        path: '/style.css',
+        method: "GET",
+        path: "/style.css",
         responses: {
           200: c.otherResponse({
-            contentType: 'text/css',
+            contentType: "text/css",
             body: c.type<string>(),
           }),
         },
@@ -479,7 +480,7 @@ describe('ts-rest-nest', () => {
         @TsRestRequest()
         {
           body: { echoHtml },
-        }: NestRequestShapes<typeof nonJsonContract>['postIndex'],
+        }: NestRequestShapes<typeof nonJsonContract>["postIndex"],
       ) {
         return {
           status: 200,
@@ -491,7 +492,7 @@ describe('ts-rest-nest', () => {
       async getRobots(@TsRestRequest() _: any) {
         return {
           status: 200,
-          body: 'User-agent: * Disallow: /',
+          body: "User-agent: * Disallow: /",
         } as const;
       }
 
@@ -499,99 +500,99 @@ describe('ts-rest-nest', () => {
       async getCss(@TsRestRequest() _: any) {
         return {
           status: 200,
-          body: 'body { color: red; }',
+          body: "body { color: red; }",
         } as const;
       }
     }
 
-    it('express', async () => {
+    it("express", async () => {
       const server = await initializeApp({ controllers: [NonJsonController] });
 
       const responseHtml = await supertest(server)
-        .post('/index.html')
-        .send({ echoHtml: '<h1>hello world</h1>' });
+        .post("/index.html")
+        .send({ echoHtml: "<h1>hello world</h1>" });
       expect(responseHtml.status).toEqual(200);
-      expect(responseHtml.text).toEqual('<h1>hello world</h1>');
-      expect(responseHtml.header['content-type']).toEqual(
-        'text/html; charset=utf-8',
+      expect(responseHtml.text).toEqual("<h1>hello world</h1>");
+      expect(responseHtml.header["content-type"]).toEqual(
+        "text/html; charset=utf-8",
       );
 
       const responseHtmlFail = await supertest(server)
-        .post('/index.html')
+        .post("/index.html")
         .send({
-          echoHtml: 'hello world',
+          echoHtml: "hello world",
         });
       expect(responseHtmlFail.status).toEqual(500);
       expect(responseHtmlFail.body).toEqual({
-        message: 'Internal server error',
+        message: "Internal server error",
         statusCode: 500,
       });
-      expect(responseHtmlFail.header['content-type']).toEqual(
-        'application/json; charset=utf-8',
+      expect(responseHtmlFail.header["content-type"]).toEqual(
+        "application/json; charset=utf-8",
       );
 
-      const responseTextPlain = await supertest(server).get('/robots.txt');
+      const responseTextPlain = await supertest(server).get("/robots.txt");
       expect(responseTextPlain.status).toEqual(200);
-      expect(responseTextPlain.text).toEqual('User-agent: * Disallow: /');
-      expect(responseTextPlain.header['content-type']).toEqual(
-        'text/plain; charset=utf-8',
+      expect(responseTextPlain.text).toEqual("User-agent: * Disallow: /");
+      expect(responseTextPlain.header["content-type"]).toEqual(
+        "text/plain; charset=utf-8",
       );
 
-      const responseCss = await supertest(server).get('/style.css');
+      const responseCss = await supertest(server).get("/style.css");
       expect(responseCss.status).toEqual(200);
-      expect(responseCss.text).toEqual('body { color: red; }');
-      expect(responseCss.header['content-type']).toEqual(
-        'text/css; charset=utf-8',
+      expect(responseCss.text).toEqual("body { color: red; }");
+      expect(responseCss.header["content-type"]).toEqual(
+        "text/css; charset=utf-8",
       );
     });
 
-    it('fastify', async () => {
+    it("fastify", async () => {
       const server = await initializeApp(
         {
           controllers: [NonJsonController],
         },
-        'fastify',
+        "fastify",
       );
 
       const responseHtml = await supertest(server)
-        .post('/index.html')
-        .send({ echoHtml: '<h1>hello world</h1>' });
+        .post("/index.html")
+        .send({ echoHtml: "<h1>hello world</h1>" });
       expect(responseHtml.status).toEqual(200);
-      expect(responseHtml.text).toEqual('<h1>hello world</h1>');
-      expect(responseHtml.header['content-type']).toEqual('text/html');
+      expect(responseHtml.text).toEqual("<h1>hello world</h1>");
+      expect(responseHtml.header["content-type"]).toEqual("text/html");
 
       const responseHtmlFail = await supertest(server)
-        .post('/index.html')
+        .post("/index.html")
         .send({
-          echoHtml: 'hello world',
+          echoHtml: "hello world",
         });
       expect(responseHtmlFail.status).toEqual(500);
       expect(responseHtmlFail.body).toEqual({
-        message: 'Internal server error',
+        message: "Internal server error",
         statusCode: 500,
       });
-      expect(responseHtmlFail.header['content-type']).toEqual(
-        'application/json; charset=utf-8',
+      expect(responseHtmlFail.header["content-type"]).toEqual(
+        "application/json; charset=utf-8",
       );
 
-      const responseTextPlain = await supertest(server).get('/robots.txt');
+      const responseTextPlain = await supertest(server).get("/robots.txt");
       expect(responseTextPlain.status).toEqual(200);
-      expect(responseTextPlain.text).toEqual('User-agent: * Disallow: /');
-      expect(responseTextPlain.header['content-type']).toEqual('text/plain');
+      expect(responseTextPlain.text).toEqual("User-agent: * Disallow: /");
+      expect(responseTextPlain.header["content-type"]).toEqual("text/plain");
 
-      const responseCss = await supertest(server).get('/style.css');
+      const responseCss = await supertest(server).get("/style.css");
       expect(responseCss.status).toEqual(200);
-      expect(responseCss.text).toEqual('body { color: red; }');
-      expect(responseCss.header['content-type']).toEqual('text/css');
+      expect(responseCss.text).toEqual("body { color: red; }");
+      expect(responseCss.header["content-type"]).toEqual("text/css");
     });
   });
 
-  describe('should handle global configuration', () => {
+  describe("should handle global configuration", () => {
     const c = initContract();
     const contract = c.router({
       getIndex: {
-        method: 'GET',
-        path: '/',
+        method: "GET",
+        path: "/",
         query: z.object({
           foo: z.boolean(),
         }),
@@ -608,7 +609,7 @@ describe('ts-rest-nest', () => {
       @TsRest(contract.getIndex)
       async getIndex(
         @TsRestRequest()
-        { query }: NestRequestShapes<typeof contract>['getIndex'],
+        { query }: NestRequestShapes<typeof contract>["getIndex"],
       ) {
         return {
           status: 200,
@@ -617,7 +618,7 @@ describe('ts-rest-nest', () => {
       }
     }
 
-    it('express', async () => {
+    it("express", async () => {
       const server = await initializeApp({
         controllers: [TestController],
         imports: [
@@ -625,12 +626,12 @@ describe('ts-rest-nest', () => {
         ],
       });
 
-      const response = await supertest(server).get('/?foo=true');
+      const response = await supertest(server).get("/?foo=true");
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ foo: true });
     });
 
-    it('fastify', async () => {
+    it("fastify", async () => {
       const server = await initializeApp(
         {
           controllers: [TestController],
@@ -638,16 +639,16 @@ describe('ts-rest-nest', () => {
             TsRestModule.register({ validateResponses: true, jsonQuery: true }),
           ],
         },
-        'fastify',
+        "fastify",
       );
 
-      const response = await supertest(server).get('/?foo=true');
+      const response = await supertest(server).get("/?foo=true");
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ foo: true });
     });
 
-    describe('should handle overrides', () => {
-      it('method override', async () => {
+    describe("should handle overrides", () => {
+      it("method override", async () => {
         @Controller()
         class TestController {
           @TsRestHandler(contract, { jsonQuery: false })
@@ -668,7 +669,7 @@ describe('ts-rest-nest', () => {
           ],
         });
 
-        const response = await supertest(server).get('/?foo=true');
+        const response = await supertest(server).get("/?foo=true");
         expect(response.status).toEqual(400);
         expect(response.body).toEqual({
           bodyResult: null,
@@ -677,19 +678,19 @@ describe('ts-rest-nest', () => {
           queryResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'boolean',
-                message: 'Expected boolean, received string',
-                path: ['foo'],
-                received: 'string',
+                code: "invalid_type",
+                expected: "boolean",
+                message: "Expected boolean, received string",
+                path: ["foo"],
+                received: "string",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
         });
       });
 
-      it('class override', async () => {
+      it("class override", async () => {
         @Controller()
         @TsRest({ jsonQuery: false })
         class TestController {
@@ -711,7 +712,7 @@ describe('ts-rest-nest', () => {
           ],
         });
 
-        const response = await supertest(server).get('/?foo=true');
+        const response = await supertest(server).get("/?foo=true");
         expect(response.status).toEqual(400);
         expect(response.body).toEqual({
           bodyResult: null,
@@ -720,19 +721,19 @@ describe('ts-rest-nest', () => {
           queryResult: {
             issues: [
               {
-                code: 'invalid_type',
-                expected: 'boolean',
-                message: 'Expected boolean, received string',
-                path: ['foo'],
-                received: 'string',
+                code: "invalid_type",
+                expected: "boolean",
+                message: "Expected boolean, received string",
+                path: ["foo"],
+                received: "string",
               },
             ],
-            name: 'ZodError',
+            name: "ZodError",
           },
         });
       });
 
-      it('method overriding class', async () => {
+      it("method overriding class", async () => {
         @Controller()
         @TsRest({ jsonQuery: false })
         class TestController {
@@ -754,19 +755,19 @@ describe('ts-rest-nest', () => {
           ],
         });
 
-        const response = await supertest(server).get('/?foo=true');
+        const response = await supertest(server).get("/?foo=true");
         expect(response.status).toEqual(200);
         expect(response.body).toEqual({ foo: true });
       });
     });
   });
 
-  describe('should handle no body', () => {
+  describe("should handle no body", () => {
     const c = initContract();
     const contract = c.router({
       getIndex: {
-        method: 'POST',
-        path: '/',
+        method: "POST",
+        path: "/",
         body: c.noBody(),
         responses: {
           204: c.noBody(),
@@ -779,7 +780,7 @@ describe('ts-rest-nest', () => {
       @TsRest(contract.getIndex)
       async getIndex(
         @TsRestRequest()
-        _: NestRequestShapes<typeof contract>['getIndex'],
+        _: NestRequestShapes<typeof contract>["getIndex"],
       ) {
         return {
           status: 204,
@@ -788,46 +789,46 @@ describe('ts-rest-nest', () => {
       }
     }
 
-    it('express', async () => {
+    it("express", async () => {
       const server = await initializeApp({
         controllers: [TestController],
       });
 
-      const response = await supertest(server).post('/');
+      const response = await supertest(server).post("/");
       expect(response.status).toEqual(204);
-      expect(response.text).toEqual('');
-      expect(response.headers['content-length']).toBeUndefined();
-      expect(response.headers['content-type']).toBeUndefined();
+      expect(response.text).toEqual("");
+      expect(response.headers["content-length"]).toBeUndefined();
+      expect(response.headers["content-type"]).toBeUndefined();
     });
 
-    it('fastify', async () => {
+    it("fastify", async () => {
       const server = await initializeApp(
         {
           controllers: [TestController],
         },
-        'fastify',
+        "fastify",
       );
 
-      const response = await supertest(server).post('/');
+      const response = await supertest(server).post("/");
       expect(response.status).toEqual(204);
-      expect(response.text).toEqual('');
-      expect(response.headers['content-length']).toBeUndefined();
-      expect(response.headers['content-type']).toBeUndefined();
+      expect(response.text).toEqual("");
+      expect(response.headers["content-length"]).toBeUndefined();
+      expect(response.headers["content-type"]).toBeUndefined();
     });
   });
 
-  describe('should handle thrown TsRestResponseError', () => {
+  describe("should handle thrown TsRestResponseError", () => {
     const c = initContract();
     const contract = c.router({
       getIndex: {
-        method: 'GET',
-        path: '/:id',
+        method: "GET",
+        path: "/:id",
         responses: {
           200: z.object({
             id: z.string(),
           }),
           404: z.object({
-            message: z.literal('Not Found'),
+            message: z.literal("Not Found"),
           }),
           500: c.noBody(),
         },
@@ -839,20 +840,20 @@ describe('ts-rest-nest', () => {
       @TsRest(contract.getIndex)
       async getIndex(
         @TsRestRequest()
-        { params: { id } }: NestRequestShapes<typeof contract>['getIndex'],
+        { params: { id } }: NestRequestShapes<typeof contract>["getIndex"],
       ) {
-        if (id === '500') {
+        if (id === "500") {
           throw new TsRestResponseError(contract.getIndex, {
             status: 500,
             body: undefined,
           });
         }
 
-        if (id === '404') {
+        if (id === "404") {
           throw new TsRestResponseError(contract.getIndex, {
             status: 404,
             body: {
-              message: 'Not Found',
+              message: "Not Found",
             },
           });
         }
@@ -864,50 +865,50 @@ describe('ts-rest-nest', () => {
       }
     }
 
-    it('express', async () => {
+    it("express", async () => {
       const server = await initializeApp({
         controllers: [TestController],
       });
 
       await supertest(server)
-        .get('/404')
+        .get("/404")
         .expect((response) => {
           expect(response.status).toEqual(404);
-          expect(response.body).toEqual({ message: 'Not Found' });
+          expect(response.body).toEqual({ message: "Not Found" });
         });
 
       await supertest(server)
-        .get('/500')
+        .get("/500")
         .expect((response) => {
           expect(response.status).toEqual(500);
-          expect(response.text).toEqual('');
-          expect(response.headers['content-length']).toEqual('0');
-          expect(response.headers['content-type']).toBeUndefined();
+          expect(response.text).toEqual("");
+          expect(response.headers["content-length"]).toEqual("0");
+          expect(response.headers["content-type"]).toBeUndefined();
         });
     });
 
-    it('fastify', async () => {
+    it("fastify", async () => {
       const server = await initializeApp(
         {
           controllers: [TestController],
         },
-        'fastify',
+        "fastify",
       );
 
       await supertest(server)
-        .get('/404')
+        .get("/404")
         .expect((response) => {
           expect(response.status).toEqual(404);
-          expect(response.body).toEqual({ message: 'Not Found' });
+          expect(response.body).toEqual({ message: "Not Found" });
         });
 
       await supertest(server)
-        .get('/500')
+        .get("/500")
         .expect((response) => {
           expect(response.status).toEqual(500);
-          expect(response.text).toEqual('');
-          expect(response.headers['content-length']).toEqual('0');
-          expect(response.headers['content-type']).toBeUndefined();
+          expect(response.text).toEqual("");
+          expect(response.headers["content-length"]).toEqual("0");
+          expect(response.headers["content-type"]).toBeUndefined();
         });
     });
   });

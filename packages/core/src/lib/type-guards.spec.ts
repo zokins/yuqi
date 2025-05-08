@@ -1,34 +1,34 @@
-import {
-  isResponse,
-  isSuccessResponse,
-  isErrorResponse,
-  isUnknownResponse,
-  isUnknownSuccessResponse,
-  isUnknownErrorResponse,
-} from './type-guards';
-import { initContract } from './dsl';
-import { Equal, Expect } from './test-helpers';
+import { initContract } from "./dsl";
 import {
   ErrorHttpStatusCode,
   HTTPStatusCode,
   SuccessfulHttpStatusCode,
-} from './status-codes';
+} from "./status-codes";
+import { Equal, Expect } from "./test-helpers";
+import {
+  isErrorResponse,
+  isResponse,
+  isSuccessResponse,
+  isUnknownErrorResponse,
+  isUnknownResponse,
+  isUnknownSuccessResponse,
+} from "./type-guards";
 
 const c = initContract();
 
-describe('Type Guards', () => {
+describe("Type Guards", () => {
   const contract = c.router({
     getPost: {
-      method: 'GET',
-      path: '/posts/:id',
+      method: "GET",
+      path: "/posts/:id",
       responses: {
         200: c.type<{ id: string }>(),
         404: c.type<{ message: string }>(),
       },
     },
     getPostStrict: {
-      method: 'GET',
-      path: '/posts/:id',
+      method: "GET",
+      path: "/posts/:id",
       responses: {
         200: c.type<{ id: string }>(),
         404: c.type<{ message: string }>(),
@@ -43,12 +43,12 @@ describe('Type Guards', () => {
     headers: Headers;
   };
 
-  const errorObject = new Error('Error');
+  const errorObject = new Error("Error");
 
   const successResponse: ResponseType = {
     status: 200,
     body: {
-      id: '1',
+      id: "1",
     },
     headers: new Headers(),
   };
@@ -56,30 +56,30 @@ describe('Type Guards', () => {
   const errorResponse: ResponseType = {
     status: 404,
     body: {
-      message: 'Not Found',
+      message: "Not Found",
     },
     headers: new Headers(),
   };
 
   const unknownSuccessResponse: ResponseType = {
     status: 207,
-    body: 'Success',
+    body: "Success",
     headers: new Headers(),
   };
 
   const unknownErrorResponse: ResponseType = {
     status: 500,
-    body: 'Server Error',
+    body: "Server Error",
     headers: new Headers(),
   };
 
-  describe('isResponse', () => {
+  describe("isResponse", () => {
     it.each([
       successResponse,
       errorResponse,
       unknownSuccessResponse,
       unknownErrorResponse,
-    ])('should return true for a valid response object', (response) => {
+    ])("should return true for a valid response object", (response) => {
       const result = isResponse(response, contract.getPost);
       expect(result).toStrictEqual(true);
 
@@ -100,7 +100,7 @@ describe('Type Guards', () => {
     });
 
     it.each([successResponse, errorResponse])(
-      '[strictStatusCode] should return true for a valid defined response object',
+      "[strictStatusCode] should return true for a valid defined response object",
       (response) => {
         const result = isResponse(response, contract.getPostStrict);
         expect(result).toStrictEqual(true);
@@ -121,9 +121,9 @@ describe('Type Guards', () => {
       errorObject,
       null,
       {},
-      { status: 200, noBody: '' },
+      { status: 200, noBody: "" },
       { status: 200 },
-    ])('should return false for an invalid response object', (response) => {
+    ])("should return false for an invalid response object", (response) => {
       expect(isResponse(response)).toBe(false);
     });
 
@@ -133,19 +133,19 @@ describe('Type Guards', () => {
       errorObject,
       null,
       {},
-      { status: 200, noBody: '' },
+      { status: 200, noBody: "" },
       { status: 200 },
     ])(
-      '[strictStatusCode] should return false for an invalid response object or undefined response',
+      "[strictStatusCode] should return false for an invalid response object or undefined response",
       (response) => {
         expect(isResponse(response, contract.getPostStrict)).toBe(false);
       },
     );
   });
 
-  describe('isSuccessResponse', () => {
+  describe("isSuccessResponse", () => {
     it.each([successResponse, unknownSuccessResponse])(
-      'should return true for a successful response',
+      "should return true for a successful response",
       (response) => {
         const result = isSuccessResponse(response, contract.getPost);
         expect(result).toStrictEqual(true);
@@ -167,7 +167,7 @@ describe('Type Guards', () => {
     );
 
     it.each([successResponse])(
-      '[strictStatusCode] should return true for a successful response',
+      "[strictStatusCode] should return true for a successful response",
       (response) => {
         const result = isSuccessResponse(response, contract.getPostStrict);
         expect(result).toStrictEqual(true);
@@ -184,14 +184,14 @@ describe('Type Guards', () => {
     );
 
     it.each([errorResponse, unknownErrorResponse])(
-      'should return false for a non-successful response',
+      "should return false for a non-successful response",
       (response) => {
         expect(isSuccessResponse(response)).toStrictEqual(false);
       },
     );
 
     it.each([unknownSuccessResponse, errorResponse, unknownErrorResponse])(
-      'should return false for a non-successful response',
+      "should return false for a non-successful response",
       (response) => {
         expect(
           isSuccessResponse(response, contract.getPostStrict),
@@ -200,9 +200,9 @@ describe('Type Guards', () => {
     );
   });
 
-  describe('isErrorResponse', () => {
+  describe("isErrorResponse", () => {
     it.each([errorResponse, unknownErrorResponse])(
-      'should return true for an error response',
+      "should return true for an error response",
       (response) => {
         const result = isErrorResponse(response, contract.getPost);
         expect(result).toStrictEqual(true);
@@ -224,7 +224,7 @@ describe('Type Guards', () => {
     );
 
     it.each([errorResponse])(
-      '[strictStatusCode] should return true for an error response',
+      "[strictStatusCode] should return true for an error response",
       (response) => {
         const result = isErrorResponse(response, contract.getPostStrict);
         expect(result).toStrictEqual(true);
@@ -241,14 +241,14 @@ describe('Type Guards', () => {
     );
 
     it.each([successResponse, unknownSuccessResponse])(
-      'should return false for a non-error response',
+      "should return false for a non-error response",
       (response) => {
         expect(isErrorResponse(response)).toStrictEqual(false);
       },
     );
 
     it.each([unknownErrorResponse, successResponse, unknownSuccessResponse])(
-      'should return false for a non-error response',
+      "should return false for a non-error response",
       (response) => {
         expect(isErrorResponse(response, contract.getPostStrict)).toStrictEqual(
           false,
@@ -257,9 +257,9 @@ describe('Type Guards', () => {
     );
   });
 
-  describe('isUnknownResponse', () => {
+  describe("isUnknownResponse", () => {
     it.each([unknownSuccessResponse, unknownErrorResponse])(
-      'should return true for responses not defined in the contract',
+      "should return true for responses not defined in the contract",
       (response) => {
         const result = isUnknownResponse(response, contract.getPost);
         expect(result).toStrictEqual(true);
@@ -280,7 +280,7 @@ describe('Type Guards', () => {
     );
 
     it.each([successResponse, errorResponse])(
-      'should return false for a response defined in the contract',
+      "should return false for a response defined in the contract",
       (response) => {
         expect(isUnknownResponse(response, contract.getPost)).toStrictEqual(
           false,
@@ -289,9 +289,9 @@ describe('Type Guards', () => {
     );
   });
 
-  describe('isUnknownSuccessResponse', () => {
+  describe("isUnknownSuccessResponse", () => {
     it.each([unknownSuccessResponse])(
-      'should return true for successful responses not defined in the contract or error responses',
+      "should return true for successful responses not defined in the contract or error responses",
       (response) => {
         const result = isUnknownSuccessResponse(response, contract.getPost);
         expect(result).toStrictEqual(true);
@@ -312,7 +312,7 @@ describe('Type Guards', () => {
     );
 
     it.each([successResponse, errorResponse, unknownErrorResponse])(
-      'should return false for a success response defined in the contract or non-success responses',
+      "should return false for a success response defined in the contract or non-success responses",
       (response) => {
         expect(
           isUnknownSuccessResponse(response, contract.getPost),
@@ -321,9 +321,9 @@ describe('Type Guards', () => {
     );
   });
 
-  describe('isUnknownErrorResponse', () => {
+  describe("isUnknownErrorResponse", () => {
     it.each([unknownErrorResponse])(
-      'should return true for error responses not defined in the contract or successful responses',
+      "should return true for error responses not defined in the contract or successful responses",
       (response) => {
         const result = isUnknownErrorResponse(response, contract.getPost);
         expect(result).toStrictEqual(true);
@@ -344,7 +344,7 @@ describe('Type Guards', () => {
     );
 
     it.each([errorResponse, successResponse, unknownSuccessResponse])(
-      'should return false for an error response defined in the contract or non-error responses',
+      "should return false for an error response defined in the contract or non-error responses",
       (response) => {
         expect(
           isUnknownErrorResponse(response, contract.getPost),

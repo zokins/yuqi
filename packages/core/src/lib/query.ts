@@ -8,12 +8,12 @@ export const convertQueryParamsToUrlString = (query: unknown, json = false) => {
   const queryString = json
     ? encodeQueryParamsJson(query)
     : encodeQueryParams(query);
-  return queryString?.length > 0 ? '?' + queryString : '';
+  return queryString?.length > 0 ? "?" + queryString : "";
 };
 
 export const encodeQueryParamsJson = (query: unknown) => {
   if (!query) {
-    return '';
+    return "";
   }
 
   return Object.entries(query)
@@ -25,8 +25,8 @@ export const encodeQueryParamsJson = (query: unknown) => {
       // this makes strings look nicer in the URL (e.g. ?name=John instead of ?name=%22John%22)
       // this is also how OpenAPI will pass strings even if they are marked as application/json types
       if (
-        typeof value === 'string' &&
-        !['true', 'false', 'null'].includes(value.trim()) &&
+        typeof value === "string" &&
+        !["true", "false", "null"].includes(value.trim()) &&
         isNaN(Number(value))
       ) {
         encodedValue = value;
@@ -36,12 +36,12 @@ export const encodeQueryParamsJson = (query: unknown) => {
 
       return `${encodeURIComponent(key)}=${encodeURIComponent(encodedValue)}`;
     })
-    .join('&');
+    .join("&");
 };
 
 export const encodeQueryParams = (query: unknown) => {
   if (!query) {
-    return '';
+    return "";
   }
 
   return (
@@ -52,7 +52,7 @@ export const encodeQueryParams = (query: unknown) => {
       .map(([key, value]) => {
         return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
       })
-      .join('&')
+      .join("&")
   );
 };
 
@@ -74,14 +74,14 @@ const tokeniseValue = (key: string, value: unknown): [string, string][] => {
   }
 
   if (value === null) {
-    return [[`${key}`, '']];
+    return [[`${key}`, ""]];
   }
 
   if (value === undefined) {
     return [];
   }
 
-  if (typeof value === 'object') {
+  if (typeof value === "object") {
     return Object.keys(value).flatMap((k) =>
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

@@ -1,5 +1,6 @@
-import { AppRoute, AppRouter } from '@ts-rest/core';
-import { AppRouteImplementationOrOptions } from '../types';
+import { AppRoute, AppRouter } from "@ts-rest/core";
+
+import { AppRouteImplementationOrOptions } from "../types";
 
 export type PartialRouter<
   T extends AppRouter,
@@ -9,8 +10,12 @@ export type PartialRouter<
   [TKey in keyof T]?: T[TKey] extends AppRouter
     ? PartialRouter<T[TKey], TPlatformArgs, TRequestExtension>
     : T[TKey] extends AppRoute
-    ? AppRouteImplementationOrOptions<T[TKey], TPlatformArgs, TRequestExtension>
-    : never;
+      ? AppRouteImplementationOrOptions<
+          T[TKey],
+          TPlatformArgs,
+          TRequestExtension
+        >
+      : never;
 };
 
 export type ContractEndpointPaths<
@@ -20,8 +25,8 @@ export type ContractEndpointPaths<
   ? T[TKey] extends AppRouter
     ? `${TKey}.${ContractEndpointPaths<T[TKey]>}`
     : T[TKey] extends AppRoute
-    ? TKey
-    : never
+      ? TKey
+      : never
   : never;
 
 export type ContractSubContractPaths<
@@ -31,8 +36,8 @@ export type ContractSubContractPaths<
   ? T[TKey] extends AppRouter
     ? TKey | `${TKey}.${ContractSubContractPaths<T[TKey]>}`
     : T[TKey] extends AppRoute
-    ? never
-    : never
+      ? never
+      : never
   : never;
 
 export type EndpointPathsToSubcontractPaths<
@@ -58,10 +63,10 @@ export type PartialRouterPaths<
       ? `${TKey}.${PartialRouterPaths<TContract[TKey], TRouter[TKey]>}`
       : never
     : TContract[TKey] extends AppRoute
-    ? [undefined] extends TRouter[TKey]
-      ? never
-      : TKey
-    : never
+      ? [undefined] extends TRouter[TKey]
+        ? never
+        : TKey
+      : never
   : never;
 
 export type ChooseContractRoute<
@@ -72,8 +77,8 @@ export type ChooseContractRoute<
     ? ChooseContractRoute<T[U], Rest>
     : never
   : T[K] extends AppRoute
-  ? T[K]
-  : never;
+    ? T[K]
+    : never;
 
 export type ChooseContractSubContract<
   T extends AppRouter,
@@ -85,7 +90,7 @@ export type ChooseContractSubContract<
       : never
     : never
   : K extends keyof T
-  ? T[K] extends AppRouter
-    ? T[K]
-    : never
-  : never;
+    ? T[K] extends AppRouter
+      ? T[K]
+      : never
+    : never;

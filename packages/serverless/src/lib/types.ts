@@ -118,8 +118,12 @@ export type RouterImplementation<
   [TKey in keyof T]: T[TKey] extends AppRouter
     ? RouterImplementation<T[TKey], TPlatformArgs, TRequestExtension>
     : T[TKey] extends AppRoute
-    ? AppRouteImplementationOrOptions<T[TKey], TPlatformArgs, TRequestExtension>
-    : never;
+      ? AppRouteImplementationOrOptions<
+          T[TKey],
+          TPlatformArgs,
+          TRequestExtension
+        >
+      : never;
 };
 
 export type RouterImplementationOrFluentRouter<

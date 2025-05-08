@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { AppRouter, ClientArgs } from '@ts-rest/core';
-import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { initQueryClient } from './create-hooks';
-import { TsrQueryClientContext } from './use-tsr-query-client';
+import { useQueryClient } from "@tanstack/react-query";
+import { AppRouter, ClientArgs } from "@ts-rest/core";
+import * as React from "react";
+import { useMemo } from "react";
+
+import { initQueryClient } from "./create-hooks";
+import { TsrQueryClientContext } from "./use-tsr-query-client";
 
 export function TsRestInnerProvider<
   TContract extends AppRouter,

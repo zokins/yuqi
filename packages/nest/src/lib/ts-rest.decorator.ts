@@ -7,14 +7,15 @@ import {
   Put,
   SetMetadata,
   UseInterceptors,
-} from '@nestjs/common';
-import { AppRoute } from '@ts-rest/core';
-import { TsRestInterceptor } from './ts-rest.interceptor';
+} from "@nestjs/common";
+import { AppRoute } from "@ts-rest/core";
+
 import {
   TsRestAppRouteMetadataKey,
   TsRestOptionsMetadataKey,
-} from './constants';
-import { TsRestOptions } from './ts-rest-options';
+} from "./constants";
+import { TsRestOptions } from "./ts-rest-options";
+import { TsRestInterceptor } from "./ts-rest.interceptor";
 
 type TsRestType = {
   (appRoute: AppRoute, options?: TsRestOptions): MethodDecorator;
@@ -34,7 +35,7 @@ export const TsRest: TsRestType = (
 ) => {
   const decorators = [];
 
-  const isMethodDecorator = 'path' in appRouteOrOptions;
+  const isMethodDecorator = "path" in appRouteOrOptions;
   const optionsToUse = isMethodDecorator ? options : appRouteOrOptions;
 
   if (isMethodDecorator) {
@@ -56,15 +57,15 @@ export const TsRest: TsRestType = (
 
 const getMethodDecorator = (appRoute: AppRoute) => {
   switch (appRoute.method) {
-    case 'DELETE':
+    case "DELETE":
       return Delete(appRoute.path);
-    case 'GET':
+    case "GET":
       return Get(appRoute.path);
-    case 'POST':
+    case "POST":
       return Post(appRoute.path);
-    case 'PATCH':
+    case "PATCH":
       return Patch(appRoute.path);
-    case 'PUT':
+    case "PUT":
       return Put(appRoute.path);
   }
 };

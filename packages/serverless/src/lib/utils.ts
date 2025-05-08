@@ -1,15 +1,15 @@
 function isArrayBuffer(maybeBuffer: unknown): maybeBuffer is ArrayBuffer {
   return (
     maybeBuffer instanceof ArrayBuffer ||
-    (typeof maybeBuffer === 'object' &&
-      Object.prototype.toString.call(maybeBuffer) === '[object ArrayBuffer]')
+    (typeof maybeBuffer === "object" &&
+      Object.prototype.toString.call(maybeBuffer) === "[object ArrayBuffer]")
   );
 }
 
 export async function arrayBufferToBase64(bufferOrBlob: ArrayBuffer | Blob) {
   if (isArrayBuffer(bufferOrBlob)) {
     if (globalThis.Buffer) {
-      return Buffer.from(bufferOrBlob).toString('base64');
+      return Buffer.from(bufferOrBlob).toString("base64");
     }
 
     return btoa(String.fromCharCode(...new Uint8Array(bufferOrBlob)));
@@ -32,7 +32,7 @@ export async function arrayBufferToString(bufferOrBlob: ArrayBuffer | Blob) {
   }
 
   if (bufferOrBlob instanceof Blob) {
-    if (typeof bufferOrBlob.text === 'function') {
+    if (typeof bufferOrBlob.text === "function") {
       return bufferOrBlob.text();
     }
 
@@ -51,13 +51,13 @@ export async function arrayBufferToString(bufferOrBlob: ArrayBuffer | Blob) {
 }
 
 export async function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-  if (typeof blob.arrayBuffer === 'function') {
+  if (typeof blob.arrayBuffer === "function") {
     return await blob.arrayBuffer();
   }
 
   for (const symbolKey of Object.getOwnPropertySymbols(blob)) {
     // detecting if blob is a jsdom polyfill
-    if (symbolKey.description === 'impl') {
+    if (symbolKey.description === "impl") {
       const blobImpl = (blob as any)[symbolKey];
       const buffer = blobImpl._buffer as Buffer;
       return buffer.buffer.slice(
@@ -77,7 +77,7 @@ export async function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
     });
   }
 
-  throw new Error('Unable to convert blob to array buffer');
+  throw new Error("Unable to convert blob to array buffer");
 }
 
 // Credits: https://github.com/nfriedly/set-cookie-parser/blob/master/lib/set-cookie.js
@@ -100,7 +100,7 @@ export const splitCookiesString = (cookiesString: string) => {
   function notSpecialChar() {
     ch = cookiesString.charAt(pos);
 
-    return ch !== '=' && ch !== ';' && ch !== ',';
+    return ch !== "=" && ch !== ";" && ch !== ",";
   }
 
   while (pos < cookiesString.length) {
@@ -109,7 +109,7 @@ export const splitCookiesString = (cookiesString: string) => {
 
     while (skipWhitespace()) {
       ch = cookiesString.charAt(pos);
-      if (ch === ',') {
+      if (ch === ",") {
         // ',' is a cookie separator if we have later first '=', not ';' or ','
         lastComma = pos;
         pos += 1;
@@ -122,7 +122,7 @@ export const splitCookiesString = (cookiesString: string) => {
         }
 
         // currently special character
-        if (pos < cookiesString.length && cookiesString.charAt(pos) === '=') {
+        if (pos < cookiesString.length && cookiesString.charAt(pos) === "=") {
           // we found cookies separator
           cookiesSeparatorFound = true;
           // pos is inside the next cookie, so back up and return it.

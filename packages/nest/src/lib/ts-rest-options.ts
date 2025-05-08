@@ -1,5 +1,6 @@
-import { TsRestOptionsMetadataKey } from './constants';
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext } from "@nestjs/common";
+
+import { TsRestOptionsMetadataKey } from "./constants";
 
 export type TsRestOptions = {
   jsonQuery?: boolean;
