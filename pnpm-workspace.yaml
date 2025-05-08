@@ -1,3 +1,20 @@
 packages:
-  - 'apps/**/*'
-  - 'libs/**/*'
+  - "apps/*"
+  - "packages/*"
+  - "examples/*"
+  - "tooling/*"
+
+catalog:
+  # Dev tooling
+  eslint: ^9.25.1
+  prettier: ^3.5.3
+  typescript: ^5.8.3
+
+  # Build tools
+  tsup: ^8.4.0
+
+  # Misc
+  zod: ^3.24.3
+
+  # Testing
+  vitest: ^3.1.3
