@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "types": ["vitest/globals"],
-    "rootDir": "./src"
-  },
-  "include": ["src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.d.ts"]
-}
